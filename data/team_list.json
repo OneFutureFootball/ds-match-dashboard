@@ -1,0 +1,134 @@
+[
+    {
+        "id": "BEN",
+        "internal_id": 1,
+        "name": "Bengaluru Phoenix FC",
+        "nickname": "Rising Phoenix",
+        "medium_name": "Bengaluru",
+        "short_name": "BEN",
+        "country": "India",
+        "city": "Bengaluru",
+        "colour": "#741B33"
+    },
+    {
+        "id": "BON",
+        "internal_id": 2,
+        "name": "Bondi Football Club",
+        "nickname": "The Blues",
+        "medium_name": "Bondi",
+        "short_name": "BON",
+        "country": "Australia",
+        "city": "Wahroonga",
+        "colour": "#CFE0EB"
+    },
+    {
+        "id": "PAL",
+        "internal_id": 3,
+        "name": "Club Sportivo Palermo",
+        "nickname": "Los Dioses",
+        "short_name": "PAL",
+        "medium_name": "Palermo",
+        "country": "Argentina",
+        "city": "Buenos Aires",
+        "colour": "#F2BDD6"
+    },
+    {
+        "id": "ANG",
+        "internal_id": 4,
+        "name": "Futbol Club Angelenos",
+        "nickname": "La Familia",
+        "medium_name": "Angelenos",
+        "short_name": "ANG",
+        "country": "United States",
+        "city": "Boyle Heights",
+        "colour": "#6471B4"
+    },
+    {
+        "id": "RIY",
+        "internal_id": 5,
+        "name": "Riyadh Stars FC",
+        "nickname": "The Stars",
+        "medium_name": "Riyadh",
+        "short_name": "RIY",
+        "country": "Saudi Arabia",
+        "city": "Riyadh",
+        "colour": "#8F7A67"
+    },
+    {
+        "id": "MAN",
+        "internal_id": 6,
+        "name": "Manhattan FC",
+        "nickname": "The Empire",
+        "medium_name": "Manhattan",
+        "short_name": "MAN",
+        "country": "United States",
+        "city": "New York City",
+        "colour": "#00306F"
+    },
+    {
+        "id": "NUS",
+        "internal_id": 7,
+        "name": "Inter Nusantara FC",
+        "nickname": "The Garuda Warriors",
+        "medium_name": "Nusantara",
+        "short_name": "NUS",
+        "country": "Indonesia",
+        "city": "Jakarta",
+        "colour": "#000000"
+    },
+    {
+        "id": "NJA",
+        "internal_id": 8,
+        "name": "Naija United Football Club",
+        "nickname": "Naija",
+        "medium_name": "Naija",
+        "short_name": "NJA",
+        "country": "Nigeria",
+        "city": "Lekki",
+        "colour": "#5FB78B"
+    },
+    {
+        "id": "PAR",
+        "internal_id": 9,
+        "name": "Paris St-Denis",
+        "nickname": "Le 93",
+        "short_name": "PAR",
+        "medium_name": "Paris",
+        "country": "France",
+        "city": "Paris",
+        "colour": "#0049A7"
+    },
+    {
+        "id": "AMZ",
+        "internal_id": 10,
+        "name": "Clube de Futebol Brasil Amazônia",
+        "nickname": "Amazônia",
+        "short_name": "AMZ",
+        "medium_name": "Amazônia",
+        "country": "Brasil",
+        "city": "Manaus",
+        "colour": "#FFDF00"
+    },
+    {
+        "id": "LDN",
+        "internal_id": 11,
+        "name": "South London United Football Club",
+        "nickname": "The 12",
+        "medium_name": "South London",
+        "short_name": "LDN",
+        "country": "United Kingdom",
+        "city": "South London",
+        "colour": "#DC6134"
+    },
+    {
+        "id": "TOK",
+        "internal_id": 12,
+        "name": "Tokyo Youth Club 東京青年部",
+        "nickname": "The Braves",
+        "short_name": "TOK",
+        "medium_name": "Tokyo",
+        "country": "Japan",
+        "city": "Tokyo",
+        "colour": "#E32C26"
+    }
+]

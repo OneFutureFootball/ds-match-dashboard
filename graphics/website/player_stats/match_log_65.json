@@ -1,0 +1,24 @@
+[
+  {
+    "ID": 65,
+    "full_name": "Miguel Condori",
+    "seasons": [
+      {
+        "season_no": 3,
+        "team_id": 3,
+        "team": "Club Sportivo Palermo",
+        "rounds": [
+          {
+            "round_no": 1,
+            "match_id": 3006,
+            "winloss": "L",
+            "result": "PAL 2-3 MAN",
+            "statistics": [
+              {}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

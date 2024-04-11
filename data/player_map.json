@@ -1,0 +1,1922 @@
+[
+  {
+    "ID": 69,
+    "full_name": "Mateus Bonfim",
+    "team_id": 10,
+    "id": "485z68",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/485z68.png"
+  },
+  {
+    "ID": 196,
+    "full_name": "Guilherme Orlando",
+    "team_id": 10,
+    "id": "o2gq68",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/o2gq68.png"
+  },
+  {
+    "ID": 213,
+    "full_name": "Romeo Menzo",
+    "team_id": 10,
+    "id": "n261l8",
+    "flag": "https://flagcdn.com/w40/sr.png",
+    "profileImage": "https://assets.1ff.com/players/n261l8.png"
+  },
+  {
+    "ID": 525,
+    "full_name": "Junior Ybarra",
+    "team_id": 10,
+    "id": "525",
+    "flag": "https://flagcdn.com/w40/ve.png",
+    "profileImage": "https://assets.1ff.com/players/525.png"
+  },
+  {
+    "ID": 387,
+    "full_name": "Tekin Karadeniz",
+    "team_id": 10,
+    "id": "12mdn2",
+    "flag": "https://flagcdn.com/w40/tr.png",
+    "profileImage": "https://assets.1ff.com/players/12mdn2.png"
+  },
+  {
+    "ID": 122,
+    "full_name": "Jesus Jiménez",
+    "team_id": 10,
+    "id": "n8y902",
+    "flag": "https://flagcdn.com/w40/pe.png",
+    "profileImage": "https://assets.1ff.com/players/n8y902.png"
+  },
+  {
+    "ID": 19,
+    "full_name": "Abderrazak El Hamdaoui",
+    "team_id": 10,
+    "id": "w23e7k",
+    "flag": "https://flagcdn.com/w40/ma.png",
+    "profileImage": "https://assets.1ff.com/players/w23e7k.png"
+  },
+  {
+    "ID": 178,
+    "full_name": "Dominic Wallace",
+    "team_id": 4,
+    "id": "z79lg7",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/z79lg7.png"
+  },
+  {
+    "ID": 369,
+    "full_name": "Joost de Groot",
+    "team_id": 4,
+    "id": "485we8",
+    "flag": "https://flagcdn.com/w40/nl.png",
+    "profileImage": "https://assets.1ff.com/players/485we8.png"
+  },
+  {
+    "ID": 526,
+    "full_name": "Eduardo Ballesteros",
+    "team_id": 4,
+    "id": "526",
+    "flag": "https://flagcdn.com/w40/mx.png",
+    "profileImage": "https://assets.1ff.com/players/526.png"
+  },
+  {
+    "ID": 193,
+    "full_name": "Marcelo Velazquez",
+    "team_id": 4,
+    "id": "485518",
+    "flag": "https://flagcdn.com/w40/py.png",
+    "profileImage": "https://assets.1ff.com/players/485518.png"
+  },
+  {
+    "ID": 7,
+    "full_name": "Álvaro Merino",
+    "team_id": 4,
+    "id": "q8dg8g",
+    "flag": "https://flagcdn.com/w40/es.png",
+    "profileImage": "https://assets.1ff.com/players/q8dg8g.png"
+  },
+  {
+    "ID": 251,
+    "full_name": "Mike Ruthven",
+    "team_id": 4,
+    "id": "38zw68",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/38zw68.png"
+  },
+  {
+    "ID": 107,
+    "full_name": "Roberto Astorga",
+    "team_id": 4,
+    "id": "q8dyz8",
+    "flag": "https://flagcdn.com/w40/cl.png",
+    "profileImage": "https://assets.1ff.com/players/q8dyz8.png"
+  },
+  {
+    "ID": 125,
+    "full_name": "Martin Prinz",
+    "team_id": 1,
+    "id": "z8ppp8",
+    "flag": "https://flagcdn.com/w40/de.png",
+    "profileImage": "https://assets.1ff.com/players/z8ppp8.png"
+  },
+  {
+    "ID": 171,
+    "full_name": "Lorenzo Schiavo",
+    "team_id": 1,
+    "id": "674rg8",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/674rg8.png"
+  },
+  {
+    "ID": 146,
+    "full_name": "Emmanuel Fargues",
+    "team_id": 1,
+    "id": "n8yd08",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/n8yd08.png"
+  },
+  {
+    "ID": 281,
+    "full_name": "Vasily Malyarov",
+    "team_id": 1,
+    "id": "38njx2",
+    "flag": "https://flagcdn.com/w40/ru.png",
+    "profileImage": "https://assets.1ff.com/players/38njx2.png"
+  },
+  {
+    "ID": 189,
+    "full_name": "Amath Niang",
+    "team_id": 1,
+    "id": "j71wn2",
+    "flag": "https://flagcdn.com/w40/sn.png",
+    "profileImage": "https://assets.1ff.com/players/j71wn2.png"
+  },
+  {
+    "ID": 144,
+    "full_name": "Rakesh Kumar",
+    "team_id": 1,
+    "id": "67jqp2",
+    "flag": "https://flagcdn.com/w40/in.png",
+    "profileImage": "https://assets.1ff.com/players/67jqp2.png"
+  },
+  {
+    "ID": 253,
+    "full_name": "Jahangir Arafat",
+    "team_id": 1,
+    "id": "w2wog8",
+    "flag": "https://flagcdn.com/w40/bd.png",
+    "profileImage": "https://assets.1ff.com/players/w2wog8.png"
+  },
+  {
+    "ID": 29,
+    "full_name": "Parfait Atangana",
+    "team_id": 2,
+    "id": "w2w9z8",
+    "flag": "https://flagcdn.com/w40/cm.png",
+    "profileImage": "https://assets.1ff.com/players/w2w9z8.png"
+  },
+  {
+    "ID": 378,
+    "full_name": "Christian Dodds",
+    "team_id": 2,
+    "id": "z79np8",
+    "flag": "https://flagcdn.com/w40/ca.png",
+    "profileImage": "https://assets.1ff.com/players/z79np8.png"
+  },
+  {
+    "ID": 130,
+    "full_name": "Ben Ruthven",
+    "team_id": 2,
+    "id": "z79qg8",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/z79qg8.png"
+  },
+  {
+    "ID": 528,
+    "full_name": "Dino Radanović",
+    "team_id": 2,
+    "id": "528",
+    "flag": "https://flagcdn.com/w40/hr.png",
+    "profileImage": "https://assets.1ff.com/players/528.png"
+  },
+  {
+    "ID": 415,
+    "full_name": "Brodie O'Brien",
+    "team_id": 2,
+    "id": "415",
+    "flag": "https://flagcdn.com/w40/au.png",
+    "profileImage": "https://assets.1ff.com/players/415.png"
+  },
+  {
+    "ID": 361,
+    "full_name": "Andy Cunningham",
+    "team_id": 2,
+    "id": "n269e2",
+    "flag": "https://flagcdn.com/w40/nz.png",
+    "profileImage": "https://assets.1ff.com/players/n269e2.png"
+  },
+  {
+    "ID": 136,
+    "full_name": "Jayden Bennett",
+    "team_id": 6,
+    "id": "v8qov7",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/v8qov7.png"
+  },
+  {
+    "ID": 248,
+    "full_name": "Wanchai Bunmi",
+    "team_id": 6,
+    "id": "o2g3q7",
+    "flag": "https://flagcdn.com/w40/th.png",
+    "profileImage": "https://assets.1ff.com/players/o2g3q7.png"
+  },
+  {
+    "ID": 330,
+    "full_name": "Adam Osyra",
+    "team_id": 6,
+    "id": "z79rp7",
+    "flag": "https://flagcdn.com/w40/pl.png",
+    "profileImage": "https://assets.1ff.com/players/z79rp7.png"
+  },
+  {
+    "ID": 163,
+    "full_name": "Isaac Carter",
+    "team_id": 6,
+    "id": "12mgw2",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/12mgw2.png"
+  },
+  {
+    "ID": 353,
+    "full_name": "Corey Robson",
+    "team_id": 6,
+    "id": "w2wqx2",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/w2wqx2.png"
+  },
+  {
+    "ID": 376,
+    "full_name": "Ezequiel Anselmo",
+    "team_id": 6,
+    "id": "o7e1m8",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/o7e1m8.png"
+  },
+  {
+    "ID": 531,
+    "full_name": "Tommaso di Paolo",
+    "team_id": 6,
+    "id": "531",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/531.png"
+  },
+  {
+    "ID": 81,
+    "full_name": "Billy Rose",
+    "team_id": 8,
+    "id": "38nr57",
+    "flag": "https://flagcdn.com/w40/au.png",
+    "profileImage": "https://assets.1ff.com/players/38nr57.png"
+  },
+  {
+    "ID": 153,
+    "full_name": "Steve Kone",
+    "team_id": 8,
+    "id": "w2wed2",
+    "flag": "https://flagcdn.com/w40/ci.png",
+    "profileImage": "https://assets.1ff.com/players/w2wed2.png"
+  },
+  {
+    "ID": 33,
+    "full_name": "Maximiliano Benedetti",
+    "team_id": 8,
+    "id": "38ny52",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/38ny52.png"
+  },
+  {
+    "ID": 298,
+    "full_name": "Amadou Sanchez",
+    "team_id": 8,
+    "id": "o8o4l7",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/o8o4l7.png"
+  },
+  {
+    "ID": 26,
+    "full_name": "Jeffrey Addo",
+    "team_id": 8,
+    "id": "o8or18",
+    "flag": "https://flagcdn.com/w40/gh.png",
+    "profileImage": "https://assets.1ff.com/players/o8or18.png"
+  },
+  {
+    "ID": 446,
+    "full_name": "Atif Alzahrani",
+    "team_id": 8,
+    "id": "446",
+    "flag": "https://flagcdn.com/w40/sa.png",
+    "profileImage": "https://assets.1ff.com/players/446.png"
+  },
+  {
+    "ID": 158,
+    "full_name": "Jean-Paul Bong",
+    "team_id": 8,
+    "id": "17kjg8",
+    "flag": "https://flagcdn.com/w40/cm.png",
+    "profileImage": "https://assets.1ff.com/players/17kjg8.png"
+  },
+  {
+    "ID": 45,
+    "full_name": "Fang Junjie",
+    "team_id": 7,
+    "id": "485162",
+    "flag": "https://flagcdn.com/w40/cn.png",
+    "profileImage": "https://assets.1ff.com/players/485162.png"
+  },
+  {
+    "ID": 141,
+    "full_name": "Kevin Zainal",
+    "team_id": 7,
+    "id": "j71zn2",
+    "flag": "https://flagcdn.com/w40/sg.png",
+    "profileImage": "https://assets.1ff.com/players/j71zn2.png"
+  },
+  {
+    "ID": 529,
+    "full_name": "Manny Samillano",
+    "team_id": 7,
+    "id": "529",
+    "flag": "https://flagcdn.com/w40/ph.png",
+    "profileImage": "https://assets.1ff.com/players/529.png"
+  },
+  {
+    "ID": 60,
+    "full_name": "Cho Moon-Soo",
+    "team_id": 7,
+    "id": "v8q1j2",
+    "flag": "https://flagcdn.com/w40/kr.png",
+    "profileImage": "https://assets.1ff.com/players/v8q1j2.png"
+  },
+  {
+    "ID": 51,
+    "full_name": "Muhd Roslan",
+    "team_id": 7,
+    "id": "38zgk2",
+    "flag": "https://flagcdn.com/w40/my.png",
+    "profileImage": "https://assets.1ff.com/players/38zgk2.png"
+  },
+  {
+    "ID": 261,
+    "full_name": "Pablo Burgueño",
+    "team_id": 3,
+    "id": "n263l2",
+    "flag": "https://flagcdn.com/w40/uy.png",
+    "profileImage": "https://assets.1ff.com/players/n263l2.png"
+  },
+  {
+    "ID": 277,
+    "full_name": "Alejandro Ortiz",
+    "team_id": 3,
+    "id": "w2w6g8",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/w2w6g8.png"
+  },
+  {
+    "ID": 118,
+    "full_name": "Ace Zungu",
+    "team_id": 3,
+    "id": "j7xv52",
+    "flag": "https://flagcdn.com/w40/za.png",
+    "profileImage": "https://assets.1ff.com/players/j7xv52.png"
+  },
+  {
+    "ID": 65,
+    "full_name": "Miguel Condori",
+    "team_id": 3,
+    "id": "j716d8",
+    "flag": "https://flagcdn.com/w40/bo.png",
+    "profileImage": "https://assets.1ff.com/players/j716d8.png"
+  },
+  {
+    "ID": 117,
+    "full_name": "Carlos Granja",
+    "team_id": 3,
+    "id": "j71kn2",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/j71kn2.png"
+  },
+  {
+    "ID": 258,
+    "full_name": "Diego Sanabria",
+    "team_id": 3,
+    "id": "17kxm2",
+    "flag": "https://flagcdn.com/w40/py.png",
+    "profileImage": "https://assets.1ff.com/players/17kxm2.png"
+  },
+  {
+    "ID": 381,
+    "full_name": "Eneko Soto",
+    "team_id": 3,
+    "id": "38nod7",
+    "flag": "https://flagcdn.com/w40/es.png",
+    "profileImage": "https://assets.1ff.com/players/38nod7.png"
+  },
+  {
+    "ID": 182,
+    "full_name": "Manuel Wolf",
+    "team_id": 9,
+    "id": "17kqg7",
+    "flag": "https://flagcdn.com/w40/at.png",
+    "profileImage": "https://assets.1ff.com/players/17kqg7.png"
+  },
+  {
+    "ID": 145,
+    "full_name": "Rodrigo Ortiz",
+    "team_id": 9,
+    "id": "485n18",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/485n18.png"
+  },
+  {
+    "ID": 180,
+    "full_name": "Remo Kastrati",
+    "team_id": 9,
+    "id": "x804y7",
+    "flag": "https://flagcdn.com/w40/ch.png",
+    "profileImage": "https://assets.1ff.com/players/x804y7.png"
+  },
+  {
+    "ID": 20,
+    "full_name": "Yannick Barré",
+    "team_id": 9,
+    "id": "67j08g",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/67j08g.png"
+  },
+  {
+    "ID": 322,
+    "full_name": "Torbjørn Braaten",
+    "team_id": 9,
+    "id": "n8yoe2",
+    "flag": "https://flagcdn.com/w40/no.png",
+    "profileImage": "https://assets.1ff.com/players/n8yoe2.png"
+  },
+  {
+    "ID": 384,
+    "full_name": "Henry Babatunde",
+    "team_id": 9,
+    "id": "v8qv62",
+    "flag": "https://flagcdn.com/w40/ng.png",
+    "profileImage": "https://assets.1ff.com/players/v8qv62.png"
+  },
+  {
+    "ID": 382,
+    "full_name": "Danylo Melnychuk",
+    "team_id": 9,
+    "id": "17k108",
+    "flag": "https://flagcdn.com/w40/ua.png",
+    "profileImage": "https://assets.1ff.com/players/17k108.png"
+  },
+  {
+    "ID": 443,
+    "full_name": "Zaki Abdo",
+    "team_id": 5,
+    "id": "443",
+    "flag": "https://flagcdn.com/w40/sa.png",
+    "profileImage": "https://assets.1ff.com/players/443.png"
+  },
+  {
+    "ID": 350,
+    "full_name": "Sidy Mbaye",
+    "team_id": 5,
+    "id": "o8oee2",
+    "flag": "https://flagcdn.com/w40/sn.png",
+    "profileImage": "https://assets.1ff.com/players/o8oee2.png"
+  },
+  {
+    "ID": 99,
+    "full_name": "Bader Abdullah",
+    "team_id": 5,
+    "id": "38zvk2",
+    "flag": "https://flagcdn.com/w40/sa.png",
+    "profileImage": "https://assets.1ff.com/players/38zvk2.png"
+  },
+  {
+    "ID": 229,
+    "full_name": "Aaron Wright-Thompson",
+    "team_id": 5,
+    "id": "w2wdg7",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/w2wdg7.png"
+  },
+  {
+    "ID": 157,
+    "full_name": "Ali Asiri",
+    "team_id": 5,
+    "id": "38npe2",
+    "flag": "https://flagcdn.com/w40/sa.png",
+    "profileImage": "https://assets.1ff.com/players/38npe2.png"
+  },
+  {
+    "ID": 390,
+    "full_name": "Bernhard Schmid",
+    "team_id": 11,
+    "id": "j7xjw2",
+    "flag": "https://flagcdn.com/w40/at.png",
+    "profileImage": "https://assets.1ff.com/players/j7xjw2.png"
+  },
+  {
+    "ID": 13,
+    "full_name": "Emeka Ezeh",
+    "team_id": 11,
+    "id": "n26x29",
+    "flag": "https://flagcdn.com/w40/ng.png",
+    "profileImage": "https://assets.1ff.com/players/n26x29.png"
+  },
+  {
+    "ID": 388,
+    "full_name": "Kofi Opoku",
+    "team_id": 11,
+    "id": "x2rq47",
+    "flag": "https://flagcdn.com/w40/gh.png",
+    "profileImage": "https://assets.1ff.com/players/x2rq47.png"
+  },
+  {
+    "ID": 243,
+    "full_name": "Pepe Muñiz",
+    "team_id": 11,
+    "id": "w23392",
+    "flag": "https://flagcdn.com/w40/es.png",
+    "profileImage": "https://assets.1ff.com/players/w23392.png"
+  },
+  {
+    "ID": 324,
+    "full_name": "Jean Salazar",
+    "team_id": 11,
+    "id": "o2gld7",
+    "flag": "https://flagcdn.com/w40/pe.png",
+    "profileImage": "https://assets.1ff.com/players/o2gld7.png"
+  },
+  {
+    "ID": 504,
+    "full_name": "Jaxon Lockwood",
+    "team_id": 11,
+    "id": "504",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/504.png"
+  },
+  {
+    "ID": 527,
+    "full_name": "Niklas Haas",
+    "team_id": 11,
+    "id": "527",
+    "flag": "https://flagcdn.com/w40/de.png",
+    "profileImage": "https://assets.1ff.com/players/527.png"
+  },
+  {
+    "ID": 138,
+    "full_name": "Stijn Janssens",
+    "team_id": 12,
+    "id": "d8l6r8",
+    "flag": "https://flagcdn.com/w40/be.png",
+    "profileImage": "https://assets.1ff.com/players/d8l6r8.png"
+  },
+  {
+    "ID": 327,
+    "full_name": "Kôsuke Maeda",
+    "team_id": 12,
+    "id": "38zz48",
+    "flag": "https://flagcdn.com/w40/jp.png",
+    "profileImage": "https://assets.1ff.com/players/38zz48.png"
+  },
+  {
+    "ID": 289,
+    "full_name": "Kôhei Kawasaki",
+    "team_id": 12,
+    "id": "j71my7",
+    "flag": "https://flagcdn.com/w40/jp.png",
+    "profileImage": "https://assets.1ff.com/players/j71my7.png"
+  },
+  {
+    "ID": 225,
+    "full_name": "Yanis N'Diaye",
+    "team_id": 12,
+    "id": "z8pgg8",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/z8pgg8.png"
+  },
+  {
+    "ID": 204,
+    "full_name": "Archie Little",
+    "team_id": 12,
+    "id": "o7eqw7",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/o7eqw7.png"
+  },
+  {
+    "ID": 259,
+    "full_name": "Vladimir Dechev",
+    "team_id": 12,
+    "id": "57vpl7",
+    "flag": "https://flagcdn.com/w40/bg.png",
+    "profileImage": "https://assets.1ff.com/players/57vpl7.png"
+  },
+  {
+    "ID": 9,
+    "full_name": "Alex Vergara",
+    "team_id": 12,
+    "id": "38n586",
+    "flag": "https://flagcdn.com/w40/co.png",
+    "profileImage": "https://assets.1ff.com/players/38n586.png"
+  },
+  {
+    "ID": 22,
+    "full_name": "João Geraldes",
+    "team_id": 10,
+    "id": "n8yg8g",
+    "flag": "https://flagcdn.com/w40/pt.png",
+    "profileImage": "https://assets.1ff.com/players/n8yg8g.png"
+  },
+  {
+    "ID": 137,
+    "full_name": "Mateo Morales",
+    "team_id": 4,
+    "id": "n26kq7",
+    "flag": "https://flagcdn.com/w40/mx.png",
+    "profileImage": "https://assets.1ff.com/players/n26kq7.png"
+  },
+  {
+    "ID": 282,
+    "full_name": "Ravi Dasar",
+    "team_id": 1,
+    "id": "17kkm7",
+    "flag": "https://flagcdn.com/w40/in.png",
+    "profileImage": "https://assets.1ff.com/players/17kkm7.png"
+  },
+  {
+    "ID": 252,
+    "full_name": "Chris Bird",
+    "team_id": 1,
+    "id": "o7evw8",
+    "flag": "https://flagcdn.com/w40/gb-wls.png",
+    "profileImage": "https://assets.1ff.com/players/o7evw8.png"
+  },
+  {
+    "ID": 306,
+    "full_name": "Ash Jones",
+    "team_id": 2,
+    "id": "z795p8",
+    "flag": "https://flagcdn.com/w40/au.png",
+    "profileImage": "https://assets.1ff.com/players/z795p8.png"
+  },
+  {
+    "ID": 297,
+    "full_name": "Luca Johnson",
+    "team_id": 6,
+    "id": "z8pmg8",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/z8pmg8.png"
+  },
+  {
+    "ID": 49,
+    "full_name": "José Alcántar",
+    "team_id": 6,
+    "id": "z8py48",
+    "flag": "https://flagcdn.com/w40/mx.png",
+    "profileImage": "https://assets.1ff.com/players/z8py48.png"
+  },
+  {
+    "ID": 362,
+    "full_name": "Deji Akande",
+    "team_id": 8,
+    "id": "d8lgv7",
+    "flag": "https://flagcdn.com/w40/ng.png",
+    "profileImage": "https://assets.1ff.com/players/d8lgv7.png"
+  },
+  {
+    "ID": 228,
+    "full_name": "Bas Holsink",
+    "team_id": 7,
+    "id": "o7edw8",
+    "flag": "https://flagcdn.com/w40/nl.png",
+    "profileImage": "https://assets.1ff.com/players/o7edw8.png"
+  },
+  {
+    "ID": 288,
+    "full_name": "Segara Biru",
+    "team_id": 7,
+    "id": "x2ryp8",
+    "flag": "https://flagcdn.com/w40/id.png",
+    "profileImage": "https://assets.1ff.com/players/x2ryp8.png"
+  },
+  {
+    "ID": 68,
+    "full_name": "Salvador Broglia",
+    "team_id": 3,
+    "id": "67jr08",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/67jr08.png"
+  },
+  {
+    "ID": 48,
+    "full_name": "Florian Grava",
+    "team_id": 9,
+    "id": "o2grj7",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/o2grj7.png"
+  },
+  {
+    "ID": 188,
+    "full_name": "Jamil Skaik",
+    "team_id": 5,
+    "id": "x2rgr8",
+    "flag": "https://flagcdn.com/w40/sa.png",
+    "profileImage": "https://assets.1ff.com/players/x2rgr8.png"
+  },
+  {
+    "ID": 67,
+    "full_name": "Ruben Sinclair",
+    "team_id": 11,
+    "id": "w23pe8",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/w23pe8.png"
+  },
+  {
+    "ID": 84,
+    "full_name": "Ko Kato",
+    "team_id": 12,
+    "id": "v8q0j7",
+    "flag": "https://flagcdn.com/w40/jp.png",
+    "profileImage": "https://assets.1ff.com/players/v8q0j7.png"
+  },
+  {
+    "ID": 356,
+    "full_name": "Dani Viana",
+    "team_id": 10,
+    "id": "x80vk7",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/x80vk7.png"
+  },
+  {
+    "ID": 35,
+    "full_name": "Andrea Olivieri",
+    "team_id": 10,
+    "id": "57vw62",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/57vw62.png"
+  },
+  {
+    "ID": 109,
+    "full_name": "Thiago Barros",
+    "team_id": 10,
+    "id": "38nne8",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/38nne8.png"
+  },
+  {
+    "ID": 391,
+    "full_name": "José Rios",
+    "team_id": 10,
+    "id": "w23yl8",
+    "flag": "https://flagcdn.com/w40/bo.png",
+    "profileImage": "https://assets.1ff.com/players/w23yl8.png"
+  },
+  {
+    "ID": 124,
+    "full_name": "Alex León",
+    "team_id": 4,
+    "id": "o2go67",
+    "flag": "https://flagcdn.com/w40/co.png",
+    "profileImage": "https://assets.1ff.com/players/o2go67.png"
+  },
+  {
+    "ID": 264,
+    "full_name": "Albin Dahlin",
+    "team_id": 4,
+    "id": "x2rjp8",
+    "flag": "https://flagcdn.com/w40/se.png",
+    "profileImage": "https://assets.1ff.com/players/x2rjp8.png"
+  },
+  {
+    "ID": 36,
+    "full_name": "Malick Clément",
+    "team_id": 4,
+    "id": "v8qgj2",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/v8qgj2.png"
+  },
+  {
+    "ID": 244,
+    "full_name": "Santiago Acevedo",
+    "team_id": 4,
+    "id": "67jvy7",
+    "flag": "https://flagcdn.com/w40/co.png",
+    "profileImage": "https://assets.1ff.com/players/67jvy7.png"
+  },
+  {
+    "ID": 187,
+    "full_name": "Thomas Parr",
+    "team_id": 1,
+    "id": "12myw2",
+    "flag": "https://flagcdn.com/w40/no.png",
+    "profileImage": "https://assets.1ff.com/players/12myw2.png"
+  },
+  {
+    "ID": 242,
+    "full_name": "Noah Drakenburg",
+    "team_id": 1,
+    "id": "j7xzn8",
+    "flag": "https://flagcdn.com/w40/se.png",
+    "profileImage": "https://assets.1ff.com/players/j7xzn8.png"
+  },
+  {
+    "ID": 185,
+    "full_name": "Sushil Rao",
+    "team_id": 1,
+    "id": "n26yq8",
+    "flag": "https://flagcdn.com/w40/in.png",
+    "profileImage": "https://assets.1ff.com/players/n26yq8.png"
+  },
+  {
+    "ID": 42,
+    "full_name": "Zlatko Kozbašic",
+    "team_id": 2,
+    "id": "j7xy42",
+    "flag": "https://flagcdn.com/w40/hr.png",
+    "profileImage": "https://assets.1ff.com/players/j7xy42.png"
+  },
+  {
+    "ID": 70,
+    "full_name": "Charlie Baker-Jones",
+    "team_id": 2,
+    "id": "n8y0g2",
+    "flag": "https://flagcdn.com/w40/au.png",
+    "profileImage": "https://assets.1ff.com/players/n8y0g2.png"
+  },
+  {
+    "ID": 102,
+    "full_name": "Juozas Butkus",
+    "team_id": 2,
+    "id": "o8ojo7",
+    "flag": "https://flagcdn.com/w40/lt.png",
+    "profileImage": "https://assets.1ff.com/players/o8ojo7.png"
+  },
+  {
+    "ID": 14,
+    "full_name": "James Keegan",
+    "team_id": 2,
+    "id": "d8lp7m",
+    "flag": "https://flagcdn.com/w40/ie.png",
+    "profileImage": "https://assets.1ff.com/players/d8lp7m.png"
+  },
+  {
+    "ID": 61,
+    "full_name": "Avram Matz",
+    "team_id": 6,
+    "id": "n266x2",
+    "flag": "https://flagcdn.com/w40/il.png",
+    "profileImage": "https://assets.1ff.com/players/n266x2.png"
+  },
+  {
+    "ID": 255,
+    "full_name": "Daniel Cézar",
+    "team_id": 6,
+    "id": "q8dv18",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/q8dv18.png"
+  },
+  {
+    "ID": 316,
+    "full_name": "Dale Ramos",
+    "team_id": 6,
+    "id": "x2r042",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/x2r042.png"
+  },
+  {
+    "ID": 174,
+    "full_name": "Cristian Venditto",
+    "team_id": 8,
+    "id": "o8oko2",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/o8oko2.png"
+  },
+  {
+    "ID": 290,
+    "full_name": "Charles Ogude",
+    "team_id": 8,
+    "id": "j7xgn2",
+    "flag": "https://flagcdn.com/w40/ng.png",
+    "profileImage": "https://assets.1ff.com/players/j7xgn2.png"
+  },
+  {
+    "ID": 472,
+    "full_name": "Ojo Oladipupo",
+    "team_id": 8,
+    "id": "472",
+    "flag": "https://flagcdn.com/w40/ng.png",
+    "profileImage": "https://assets.1ff.com/players/472.png"
+  },
+  {
+    "ID": 521,
+    "full_name": "Nick Amos",
+    "team_id": 8,
+    "id": "521",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/521.png"
+  },
+  {
+    "ID": 77,
+    "full_name": "Thuan Ly",
+    "team_id": 7,
+    "id": "w2w5z2",
+    "flag": "https://flagcdn.com/w40/vn.png",
+    "profileImage": "https://assets.1ff.com/players/w2w5z2.png"
+  },
+  {
+    "ID": 274,
+    "full_name": "Gianluca Capece",
+    "team_id": 7,
+    "id": "o8oyl7",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/o8oyl7.png"
+  },
+  {
+    "ID": 317,
+    "full_name": "Hari Mahendra",
+    "team_id": 7,
+    "id": "j710z8",
+    "flag": "https://flagcdn.com/w40/id.png",
+    "profileImage": "https://assets.1ff.com/players/j710z8.png"
+  },
+  {
+    "ID": 293,
+    "full_name": "Izan Sabaté",
+    "team_id": 3,
+    "id": "485rd7",
+    "flag": "https://flagcdn.com/w40/es.png",
+    "profileImage": "https://assets.1ff.com/players/485rd7.png"
+  },
+  {
+    "ID": 221,
+    "full_name": "Bernardo De Los Santos",
+    "team_id": 3,
+    "id": "485ed8",
+    "flag": "https://flagcdn.com/w40/uy.png",
+    "profileImage": "https://assets.1ff.com/players/485ed8.png"
+  },
+  {
+    "ID": 233,
+    "full_name": "Ignacio Correa",
+    "team_id": 3,
+    "id": "38n5x8",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/38n5x8.png"
+  },
+  {
+    "ID": 212,
+    "full_name": "Leonardo Riveros",
+    "team_id": 3,
+    "id": "v8q4m2",
+    "flag": "https://flagcdn.com/w40/cl.png",
+    "profileImage": "https://assets.1ff.com/players/v8q4m2.png"
+  },
+  {
+    "ID": 119,
+    "full_name": "Jung Sang-Min",
+    "team_id": 9,
+    "id": "w23wk7",
+    "flag": "https://flagcdn.com/w40/kr.png",
+    "profileImage": "https://assets.1ff.com/players/w23wk7.png"
+  },
+  {
+    "ID": 286,
+    "full_name": "Serge Dosso",
+    "team_id": 9,
+    "id": "d8lq42",
+    "flag": "https://flagcdn.com/w40/ci.png",
+    "profileImage": "https://assets.1ff.com/players/d8lq42.png"
+  },
+  {
+    "ID": 75,
+    "full_name": "Pedro Herculano",
+    "team_id": 9,
+    "id": "38zkk8",
+    "flag": "https://flagcdn.com/w40/pt.png",
+    "profileImage": "https://assets.1ff.com/players/38zkk8.png"
+  },
+  {
+    "ID": 482,
+    "full_name": "Jean-Luc Duprat",
+    "team_id": 9,
+    "id": "482",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/482.png"
+  },
+  {
+    "ID": 329,
+    "full_name": "Alex Aquino",
+    "team_id": 5,
+    "id": "w2wgx7",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/w2wgx7.png"
+  },
+  {
+    "ID": 210,
+    "full_name": "Halil Narin",
+    "team_id": 5,
+    "id": "17k3m2",
+    "flag": "https://flagcdn.com/w40/tr.png",
+    "profileImage": "https://assets.1ff.com/players/17k3m2.png"
+  },
+  {
+    "ID": 347,
+    "full_name": "Cerqueira",
+    "team_id": 5,
+    "id": "674p17",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/674p17.png"
+  },
+  {
+    "ID": 191,
+    "full_name": "Rashid Al Balushi",
+    "team_id": 5,
+    "id": "w23lk2",
+    "flag": "https://flagcdn.com/w40/om.png",
+    "profileImage": "https://assets.1ff.com/players/w23lk2.png"
+  },
+  {
+    "ID": 168,
+    "full_name": "Adrien Grondin",
+    "team_id": 11,
+    "id": "67j9p8",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/67j9p8.png"
+  },
+  {
+    "ID": 234,
+    "full_name": "Aidil Noor",
+    "team_id": 11,
+    "id": "17k5m7",
+    "flag": "https://flagcdn.com/w40/sg.png",
+    "profileImage": "https://assets.1ff.com/players/17k5m7.png"
+  },
+  {
+    "ID": 278,
+    "full_name": "James Alcock",
+    "team_id": 11,
+    "id": "z79e98",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/z79e98.png"
+  },
+  {
+    "ID": 103,
+    "full_name": "Joey Tesselaar",
+    "team_id": 11,
+    "id": "38zvn2",
+    "flag": "https://flagcdn.com/w40/nl.png",
+    "profileImage": "https://assets.1ff.com/players/38zvn2.png"
+  },
+  {
+    "ID": 262,
+    "full_name": "Raphael Hauffe",
+    "team_id": 12,
+    "id": "d8ll48",
+    "flag": "https://flagcdn.com/w40/de.png",
+    "profileImage": "https://assets.1ff.com/players/d8ll48.png"
+  },
+  {
+    "ID": 139,
+    "full_name": "Tsubasa Tanaka",
+    "team_id": 12,
+    "id": "12m6w7",
+    "flag": "https://flagcdn.com/w40/jp.png",
+    "profileImage": "https://assets.1ff.com/players/12m6w7.png"
+  },
+  {
+    "ID": 513,
+    "full_name": "Ichiro Oba",
+    "team_id": 12,
+    "id": "513",
+    "flag": "https://flagcdn.com/w40/jp.png",
+    "profileImage": "https://assets.1ff.com/players/513.png"
+  },
+  {
+    "ID": 240,
+    "full_name": "Junpei Sasaki",
+    "team_id": 12,
+    "id": "x2rlp2",
+    "flag": "https://flagcdn.com/w40/jp.png",
+    "profileImage": "https://assets.1ff.com/players/x2rlp2.png"
+  },
+  {
+    "ID": 491,
+    "full_name": "Flávio Castilho",
+    "team_id": 10,
+    "id": "491",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/491.png"
+  },
+  {
+    "ID": 95,
+    "full_name": "Gustavo Carvalho",
+    "team_id": 10,
+    "id": "674gq7",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/674gq7.png"
+  },
+  {
+    "ID": 379,
+    "full_name": "Patrick Zimmerman",
+    "team_id": 10,
+    "id": "q8d1m8",
+    "flag": "https://flagcdn.com/w40/de.png",
+    "profileImage": "https://assets.1ff.com/players/q8d1m8.png"
+  },
+  {
+    "ID": 319,
+    "full_name": "Victor Chinchilla",
+    "team_id": 10,
+    "id": "w234l8",
+    "flag": "https://flagcdn.com/w40/cr.png",
+    "profileImage": "https://assets.1ff.com/players/w234l8.png"
+  },
+  {
+    "ID": 352,
+    "full_name": "Vinicius Ribeiro",
+    "team_id": 10,
+    "id": "o7e5m7",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/o7e5m7.png"
+  },
+  {
+    "ID": 31,
+    "full_name": "Avery Joseph",
+    "team_id": 10,
+    "id": "q8djg8",
+    "flag": "https://flagcdn.com/w40/tt.png",
+    "profileImage": "https://assets.1ff.com/players/q8djg8.png"
+  },
+  {
+    "ID": 93,
+    "full_name": "Jalen Duke",
+    "team_id": 4,
+    "id": "485p62",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/485p62.png"
+  },
+  {
+    "ID": 116,
+    "full_name": "Cristian Zacarías",
+    "team_id": 4,
+    "id": "x2r4r8",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/x2r4r8.png"
+  },
+  {
+    "ID": 152,
+    "full_name": "Ignacio Macías",
+    "team_id": 4,
+    "id": "o7ekq7",
+    "flag": "https://flagcdn.com/w40/mx.png",
+    "profileImage": "https://assets.1ff.com/players/o7ekq7.png"
+  },
+  {
+    "ID": 400,
+    "full_name": "Alex Osei",
+    "team_id": 4,
+    "id": "o2gpp2",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/o2gpp2.png"
+  },
+  {
+    "ID": 23,
+    "full_name": "Jae Jackson-Cook",
+    "team_id": 4,
+    "id": "674q21",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/674q21.png"
+  },
+  {
+    "ID": 433,
+    "full_name": "Nate Gomez",
+    "team_id": 4,
+    "id": "433",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/433.png"
+  },
+  {
+    "ID": 164,
+    "full_name": "Max Chen",
+    "team_id": 4,
+    "id": "x2rwr7",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/x2rwr7.png"
+  },
+  {
+    "ID": 167,
+    "full_name": "Gerônimo Martins",
+    "team_id": 1,
+    "id": "w235k7",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/w235k7.png"
+  },
+  {
+    "ID": 40,
+    "full_name": "Ajay Pal",
+    "team_id": 1,
+    "id": "x2r1q8",
+    "flag": "https://flagcdn.com/w40/in.png",
+    "profileImage": "https://assets.1ff.com/players/x2r1q8.png"
+  },
+  {
+    "ID": 140,
+    "full_name": "So Sung-Chul",
+    "team_id": 1,
+    "id": "x2rzr7",
+    "flag": "https://flagcdn.com/w40/kr.png",
+    "profileImage": "https://assets.1ff.com/players/x2rzr7.png"
+  },
+  {
+    "ID": 21,
+    "full_name": "Sinan Kara",
+    "team_id": 1,
+    "id": "48567j",
+    "flag": "https://flagcdn.com/w40/tr.png",
+    "profileImage": "https://assets.1ff.com/players/48567j.png"
+  },
+  {
+    "ID": 12,
+    "full_name": "Ömer Özer",
+    "team_id": 1,
+    "id": "v8qj21",
+    "flag": "https://flagcdn.com/w40/tr.png",
+    "profileImage": "https://assets.1ff.com/players/v8qj21.png"
+  },
+  {
+    "ID": 128,
+    "full_name": "Hao Shun",
+    "team_id": 1,
+    "id": "o7egq8",
+    "flag": "https://flagcdn.com/w40/cn.png",
+    "profileImage": "https://assets.1ff.com/players/o7egq8.png"
+  },
+  {
+    "ID": 79,
+    "full_name": "Sandeep Patel",
+    "team_id": 1,
+    "id": "q8d6g2",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/q8d6g2.png"
+  },
+  {
+    "ID": 74,
+    "full_name": "Ricardo Augusto",
+    "team_id": 2,
+    "id": "o8o918",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/o8o918.png"
+  },
+  {
+    "ID": 311,
+    "full_name": "Ivano Pellegrini",
+    "team_id": 2,
+    "id": "57v592",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/57v592.png"
+  },
+  {
+    "ID": 135,
+    "full_name": "Cassiano Rodrigues",
+    "team_id": 2,
+    "id": "57vok8",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/57vok8.png"
+  },
+  {
+    "ID": 216,
+    "full_name": "Ajak Bul",
+    "team_id": 2,
+    "id": "x2rop2",
+    "flag": "https://flagcdn.com/w40/ss.png",
+    "profileImage": "https://assets.1ff.com/players/x2rop2.png"
+  },
+  {
+    "ID": 127,
+    "full_name": "Ruben Santos",
+    "team_id": 2,
+    "id": "38z9n7",
+    "flag": "https://flagcdn.com/w40/pt.png",
+    "profileImage": "https://assets.1ff.com/players/38z9n7.png"
+  },
+  {
+    "ID": 17,
+    "full_name": "Josh Park",
+    "team_id": 2,
+    "id": "j71d7k",
+    "flag": "https://flagcdn.com/w40/au.png",
+    "profileImage": "https://assets.1ff.com/players/j71d7k.png"
+  },
+  {
+    "ID": 24,
+    "full_name": "Ellis Thomas",
+    "team_id": 2,
+    "id": "o2g0j7",
+    "flag": "https://flagcdn.com/w40/gb-wls.png",
+    "profileImage": "https://assets.1ff.com/players/o2g0j7.png"
+  },
+  {
+    "ID": 239,
+    "full_name": "Jeison Valoyes",
+    "team_id": 6,
+    "id": "12m5v8",
+    "flag": "https://flagcdn.com/w40/co.png",
+    "profileImage": "https://assets.1ff.com/players/12m5v8.png"
+  },
+  {
+    "ID": 354,
+    "full_name": "Léo Ramon",
+    "team_id": 6,
+    "id": "z799p7",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/z799p7.png"
+  },
+  {
+    "ID": 226,
+    "full_name": "Jack Holden",
+    "team_id": 6,
+    "id": "o8o5l2",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/o8o5l2.png"
+  },
+  {
+    "ID": 217,
+    "full_name": "Pablo Mancinelli",
+    "team_id": 6,
+    "id": "j71gy7",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/j71gy7.png"
+  },
+  {
+    "ID": 198,
+    "full_name": "Sasa Pintaric",
+    "team_id": 6,
+    "id": "o8o3o8",
+    "flag": "https://flagcdn.com/w40/hr.png",
+    "profileImage": "https://assets.1ff.com/players/o8o3o8.png"
+  },
+  {
+    "ID": 460,
+    "full_name": "Devin Reyes",
+    "team_id": 6,
+    "id": "460",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/460.png"
+  },
+  {
+    "ID": 53,
+    "full_name": "Elijah Edwards",
+    "team_id": 6,
+    "id": "w2w4z7",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/w2w4z7.png"
+  },
+  {
+    "ID": 232,
+    "full_name": "Abdoulaye Boli",
+    "team_id": 8,
+    "id": "x805x2",
+    "flag": "https://flagcdn.com/w40/ci.png",
+    "profileImage": "https://assets.1ff.com/players/x805x2.png"
+  },
+  {
+    "ID": 283,
+    "full_name": "Tobias Jung",
+    "team_id": 8,
+    "id": "57v6l8",
+    "flag": "https://flagcdn.com/w40/de.png",
+    "profileImage": "https://assets.1ff.com/players/57v6l8.png"
+  },
+  {
+    "ID": 542,
+    "full_name": "Sohail Siddiqui",
+    "team_id": 8,
+    "id": "542",
+    "flag": "https://flagcdn.com/w40/sa.png",
+    "profileImage": "https://assets.1ff.com/players/542.png"
+  },
+  {
+    "ID": 219,
+    "full_name": "Anthony Chidi",
+    "team_id": 8,
+    "id": "w23o92",
+    "flag": "https://flagcdn.com/w40/ng.png",
+    "profileImage": "https://assets.1ff.com/players/w23o92.png"
+  },
+  {
+    "ID": 357,
+    "full_name": "Murilo Wellington",
+    "team_id": 8,
+    "id": "38nzd8",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/38nzd8.png"
+  },
+  {
+    "ID": 348,
+    "full_name": "Menzi Mkhize",
+    "team_id": 8,
+    "id": "o2gmd2",
+    "flag": "https://flagcdn.com/w40/za.png",
+    "profileImage": "https://assets.1ff.com/players/o2gmd2.png"
+  },
+  {
+    "ID": 294,
+    "full_name": "Baba Fall",
+    "team_id": 8,
+    "id": "n8ypd8",
+    "flag": "https://flagcdn.com/w40/sn.png",
+    "profileImage": "https://assets.1ff.com/players/n8ypd8.png"
+  },
+  {
+    "ID": 183,
+    "full_name": "Stanley van Ooijen",
+    "team_id": 7,
+    "id": "57vek2",
+    "flag": "https://flagcdn.com/w40/nl.png",
+    "profileImage": "https://assets.1ff.com/players/57vek2.png"
+  },
+  {
+    "ID": 203,
+    "full_name": "Zé Antunes",
+    "team_id": 7,
+    "id": "38z162",
+    "flag": "https://flagcdn.com/w40/pt.png",
+    "profileImage": "https://assets.1ff.com/players/38z162.png"
+  },
+  {
+    "ID": 111,
+    "full_name": "Kwon Dae-Seong",
+    "team_id": 7,
+    "id": "57v1k7",
+    "flag": "https://flagcdn.com/w40/kr.png",
+    "profileImage": "https://assets.1ff.com/players/57v1k7.png"
+  },
+  {
+    "ID": 349,
+    "full_name": "Amirul Abu Bakar",
+    "team_id": 7,
+    "id": "z8pw97",
+    "flag": "https://flagcdn.com/w40/my.png",
+    "profileImage": "https://assets.1ff.com/players/z8pw97.png"
+  },
+  {
+    "ID": 156,
+    "full_name": "Dominic Azmi",
+    "team_id": 7,
+    "id": "x80wy2",
+    "flag": "https://flagcdn.com/w40/my.png",
+    "profileImage": "https://assets.1ff.com/players/x80wy2.png"
+  },
+  {
+    "ID": 5,
+    "full_name": "David de Sousa",
+    "team_id": 7,
+    "id": "w2wz2l",
+    "flag": "https://flagcdn.com/w40/ao.png",
+    "profileImage": "https://assets.1ff.com/players/w2wz2l.png"
+  },
+  {
+    "ID": 86,
+    "full_name": "Pieter Cools",
+    "team_id": 7,
+    "id": "d8lxp8",
+    "flag": "https://flagcdn.com/w40/be.png",
+    "profileImage": "https://assets.1ff.com/players/d8lxp8.png"
+  },
+  {
+    "ID": 37,
+    "full_name": "Olle Mustafa",
+    "team_id": 7,
+    "id": "n26ex7",
+    "flag": "https://flagcdn.com/w40/se.png",
+    "profileImage": "https://assets.1ff.com/players/n26ex7.png"
+  },
+  {
+    "ID": 87,
+    "full_name": "Facundo Martins",
+    "team_id": 3,
+    "id": "12mnp8",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/12mnp8.png"
+  },
+  {
+    "ID": 323,
+    "full_name": "Federico Villa",
+    "team_id": 3,
+    "id": "674v17",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/674v17.png"
+  },
+  {
+    "ID": 523,
+    "full_name": "Marcos Peñaranda",
+    "team_id": 3,
+    "id": "523",
+    "flag": "https://flagcdn.com/w40/co.png",
+    "profileImage": "https://assets.1ff.com/players/523.png"
+  },
+  {
+    "ID": 64,
+    "full_name": "Albano Álvarez",
+    "team_id": 3,
+    "id": "x2r3q2",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/x2r3q2.png"
+  },
+  {
+    "ID": 276,
+    "full_name": "Dani Martos",
+    "team_id": 3,
+    "id": "o7eew7",
+    "flag": "https://flagcdn.com/w40/es.png",
+    "profileImage": "https://assets.1ff.com/players/o7eew7.png"
+  },
+  {
+    "ID": 147,
+    "full_name": "Afonso Ferreira",
+    "team_id": 3,
+    "id": "674ng2",
+    "flag": "https://flagcdn.com/w40/pt.png",
+    "profileImage": "https://assets.1ff.com/players/674ng2.png"
+  },
+  {
+    "ID": 549,
+    "full_name": "Manaaki Takimoana",
+    "team_id": 3,
+    "id": "549",
+    "flag": "https://flagcdn.com/w40/nz.png",
+    "profileImage": "https://assets.1ff.com/players/549.png"
+  },
+  {
+    "ID": 209,
+    "full_name": "Moussa Balmy",
+    "team_id": 9,
+    "id": "38n3x7",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/38n3x7.png"
+  },
+  {
+    "ID": 83,
+    "full_name": "Amadou Dubois",
+    "team_id": 9,
+    "id": "57vr68",
+    "flag": "https://flagcdn.com/w40/fr.png",
+    "profileImage": "https://assets.1ff.com/players/57vr68.png"
+  },
+  {
+    "ID": 524,
+    "full_name": "Liam O'Malley",
+    "team_id": 9,
+    "id": "524",
+    "flag": "https://flagcdn.com/w40/ie.png",
+    "profileImage": "https://assets.1ff.com/players/524.png"
+  },
+  {
+    "ID": 231,
+    "full_name": "Soufiane Benamar",
+    "team_id": 9,
+    "id": "q8d912",
+    "flag": "https://flagcdn.com/w40/ma.png",
+    "profileImage": "https://assets.1ff.com/players/q8d912.png"
+  },
+  {
+    "ID": 134,
+    "full_name": "Kokou Akakpo",
+    "team_id": 9,
+    "id": "17k6g2",
+    "flag": "https://flagcdn.com/w40/tg.png",
+    "profileImage": "https://assets.1ff.com/players/17k6g2.png"
+  },
+  {
+    "ID": 15,
+    "full_name": "Hugo Müller",
+    "team_id": 9,
+    "id": "12mp29",
+    "flag": "https://flagcdn.com/w40/de.png",
+    "profileImage": "https://assets.1ff.com/players/12mp29.png"
+  },
+  {
+    "ID": 101,
+    "full_name": "Brian Silvestri",
+    "team_id": 9,
+    "id": "z8pdp8",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/z8pdp8.png"
+  },
+  {
+    "ID": 223,
+    "full_name": "Adam Akinola",
+    "team_id": 5,
+    "id": "674zr2",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/674zr2.png"
+  },
+  {
+    "ID": 358,
+    "full_name": "Ollie Harris-Marsh",
+    "team_id": 5,
+    "id": "17kg08",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/17kg08.png"
+  },
+  {
+    "ID": 58,
+    "full_name": "Saeed Ali",
+    "team_id": 5,
+    "id": "17kyx8",
+    "flag": "https://flagcdn.com/w40/ae.png",
+    "profileImage": "https://assets.1ff.com/players/17kyx8.png"
+  },
+  {
+    "ID": 522,
+    "full_name": "Enzo Montiel",
+    "team_id": 5,
+    "id": "522",
+    "flag": "https://flagcdn.com/w40/es.png",
+    "profileImage": "https://assets.1ff.com/players/522.png"
+  },
+  {
+    "ID": 291,
+    "full_name": "Kostas Takas",
+    "team_id": 5,
+    "id": "w23m98",
+    "flag": "https://flagcdn.com/w40/gr.png",
+    "profileImage": "https://assets.1ff.com/players/w23m98.png"
+  },
+  {
+    "ID": 161,
+    "full_name": "Adel Salem",
+    "team_id": 5,
+    "id": "n26nq7",
+    "flag": "https://flagcdn.com/w40/ae.png",
+    "profileImage": "https://assets.1ff.com/players/n26nq7.png"
+  },
+  {
+    "ID": 266,
+    "full_name": "Ahmed Ashour",
+    "team_id": 5,
+    "id": "j7xln7",
+    "flag": "https://flagcdn.com/w40/eg.png",
+    "profileImage": "https://assets.1ff.com/players/j7xln7.png"
+  },
+  {
+    "ID": 543,
+    "full_name": "Hasan Sabry",
+    "team_id": 11,
+    "id": "543",
+    "flag": "https://flagcdn.com/w40/eg.png",
+    "profileImage": "https://assets.1ff.com/players/543.png"
+  },
+  {
+    "ID": 220,
+    "full_name": "Paul Obagbemiro",
+    "team_id": 11,
+    "id": "67j5y2",
+    "flag": "https://flagcdn.com/w40/ng.png",
+    "profileImage": "https://assets.1ff.com/players/67j5y2.png"
+  },
+  {
+    "ID": 424,
+    "full_name": "Renzo Moyano",
+    "team_id": 11,
+    "id": "424",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/424.png"
+  },
+  {
+    "ID": 343,
+    "full_name": "Samuel Eke",
+    "team_id": 11,
+    "id": "w23gl8",
+    "flag": "https://flagcdn.com/w40/gb-eng.png",
+    "profileImage": "https://assets.1ff.com/players/w23gl8.png"
+  },
+  {
+    "ID": 207,
+    "full_name": "Amit Prasad",
+    "team_id": 11,
+    "id": "q8dq17",
+    "flag": "https://flagcdn.com/w40/in.png",
+    "profileImage": "https://assets.1ff.com/players/q8dq17.png"
+  },
+  {
+    "ID": 299,
+    "full_name": "Ondrej Sýkora",
+    "team_id": 11,
+    "id": "38zo67",
+    "flag": "https://flagcdn.com/w40/cz.png",
+    "profileImage": "https://assets.1ff.com/players/38zo67.png"
+  },
+  {
+    "ID": 321,
+    "full_name": "Fodé Diaby",
+    "team_id": 11,
+    "id": "485qe8",
+    "flag": "https://flagcdn.com/w40/gn.png",
+    "profileImage": "https://assets.1ff.com/players/485qe8.png"
+  },
+  {
+    "ID": 269,
+    "full_name": "Hiroyuki Suzuki",
+    "team_id": 12,
+    "id": "485gd2",
+    "flag": "https://flagcdn.com/w40/jp.png",
+    "profileImage": "https://assets.1ff.com/players/485gd2.png"
+  },
+  {
+    "ID": 184,
+    "full_name": "Jacopo Petrone",
+    "team_id": 12,
+    "id": "v8q5v8",
+    "flag": "https://flagcdn.com/w40/it.png",
+    "profileImage": "https://assets.1ff.com/players/v8q5v8.png"
+  },
+  {
+    "ID": 318,
+    "full_name": "Yacine Haddad",
+    "team_id": 12,
+    "id": "j7xpw2",
+    "flag": "https://flagcdn.com/w40/dz.png",
+    "profileImage": "https://assets.1ff.com/players/j7xpw2.png"
+  },
+  {
+    "ID": 541,
+    "full_name": "Mayacine Badiakha",
+    "team_id": 12,
+    "id": "541",
+    "flag": "https://flagcdn.com/w40/sn.png",
+    "profileImage": "https://assets.1ff.com/players/541.png"
+  },
+  {
+    "ID": 398,
+    "full_name": "Henrique Bastos",
+    "team_id": 12,
+    "id": "o8one2",
+    "flag": "https://flagcdn.com/w40/br.png",
+    "profileImage": "https://assets.1ff.com/players/o8one2.png"
+  },
+  {
+    "ID": 131,
+    "full_name": "Lokela Young",
+    "team_id": 12,
+    "id": "q8d5z7",
+    "flag": "https://flagcdn.com/w40/us.png",
+    "profileImage": "https://assets.1ff.com/players/q8d5z7.png"
+  },
+  {
+    "ID": 394,
+    "full_name": "Siu Tsz Chun",
+    "team_id": 12,
+    "id": "n8yje8",
+    "flag": "https://flagcdn.com/w40/hk.png",
+    "profileImage": "https://assets.1ff.com/players/n8yje8.png"
+  },
+  {
+    "ID": 545,
+    "full_name": "Nemer Mekdad",
+    "team_id": 10,
+    "id": "545",
+    "flag": "https://flagcdn.com/w40/ps.png",
+    "profileImage": "https://assets.1ff.com/players/545.png"
+  },
+  {
+    "ID": 559,
+    "full_name": "Jakub Jeřábek",
+    "team_id": 10,
+    "id": "559",
+    "flag": "https://flagcdn.com/w40/cz.png",
+    "profileImage": "https://assets.1ff.com/players/559.png"
+  },
+  {
+    "ID": 544,
+    "full_name": "Lin Xiaobo",
+    "team_id": 4,
+    "id": "544",
+    "flag": "https://flagcdn.com/w40/cn.png",
+    "profileImage": "https://assets.1ff.com/players/544.png"
+  },
+  {
+    "ID": 552,
+    "full_name": "Erhan Şaşmaz",
+    "team_id": 1,
+    "id": "552",
+    "flag": "https://flagcdn.com/w40/tr.png",
+    "profileImage": "https://assets.1ff.com/players/552.png"
+  },
+  {
+    "ID": 546,
+    "full_name": "Garang Tarihoran",
+    "team_id": 2,
+    "id": "546",
+    "flag": "https://flagcdn.com/w40/id.png",
+    "profileImage": "https://assets.1ff.com/players/546.png"
+  },
+  {
+    "ID": 557,
+    "full_name": "Danny Laing",
+    "team_id": 2,
+    "id": "557",
+    "flag": "https://flagcdn.com/w40/gb-sct.png",
+    "profileImage": "https://assets.1ff.com/players/557.png"
+  },
+  {
+    "ID": 547,
+    "full_name": "Quan Nguyen",
+    "team_id": 6,
+    "id": "547",
+    "flag": "https://flagcdn.com/w40/vn.png",
+    "profileImage": "https://assets.1ff.com/players/547.png"
+  },
+  {
+    "ID": 554,
+    "full_name": "Árni Björgvinsson",
+    "team_id": 8,
+    "id": "554",
+    "flag": "https://flagcdn.com/w40/is.png",
+    "profileImage": "https://assets.1ff.com/players/554.png"
+  },
+  {
+    "ID": 563,
+    "full_name": "Musab Issa",
+    "team_id": 7,
+    "id": "563",
+    "flag": "https://flagcdn.com/w40/sd.png",
+    "profileImage": "https://assets.1ff.com/players/563.png"
+  },
+  {
+    "ID": 553,
+    "full_name": "Davy Dehond",
+    "team_id": 7,
+    "id": "553",
+    "flag": "https://flagcdn.com/w40/be.png",
+    "profileImage": "https://assets.1ff.com/players/553.png"
+  },
+  {
+    "ID": 560,
+    "full_name": "Osvaldo Papaleo",
+    "team_id": 3,
+    "id": "560",
+    "flag": "https://flagcdn.com/w40/ar.png",
+    "profileImage": "https://assets.1ff.com/players/560.png"
+  },
+  {
+    "ID": 550,
+    "full_name": "Osca Schofield",
+    "team_id": 9,
+    "id": "550",
+    "flag": "https://flagcdn.com/w40/au.png",
+    "profileImage": "https://assets.1ff.com/players/550.png"
+  },
+  {
+    "ID": 548,
+    "full_name": "Gopi Sada",
+    "team_id": 5,
+    "id": "548",
+    "flag": "https://flagcdn.com/w40/in.png",
+    "profileImage": "https://assets.1ff.com/players/548.png"
+  },
+  {
+    "ID": 555,
+    "full_name": "Ayoub Ahmed",
+    "team_id": 5,
+    "id": "555",
+    "flag": "https://flagcdn.com/w40/ae.png",
+    "profileImage": "https://assets.1ff.com/players/555.png"
+  },
+  {
+    "ID": 564,
+    "full_name": "Filip Markov",
+    "team_id": 5,
+    "id": "564",
+    "flag": "https://flagcdn.com/w40/rs.png",
+    "profileImage": "https://assets.1ff.com/players/564.png"
+  },
+  {
+    "ID": 556,
+    "full_name": "Wojciech Przezak",
+    "team_id": 11,
+    "id": "556",
+    "flag": "https://flagcdn.com/w40/pl.png",
+    "profileImage": "https://assets.1ff.com/players/556.png"
+  },
+  {
+    "ID": 551,
+    "full_name": "Mirco Schipplock",
+    "team_id": 12,
+    "id": "551",
+    "flag": "https://flagcdn.com/w40/de.png",
+    "profileImage": "https://assets.1ff.com/players/551.png"
+  }
+]

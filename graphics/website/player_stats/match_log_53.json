@@ -1,0 +1,80 @@
+[
+  {
+    "ID": 53,
+    "full_name": "Elijah Edwards",
+    "seasons": [
+      {
+        "season_no": 3,
+        "team_id": 6,
+        "team": "Manhattan FC",
+        "rounds": [
+          {
+            "round_no": 1,
+            "match_id": 3006,
+            "winloss": "W",
+            "result": "PAL 2-3 MAN",
+            "pos_group": "DEF",
+            "statistics": [
+              {
+                "order": 1,
+                "code": "MIN",
+                "statistic": "Minutes Played",
+                "value": 60.7126,
+                "display": "61"
+              },
+              {
+                "order": 2,
+                "code": "RAT",
+                "statistic": "Player Rating",
+                "value": 32,
+                "display": "32"
+              },
+              {
+                "order": 3,
+                "code": "G",
+                "statistic": "Goals",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 4,
+                "code": "AS",
+                "statistic": "Assists",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 5,
+                "code": "P",
+                "statistic": "Passes",
+                "value": 39,
+                "display": "39"
+              },
+              {
+                "order": 6,
+                "code": "P%",
+                "statistic": "Pass Completion %",
+                "value": 0.5897,
+                "display": "59%"
+              },
+              {
+                "order": 7,
+                "code": "INT",
+                "statistic": "Interceptions",
+                "value": 3,
+                "display": "3"
+              },
+              {
+                "order": 8,
+                "code": "TK",
+                "statistic": "Tackles Completed",
+                "value": 0,
+                "display": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

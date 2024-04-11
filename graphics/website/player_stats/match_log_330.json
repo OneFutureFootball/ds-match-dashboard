@@ -1,0 +1,80 @@
+[
+  {
+    "ID": 330,
+    "full_name": "Adam Osyra",
+    "seasons": [
+      {
+        "season_no": 3,
+        "team_id": 6,
+        "team": "Manhattan FC",
+        "rounds": [
+          {
+            "round_no": 1,
+            "match_id": 3006,
+            "winloss": "W",
+            "result": "PAL 2-3 MAN",
+            "pos_group": "MID",
+            "statistics": [
+              {
+                "order": 1,
+                "code": "MIN",
+                "statistic": "Minutes Played",
+                "value": 14.4929,
+                "display": "14"
+              },
+              {
+                "order": 2,
+                "code": "RAT",
+                "statistic": "Player Rating",
+                "value": 17,
+                "display": "17"
+              },
+              {
+                "order": 3,
+                "code": "G",
+                "statistic": "Goals",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 4,
+                "code": "AS",
+                "statistic": "Assists",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 5,
+                "code": "P",
+                "statistic": "Passes",
+                "value": 5,
+                "display": "5"
+              },
+              {
+                "order": 6,
+                "code": "P%",
+                "statistic": "Pass Completion %",
+                "value": 0.8,
+                "display": "80%"
+              },
+              {
+                "order": 7,
+                "code": "F⅓",
+                "statistic": "Final Third Entries",
+                "value": 1,
+                "display": "1"
+              },
+              {
+                "order": 8,
+                "code": "PR",
+                "statistic": "Pressures",
+                "value": 0,
+                "display": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

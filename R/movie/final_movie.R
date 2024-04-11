@@ -1,0 +1,150 @@
+active_cores <- 8
+normal <- 30
+slow <- 2
+
+pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 5*normal) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 12*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 7*normal))
+
+goals <- match_file %>% subset(state=='Goal') %>% select(period,time) %>% mutate(goal=1) %>% rename(secs=time)
+pens <- match_file %>% subset(next_action=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
+high_xg <- match_file %>% drop_na(xg) %>% arrange(desc(xg)) %>% head(10) %>% 
+    select(period,time) %>% arrange(period,time) %>% mutate(shot=1) %>% rename(secs=time)
+kickoffs <- match_file %>% subset(state=='Kickoff') %>% select(period,time) %>% mutate(kickoff=1) %>% rename(secs=time)
+subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% mutate(time = round(time), sub=1) %>% rename(secs=time) %>% slice(-1)
+trxs <- trx_list %>% select(period,secs) %>% mutate(trxx=1)
+
+frame_index <- time_base %>% 
+    arrange(period,secs) %>% 
+    mutate(filename = paste0('_',period,'_',str_pad(secs,4,pad='0'),'.png'),
+           base = 'output/layers/01/Match.png') %>% 
+    left_join(data.frame(minute = list.files('output/layers/02')) %>% mutate(filename=str_replace(minute,'Minute','')),by='filename') %>% 
+    left_join(data.frame(key = list.files('output/layers/03')) %>% mutate(filename=str_replace(key,'Key','')),by='filename') %>% 
+    left_join(data.frame(trx = list.files('output/layers/04')) %>% 
+                  mutate(filename=str_replace(trx,'Trx','')),by='filename') %>% 
+    left_join(data.frame(lineup = list.files('output/layers/05')) %>% mutate(filename=str_replace(lineup,'Lineup','')),by='filename') %>% 
+    fill(c(minute,key,trx,lineup),.direction='down') %>% 
+    left_join(goals,by=c('period','secs')) %>% 
+    left_join(pens,by=c('period','secs')) %>% 
+    left_join(high_xg,by=c('period','secs')) %>% 
+    left_join(kickoffs,by=c('period','secs')) %>% 
+    left_join(subs,by=c('period','secs')) %>% 
+    left_join(trxs,by=c('period','secs')) %>% 
+    mutate(next_goal = ifelse(goal==1,secs,NA),
+           prev_goal = ifelse(goal==1,secs,NA),
+           next_pen = ifelse(pen==1,secs,NA),
+           prev_pen = ifelse(pen==1,secs,NA),
+           next_shot = ifelse(shot==1,secs,NA),
+           prev_shot = ifelse(shot==1,secs,NA),
+           prev_kickoff = ifelse(kickoff==1,secs,NA),
+           next_kickoff = ifelse(kickoff==1,secs,NA),
+           next_sub = ifelse(sub==1,secs,NA),
+           prev_sub = ifelse(sub==1,secs,NA),
+           next_trx = ifelse(trxx==1,secs,NA)) %>% 
+    group_by(period) %>% 
+    fill(c(next_goal,next_pen, next_shot, next_kickoff, next_trx, next_sub), .direction='up') %>% 
+    fill(c(prev_goal,prev_pen, prev_shot, prev_kickoff, prev_sub), .direction='down') %>% 
+    mutate(
+        match_state = case_when(
+            secs<next_pen & next_pen - secs <= 20 ~ 'build_up',
+            secs>=prev_pen & secs-prev_pen <= 10 ~ 'reaction',
+            secs>=prev_pen & secs<next_goal & next_goal-prev_pen < 75 ~ 'trx',
+            secs==prev_goal ~ 'overlay',
+            secs<=prev_goal+11 ~ 'overlay',
+            secs>=prev_kickoff & secs - prev_kickoff <= 15 ~ 'kickoff',
+            secs<next_goal & next_goal - secs <= 20 ~ 'build_up',
+            secs<next_shot & next_shot - secs <= 20 ~ 'build_up',
+            secs> prev_goal & secs - prev_shot > 15 ~ NA_character_,
+            secs>=prev_shot & secs - prev_shot <= 10 ~ 'reaction',
+        ),
+        delay = next_trx - secs,
+        overlay = paste0('output/layers/07/Overlay_',period,'_',str_pad(secs,4,pad='0'),'.png'),
+        overlay = ifelse(file.exists(overlay),overlay,NA_character_)
+    )
+
+frame_index <- frame_index %>% 
+    mutate(prev_state = ifelse(is.na(match_state),NA,secs),
+           next_state = ifelse(is.na(match_state),NA,secs)) %>% 
+    group_by(period) %>% 
+    fill(c(prev_state,overlay),.direction='down') %>% 
+    fill(c(next_state),.direction='up') %>% 
+    mutate(overlay = ifelse(match_state=='overlay',overlay,NA_character_),
+           elapsed = secs - prev_state,
+           remaining = next_state - secs,
+           match_state = replace_na(match_state,'show_lineup'),
+           lineup = ifelse(!match_state%in%c('show_lineup'),NA_character_,lineup)
+    ) %>% 
+    left_join(key_moments %>% select(period,secs=time,state),by=c('period','secs')) %>% 
+    ungroup() %>% 
+    mutate(REP = case_when(
+        match_state=='overlay' & state%in%c('Goal_1','Goal_2') ~ 0.2*normal,
+        match_state=='overlay' & state=='Goal' ~ 6*normal,
+        match_state=='overlay' & state=='Goal Text' ~ 8*normal,
+        secs==next_sub ~ 2*normal,
+        secs==0 ~ 3*normal,
+        match_state%in%c('kickoff','build_up','reaction') ~ normal / slow,
+        TRUE ~ 1
+    ))
+
+
+
+frame_index <- pre_match %>% 
+    bind_rows(frame_index %>% subset(period==1)) %>% 
+    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 10*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 10*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/league_table_post.png', REP = 20*normal)) %>% 
+    group_by(period) %>% 
+    fill(c(filename, minute, key, trx),.direction='down') %>%
+    ungroup() %>% 
+    mutate(IDX = row_number()) %>% 
+    mutate(KEY = 1 + IDX%%active_cores)
+
+frame_index %>% 
+    toJSON(pretty = TRUE) %>%
+    write('output/frame_index.json')
+
+message('Building frames')
+message(nrow(frame_index))
+
+cl <- makeCluster(active_cores)
+registerDoParallel(cl)
+
+foreach(idx = unique(frame_index$KEY)) %dopar% {
+    source('R/setup.R')
+    frame_index <- fromJSON('output/frame_index.json')
+    if('overlay'%in%names(frame_index)) frame_index <- frame_index %>% mutate(overlay=NA_character_)
+    assign('frame_index',frame_index,envir = .GlobalEnv)
+    this_list <- subset(frame_index,KEY==idx)
+    for(i in this_list$IDX) build_frame(i)
+    for(i in this_list$IDX){
+        frame <- this_list %>% subset(IDX==i)
+        for(j in seq(frame$REP)){
+            file.copy(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'),
+                      paste0('output/frames/',str_pad(i,5,pad='0'),'_',str_pad(j,4,pad='0'),'.png'),
+                      overwrite=TRUE)
+        }
+        file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
+    }
+}
+stopCluster(cl)
+
+for(i in frame_index %>% drop_na(overlay) %>% pull(IDX)){
+    build_frame(i)
+    frame <- frame_index %>% subset(IDX==i)
+    for(j in seq(frame$REP)){
+        file.copy(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'),
+                  paste0('output/frames/',str_pad(i,5,pad='0'),'_',str_pad(j,4,pad='0'),'.png'),
+                  overwrite=TRUE)
+    }
+    file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
+} 
+
+message('All frames built')
+
+all_frames <- list.files('output/frames',full.names=TRUE)
+av::av_encode_video(all_frames,
+                    framerate = 30,
+                    output = paste0('output/S',match_details$season_no,
+                                    '_R',str_pad(match_details$round_no,2,pad='0'),
+                                    '_',match_details$home_short_name,'v',match_details$away_short_name,'.mp4'))

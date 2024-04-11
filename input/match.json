@@ -1,0 +1,1 @@
+{"season_no":[3],"round_no":[1],"match_id":[3006],"type":["regular"],"teams":[{"class":"A","id":3,"aim":"regular","policy":"regular","rest_threshold":0.12,"bench_threshold":0.999},{"class":"B","id":6,"aim":"regular","policy":"regular","rest_threshold":0.12,"bench_threshold":0.999}],"seed":[3006],"status":["Completed"],"score":[{"home":2,"away":3}]}

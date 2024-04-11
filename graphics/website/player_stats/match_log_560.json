@@ -1,0 +1,80 @@
+[
+  {
+    "ID": 560,
+    "full_name": "Osvaldo Papaleo",
+    "seasons": [
+      {
+        "season_no": 3,
+        "team_id": 3,
+        "team": "Club Sportivo Palermo",
+        "rounds": [
+          {
+            "round_no": 1,
+            "match_id": 3006,
+            "winloss": "L",
+            "result": "PAL 2-3 MAN",
+            "pos_group": "DEF",
+            "statistics": [
+              {
+                "order": 1,
+                "code": "MIN",
+                "statistic": "Minutes Played",
+                "value": 23.9221,
+                "display": "24"
+              },
+              {
+                "order": 2,
+                "code": "RAT",
+                "statistic": "Player Rating",
+                "value": 19,
+                "display": "19"
+              },
+              {
+                "order": 3,
+                "code": "G",
+                "statistic": "Goals",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 4,
+                "code": "AS",
+                "statistic": "Assists",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 5,
+                "code": "P",
+                "statistic": "Passes",
+                "value": 13,
+                "display": "13"
+              },
+              {
+                "order": 6,
+                "code": "P%",
+                "statistic": "Pass Completion %",
+                "value": 0.6923,
+                "display": "69%"
+              },
+              {
+                "order": 7,
+                "code": "INT",
+                "statistic": "Interceptions",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 8,
+                "code": "TK",
+                "statistic": "Tackles Completed",
+                "value": 0,
+                "display": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

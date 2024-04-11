@@ -1,0 +1,1316 @@
+[
+  {
+    "ID": 242,
+    "salary": 110100000,
+    "weekly": 440,
+    "trade": 36500
+  },
+  {
+    "ID": 185,
+    "salary": 80800000,
+    "weekly": 323,
+    "trade": 23000
+  },
+  {
+    "ID": 282,
+    "salary": 70400000,
+    "weekly": 282,
+    "trade": 19500
+  },
+  {
+    "ID": 167,
+    "salary": 63300000,
+    "weekly": 253,
+    "trade": 17500
+  },
+  {
+    "ID": 140,
+    "salary": 47300000,
+    "weekly": 189,
+    "trade": 11500
+  },
+  {
+    "ID": 187,
+    "salary": 63500000,
+    "weekly": 254,
+    "trade": 10500
+  },
+  {
+    "ID": 21,
+    "salary": 36900000,
+    "weekly": 148,
+    "trade": 8500
+  },
+  {
+    "ID": 12,
+    "salary": 39300000,
+    "weekly": 157,
+    "trade": 7500
+  },
+  {
+    "ID": 524,
+    "salary": 38200000,
+    "weekly": 153,
+    "trade": 7500
+  },
+  {
+    "ID": 171,
+    "salary": 38200000,
+    "weekly": 153,
+    "trade": 5000
+  },
+  {
+    "ID": 40,
+    "salary": 25300000,
+    "weekly": 101,
+    "trade": 4500
+  },
+  {
+    "ID": 128,
+    "salary": 44200000,
+    "weekly": 177,
+    "trade": 3000
+  },
+  {
+    "ID": 79,
+    "salary": 15000000,
+    "weekly": 60,
+    "trade": 2500
+  },
+  {
+    "ID": 144,
+    "salary": 13900000,
+    "weekly": 56,
+    "trade": 1500
+  },
+  {
+    "ID": 146,
+    "salary": 10500000,
+    "weekly": 42,
+    "trade": 1500
+  },
+  {
+    "ID": 253,
+    "salary": 8800000,
+    "weekly": 35,
+    "trade": 1500
+  },
+  {
+    "ID": 70,
+    "salary": 97100000,
+    "weekly": 388,
+    "trade": 34500
+  },
+  {
+    "ID": 42,
+    "salary": 77400000,
+    "weekly": 310,
+    "trade": 23500
+  },
+  {
+    "ID": 17,
+    "salary": 67100000,
+    "weekly": 268,
+    "trade": 19000
+  },
+  {
+    "ID": 306,
+    "salary": 64100000,
+    "weekly": 256,
+    "trade": 17000
+  },
+  {
+    "ID": 216,
+    "salary": 64800000,
+    "weekly": 259,
+    "trade": 15000
+  },
+  {
+    "ID": 358,
+    "salary": 51100000,
+    "weekly": 204,
+    "trade": 13500
+  },
+  {
+    "ID": 348,
+    "salary": 48700000,
+    "weekly": 195,
+    "trade": 12000
+  },
+  {
+    "ID": 14,
+    "salary": 54300000,
+    "weekly": 217,
+    "trade": 11500
+  },
+  {
+    "ID": 74,
+    "salary": 42300000,
+    "weekly": 169,
+    "trade": 10000
+  },
+  {
+    "ID": 311,
+    "salary": 33900000,
+    "weekly": 136,
+    "trade": 6500
+  },
+  {
+    "ID": 156,
+    "salary": 33600000,
+    "weekly": 134,
+    "trade": 6500
+  },
+  {
+    "ID": 24,
+    "salary": 43300000,
+    "weekly": 173,
+    "trade": 5000
+  },
+  {
+    "ID": 29,
+    "salary": 16100000,
+    "weekly": 64,
+    "trade": 2500
+  },
+  {
+    "ID": 135,
+    "salary": 15000000,
+    "weekly": 60,
+    "trade": 2000
+  },
+  {
+    "ID": 361,
+    "salary": 10200000,
+    "weekly": 41,
+    "trade": 1500
+  },
+  {
+    "ID": 198,
+    "salary": 9100000,
+    "weekly": 36,
+    "trade": 1500
+  },
+  {
+    "ID": 528,
+    "salary": 8600000,
+    "weekly": 34,
+    "trade": 1000
+  },
+  {
+    "ID": 415,
+    "salary": 7200000,
+    "weekly": 29,
+    "trade": 1000
+  },
+  {
+    "ID": 109,
+    "salary": 73900000,
+    "weekly": 296,
+    "trade": 18500
+  },
+  {
+    "ID": 22,
+    "salary": 67400000,
+    "weekly": 270,
+    "trade": 18000
+  },
+  {
+    "ID": 356,
+    "salary": 90300000,
+    "weekly": 361,
+    "trade": 17500
+  },
+  {
+    "ID": 391,
+    "salary": 52600000,
+    "weekly": 210,
+    "trade": 14500
+  },
+  {
+    "ID": 35,
+    "salary": 67600000,
+    "weekly": 270,
+    "trade": 14000
+  },
+  {
+    "ID": 95,
+    "salary": 44900000,
+    "weekly": 180,
+    "trade": 11000
+  },
+  {
+    "ID": 31,
+    "salary": 54700000,
+    "weekly": 219,
+    "trade": 10500
+  },
+  {
+    "ID": 379,
+    "salary": 39700000,
+    "weekly": 159,
+    "trade": 9500
+  },
+  {
+    "ID": 69,
+    "salary": 42700000,
+    "weekly": 171,
+    "trade": 7000
+  },
+  {
+    "ID": 127,
+    "salary": 30600000,
+    "weekly": 122,
+    "trade": 6500
+  },
+  {
+    "ID": 352,
+    "salary": 29600000,
+    "weekly": 118,
+    "trade": 3000
+  },
+  {
+    "ID": 491,
+    "salary": 19700000,
+    "weekly": 79,
+    "trade": 3000
+  },
+  {
+    "ID": 196,
+    "salary": 14600000,
+    "weekly": 58,
+    "trade": 2000
+  },
+  {
+    "ID": 7,
+    "salary": 11900000,
+    "weekly": 48,
+    "trade": 1000
+  },
+  {
+    "ID": 117,
+    "salary": 9100000,
+    "weekly": 36,
+    "trade": 1000
+  },
+  {
+    "ID": 525,
+    "salary": 7200000,
+    "weekly": 29,
+    "trade": 1000
+  },
+  {
+    "ID": 5,
+    "salary": 6200000,
+    "weekly": 25,
+    "trade": 1000
+  },
+  {
+    "ID": 19,
+    "salary": 5000000,
+    "weekly": 20,
+    "trade": 1000
+  },
+  {
+    "ID": 122,
+    "salary": 9000000,
+    "weekly": 36,
+    "trade": 500
+  },
+  {
+    "ID": 213,
+    "salary": 5600000,
+    "weekly": 22,
+    "trade": 500
+  },
+  {
+    "ID": 293,
+    "salary": 98700000,
+    "weekly": 395,
+    "trade": 35500
+  },
+  {
+    "ID": 68,
+    "salary": 77900000,
+    "weekly": 312,
+    "trade": 24500
+  },
+  {
+    "ID": 221,
+    "salary": 70400000,
+    "weekly": 282,
+    "trade": 20500
+  },
+  {
+    "ID": 212,
+    "salary": 56100000,
+    "weekly": 224,
+    "trade": 15500
+  },
+  {
+    "ID": 233,
+    "salary": 57900000,
+    "weekly": 232,
+    "trade": 14000
+  },
+  {
+    "ID": 64,
+    "salary": 59600000,
+    "weekly": 238,
+    "trade": 13500
+  },
+  {
+    "ID": 323,
+    "salary": 41500000,
+    "weekly": 166,
+    "trade": 10000
+  },
+  {
+    "ID": 523,
+    "salary": 39300000,
+    "weekly": 157,
+    "trade": 8000
+  },
+  {
+    "ID": 277,
+    "salary": 40600000,
+    "weekly": 162,
+    "trade": 5500
+  },
+  {
+    "ID": 261,
+    "salary": 23500000,
+    "weekly": 94,
+    "trade": 4000
+  },
+  {
+    "ID": 147,
+    "salary": 21000000,
+    "weekly": 84,
+    "trade": 3500
+  },
+  {
+    "ID": 87,
+    "salary": 18700000,
+    "weekly": 75,
+    "trade": 3500
+  },
+  {
+    "ID": 424,
+    "salary": 19500000,
+    "weekly": 78,
+    "trade": 3000
+  },
+  {
+    "ID": 276,
+    "salary": 18300000,
+    "weekly": 73,
+    "trade": 3000
+  },
+  {
+    "ID": 118,
+    "salary": 18500000,
+    "weekly": 74,
+    "trade": 2500
+  },
+  {
+    "ID": 101,
+    "salary": 16900000,
+    "weekly": 68,
+    "trade": 2500
+  },
+  {
+    "ID": 258,
+    "salary": 10900000,
+    "weekly": 44,
+    "trade": 1500
+  },
+  {
+    "ID": 243,
+    "salary": 8700000,
+    "weekly": 35,
+    "trade": 1000
+  },
+  {
+    "ID": 65,
+    "salary": 6500000,
+    "weekly": 26,
+    "trade": 1000
+  },
+  {
+    "ID": 9,
+    "salary": 8200000,
+    "weekly": 33,
+    "trade": 500
+  },
+  {
+    "ID": 124,
+    "salary": 99100000,
+    "weekly": 396,
+    "trade": 28000
+  },
+  {
+    "ID": 264,
+    "salary": 82500000,
+    "weekly": 330,
+    "trade": 25500
+  },
+  {
+    "ID": 137,
+    "salary": 68900000,
+    "weekly": 276,
+    "trade": 21000
+  },
+  {
+    "ID": 93,
+    "salary": 45900000,
+    "weekly": 184,
+    "trade": 10000
+  },
+  {
+    "ID": 244,
+    "salary": 42100000,
+    "weekly": 168,
+    "trade": 10000
+  },
+  {
+    "ID": 116,
+    "salary": 42500000,
+    "weekly": 170,
+    "trade": 9500
+  },
+  {
+    "ID": 152,
+    "salary": 36200000,
+    "weekly": 145,
+    "trade": 8000
+  },
+  {
+    "ID": 36,
+    "salary": 66500000,
+    "weekly": 266,
+    "trade": 5500
+  },
+  {
+    "ID": 164,
+    "salary": 32400000,
+    "weekly": 130,
+    "trade": 5000
+  },
+  {
+    "ID": 23,
+    "salary": 39900000,
+    "weekly": 160,
+    "trade": 4500
+  },
+  {
+    "ID": 400,
+    "salary": 21900000,
+    "weekly": 88,
+    "trade": 3500
+  },
+  {
+    "ID": 319,
+    "salary": 16200000,
+    "weekly": 65,
+    "trade": 2500
+  },
+  {
+    "ID": 281,
+    "salary": 11800000,
+    "weekly": 47,
+    "trade": 2000
+  },
+  {
+    "ID": 433,
+    "salary": 11400000,
+    "weekly": 46,
+    "trade": 1500
+  },
+  {
+    "ID": 526,
+    "salary": 11100000,
+    "weekly": 44,
+    "trade": 1500
+  },
+  {
+    "ID": 193,
+    "salary": 8600000,
+    "weekly": 34,
+    "trade": 1000
+  },
+  {
+    "ID": 107,
+    "salary": 8600000,
+    "weekly": 34,
+    "trade": 1000
+  },
+  {
+    "ID": 251,
+    "salary": 8200000,
+    "weekly": 33,
+    "trade": 1000
+  },
+  {
+    "ID": 228,
+    "salary": 118400000,
+    "weekly": 474,
+    "trade": 44000
+  },
+  {
+    "ID": 288,
+    "salary": 89900000,
+    "weekly": 360,
+    "trade": 31000
+  },
+  {
+    "ID": 274,
+    "salary": 65800000,
+    "weekly": 263,
+    "trade": 20000
+  },
+  {
+    "ID": 77,
+    "salary": 35400000,
+    "weekly": 142,
+    "trade": 8000
+  },
+  {
+    "ID": 86,
+    "salary": 35100000,
+    "weekly": 140,
+    "trade": 8000
+  },
+  {
+    "ID": 102,
+    "salary": 64100000,
+    "weekly": 256,
+    "trade": 7000
+  },
+  {
+    "ID": 111,
+    "salary": 32500000,
+    "weekly": 130,
+    "trade": 6500
+  },
+  {
+    "ID": 317,
+    "salary": 34100000,
+    "weekly": 136,
+    "trade": 6000
+  },
+  {
+    "ID": 141,
+    "salary": 25800000,
+    "weekly": 103,
+    "trade": 5000
+  },
+  {
+    "ID": 349,
+    "salary": 57700000,
+    "weekly": 231,
+    "trade": 4500
+  },
+  {
+    "ID": 45,
+    "salary": 20300000,
+    "weekly": 81,
+    "trade": 3000
+  },
+  {
+    "ID": 37,
+    "salary": 37700000,
+    "weekly": 151,
+    "trade": 2500
+  },
+  {
+    "ID": 203,
+    "salary": 44100000,
+    "weekly": 176,
+    "trade": 2000
+  },
+  {
+    "ID": 60,
+    "salary": 12300000,
+    "weekly": 49,
+    "trade": 2000
+  },
+  {
+    "ID": 529,
+    "salary": 9700000,
+    "weekly": 39,
+    "trade": 1500
+  },
+  {
+    "ID": 178,
+    "salary": 7900000,
+    "weekly": 32,
+    "trade": 1000
+  },
+  {
+    "ID": 51,
+    "salary": 7300000,
+    "weekly": 29,
+    "trade": 1000
+  },
+  {
+    "ID": 297,
+    "salary": 100700000,
+    "weekly": 403,
+    "trade": 36500
+  },
+  {
+    "ID": 316,
+    "salary": 97500000,
+    "weekly": 390,
+    "trade": 24000
+  },
+  {
+    "ID": 49,
+    "salary": 71500000,
+    "weekly": 286,
+    "trade": 19500
+  },
+  {
+    "ID": 61,
+    "salary": 73300000,
+    "weekly": 293,
+    "trade": 18000
+  },
+  {
+    "ID": 255,
+    "salary": 41300000,
+    "weekly": 165,
+    "trade": 7000
+  },
+  {
+    "ID": 217,
+    "salary": 35400000,
+    "weekly": 142,
+    "trade": 6500
+  },
+  {
+    "ID": 53,
+    "salary": 32300000,
+    "weekly": 129,
+    "trade": 6500
+  },
+  {
+    "ID": 226,
+    "salary": 34500000,
+    "weekly": 138,
+    "trade": 6000
+  },
+  {
+    "ID": 239,
+    "salary": 31600000,
+    "weekly": 126,
+    "trade": 4500
+  },
+  {
+    "ID": 353,
+    "salary": 21600000,
+    "weekly": 86,
+    "trade": 4000
+  },
+  {
+    "ID": 378,
+    "salary": 17800000,
+    "weekly": 71,
+    "trade": 3000
+  },
+  {
+    "ID": 163,
+    "salary": 51800000,
+    "weekly": 207,
+    "trade": 2500
+  },
+  {
+    "ID": 136,
+    "salary": 18900000,
+    "weekly": 76,
+    "trade": 1500
+  },
+  {
+    "ID": 130,
+    "salary": 11100000,
+    "weekly": 44,
+    "trade": 1500
+  },
+  {
+    "ID": 376,
+    "salary": 9100000,
+    "weekly": 36,
+    "trade": 1500
+  },
+  {
+    "ID": 531,
+    "salary": 9200000,
+    "weekly": 37,
+    "trade": 1000
+  },
+  {
+    "ID": 460,
+    "salary": 5800000,
+    "weekly": 23,
+    "trade": 1000
+  },
+  {
+    "ID": 174,
+    "salary": 80100000,
+    "weekly": 320,
+    "trade": 25500
+  },
+  {
+    "ID": 362,
+    "salary": 58100000,
+    "weekly": 232,
+    "trade": 16000
+  },
+  {
+    "ID": 472,
+    "salary": 59800000,
+    "weekly": 239,
+    "trade": 14500
+  },
+  {
+    "ID": 521,
+    "salary": 49800000,
+    "weekly": 199,
+    "trade": 11000
+  },
+  {
+    "ID": 294,
+    "salary": 54800000,
+    "weekly": 219,
+    "trade": 8500
+  },
+  {
+    "ID": 290,
+    "salary": 85400000,
+    "weekly": 342,
+    "trade": 7500
+  },
+  {
+    "ID": 232,
+    "salary": 38700000,
+    "weekly": 155,
+    "trade": 7000
+  },
+  {
+    "ID": 357,
+    "salary": 36200000,
+    "weekly": 145,
+    "trade": 6500
+  },
+  {
+    "ID": 219,
+    "salary": 30000000,
+    "weekly": 120,
+    "trade": 6000
+  },
+  {
+    "ID": 220,
+    "salary": 27100000,
+    "weekly": 108,
+    "trade": 4000
+  },
+  {
+    "ID": 134,
+    "salary": 20000000,
+    "weekly": 80,
+    "trade": 3500
+  },
+  {
+    "ID": 283,
+    "salary": 42200000,
+    "weekly": 169,
+    "trade": 3000
+  },
+  {
+    "ID": 298,
+    "salary": 17800000,
+    "weekly": 71,
+    "trade": 2500
+  },
+  {
+    "ID": 26,
+    "salary": 18400000,
+    "weekly": 74,
+    "trade": 2000
+  },
+  {
+    "ID": 81,
+    "salary": 11700000,
+    "weekly": 47,
+    "trade": 2000
+  },
+  {
+    "ID": 153,
+    "salary": 9600000,
+    "weekly": 38,
+    "trade": 1500
+  },
+  {
+    "ID": 48,
+    "salary": 125000000,
+    "weekly": 500,
+    "trade": 50000
+  },
+  {
+    "ID": 119,
+    "salary": 84800000,
+    "weekly": 339,
+    "trade": 19500
+  },
+  {
+    "ID": 15,
+    "salary": 68900000,
+    "weekly": 276,
+    "trade": 16500
+  },
+  {
+    "ID": 482,
+    "salary": 63200000,
+    "weekly": 253,
+    "trade": 15500
+  },
+  {
+    "ID": 83,
+    "salary": 56000000,
+    "weekly": 224,
+    "trade": 15500
+  },
+  {
+    "ID": 209,
+    "salary": 53200000,
+    "weekly": 213,
+    "trade": 14000
+  },
+  {
+    "ID": 318,
+    "salary": 41800000,
+    "weekly": 167,
+    "trade": 9500
+  },
+  {
+    "ID": 183,
+    "salary": 38700000,
+    "weekly": 155,
+    "trade": 9000
+  },
+  {
+    "ID": 286,
+    "salary": 39100000,
+    "weekly": 156,
+    "trade": 8000
+  },
+  {
+    "ID": 75,
+    "salary": 67300000,
+    "weekly": 269,
+    "trade": 7500
+  },
+  {
+    "ID": 384,
+    "salary": 29800000,
+    "weekly": 119,
+    "trade": 6000
+  },
+  {
+    "ID": 322,
+    "salary": 36200000,
+    "weekly": 145,
+    "trade": 3000
+  },
+  {
+    "ID": 382,
+    "salary": 19200000,
+    "weekly": 77,
+    "trade": 2500
+  },
+  {
+    "ID": 145,
+    "salary": 18000000,
+    "weekly": 72,
+    "trade": 2500
+  },
+  {
+    "ID": 182,
+    "salary": 14400000,
+    "weekly": 58,
+    "trade": 2000
+  },
+  {
+    "ID": 180,
+    "salary": 11800000,
+    "weekly": 47,
+    "trade": 2000
+  },
+  {
+    "ID": 381,
+    "salary": 9800000,
+    "weekly": 39,
+    "trade": 1500
+  },
+  {
+    "ID": 20,
+    "salary": 14400000,
+    "weekly": 58,
+    "trade": 1000
+  },
+  {
+    "ID": 189,
+    "salary": 7400000,
+    "weekly": 30,
+    "trade": 1000
+  },
+  {
+    "ID": 158,
+    "salary": 5000000,
+    "weekly": 20,
+    "trade": 1000
+  },
+  {
+    "ID": 347,
+    "salary": 106000000,
+    "weekly": 424,
+    "trade": 39000
+  },
+  {
+    "ID": 329,
+    "salary": 92100000,
+    "weekly": 368,
+    "trade": 28000
+  },
+  {
+    "ID": 58,
+    "salary": 70700000,
+    "weekly": 283,
+    "trade": 21500
+  },
+  {
+    "ID": 188,
+    "salary": 67900000,
+    "weekly": 272,
+    "trade": 20000
+  },
+  {
+    "ID": 210,
+    "salary": 58900000,
+    "weekly": 236,
+    "trade": 16000
+  },
+  {
+    "ID": 223,
+    "salary": 54500000,
+    "weekly": 218,
+    "trade": 14500
+  },
+  {
+    "ID": 191,
+    "salary": 49800000,
+    "weekly": 199,
+    "trade": 12500
+  },
+  {
+    "ID": 291,
+    "salary": 46000000,
+    "weekly": 184,
+    "trade": 12000
+  },
+  {
+    "ID": 161,
+    "salary": 44200000,
+    "weekly": 177,
+    "trade": 11000
+  },
+  {
+    "ID": 522,
+    "salary": 39800000,
+    "weekly": 159,
+    "trade": 8000
+  },
+  {
+    "ID": 350,
+    "salary": 35300000,
+    "weekly": 141,
+    "trade": 8000
+  },
+  {
+    "ID": 266,
+    "salary": 16000000,
+    "weekly": 64,
+    "trade": 2500
+  },
+  {
+    "ID": 369,
+    "salary": 15000000,
+    "weekly": 60,
+    "trade": 2000
+  },
+  {
+    "ID": 99,
+    "salary": 15300000,
+    "weekly": 61,
+    "trade": 1500
+  },
+  {
+    "ID": 157,
+    "salary": 10400000,
+    "weekly": 42,
+    "trade": 1500
+  },
+  {
+    "ID": 231,
+    "salary": 10400000,
+    "weekly": 42,
+    "trade": 1500
+  },
+  {
+    "ID": 330,
+    "salary": 9900000,
+    "weekly": 40,
+    "trade": 1500
+  },
+  {
+    "ID": 443,
+    "salary": 9200000,
+    "weekly": 37,
+    "trade": 1000
+  },
+  {
+    "ID": 446,
+    "salary": 7900000,
+    "weekly": 32,
+    "trade": 1000
+  },
+  {
+    "ID": 387,
+    "salary": 7000000,
+    "weekly": 28,
+    "trade": 1000
+  },
+  {
+    "ID": 168,
+    "salary": 107400000,
+    "weekly": 430,
+    "trade": 35000
+  },
+  {
+    "ID": 67,
+    "salary": 52200000,
+    "weekly": 209,
+    "trade": 13500
+  },
+  {
+    "ID": 234,
+    "salary": 50600000,
+    "weekly": 202,
+    "trade": 13500
+  },
+  {
+    "ID": 321,
+    "salary": 50400000,
+    "weekly": 202,
+    "trade": 13000
+  },
+  {
+    "ID": 252,
+    "salary": 50200000,
+    "weekly": 201,
+    "trade": 11500
+  },
+  {
+    "ID": 343,
+    "salary": 52600000,
+    "weekly": 210,
+    "trade": 9500
+  },
+  {
+    "ID": 103,
+    "salary": 41300000,
+    "weekly": 165,
+    "trade": 9500
+  },
+  {
+    "ID": 278,
+    "salary": 54500000,
+    "weekly": 218,
+    "trade": 8500
+  },
+  {
+    "ID": 13,
+    "salary": 31700000,
+    "weekly": 127,
+    "trade": 5500
+  },
+  {
+    "ID": 299,
+    "salary": 31800000,
+    "weekly": 127,
+    "trade": 5000
+  },
+  {
+    "ID": 207,
+    "salary": 27700000,
+    "weekly": 111,
+    "trade": 4500
+  },
+  {
+    "ID": 324,
+    "salary": 16300000,
+    "weekly": 65,
+    "trade": 3000
+  },
+  {
+    "ID": 229,
+    "salary": 13100000,
+    "weekly": 52,
+    "trade": 2000
+  },
+  {
+    "ID": 125,
+    "salary": 12700000,
+    "weekly": 51,
+    "trade": 2000
+  },
+  {
+    "ID": 390,
+    "salary": 13300000,
+    "weekly": 53,
+    "trade": 1500
+  },
+  {
+    "ID": 204,
+    "salary": 11600000,
+    "weekly": 46,
+    "trade": 1500
+  },
+  {
+    "ID": 388,
+    "salary": 8100000,
+    "weekly": 32,
+    "trade": 1000
+  },
+  {
+    "ID": 504,
+    "salary": 6000000,
+    "weekly": 24,
+    "trade": 1000
+  },
+  {
+    "ID": 527,
+    "salary": 5000000,
+    "weekly": 20,
+    "trade": 500
+  },
+  {
+    "ID": 84,
+    "salary": 89400000,
+    "weekly": 358,
+    "trade": 29000
+  },
+  {
+    "ID": 262,
+    "salary": 71500000,
+    "weekly": 286,
+    "trade": 20000
+  },
+  {
+    "ID": 269,
+    "salary": 58800000,
+    "weekly": 235,
+    "trade": 16500
+  },
+  {
+    "ID": 240,
+    "salary": 53700000,
+    "weekly": 215,
+    "trade": 13500
+  },
+  {
+    "ID": 139,
+    "salary": 48800000,
+    "weekly": 195,
+    "trade": 12500
+  },
+  {
+    "ID": 513,
+    "salary": 51000000,
+    "weekly": 204,
+    "trade": 11500
+  },
+  {
+    "ID": 398,
+    "salary": 41400000,
+    "weekly": 166,
+    "trade": 7000
+  },
+  {
+    "ID": 184,
+    "salary": 38900000,
+    "weekly": 156,
+    "trade": 7000
+  },
+  {
+    "ID": 394,
+    "salary": 42700000,
+    "weekly": 171,
+    "trade": 6000
+  },
+  {
+    "ID": 354,
+    "salary": 25500000,
+    "weekly": 102,
+    "trade": 4500
+  },
+  {
+    "ID": 131,
+    "salary": 34600000,
+    "weekly": 138,
+    "trade": 4000
+  },
+  {
+    "ID": 33,
+    "salary": 19700000,
+    "weekly": 79,
+    "trade": 3000
+  },
+  {
+    "ID": 248,
+    "salary": 15500000,
+    "weekly": 62,
+    "trade": 1500
+  },
+  {
+    "ID": 259,
+    "salary": 11100000,
+    "weekly": 44,
+    "trade": 1500
+  },
+  {
+    "ID": 138,
+    "salary": 10200000,
+    "weekly": 41,
+    "trade": 1500
+  },
+  {
+    "ID": 289,
+    "salary": 10000000,
+    "weekly": 40,
+    "trade": 1500
+  },
+  {
+    "ID": 225,
+    "salary": 13900000,
+    "weekly": 56,
+    "trade": 1000
+  },
+  {
+    "ID": 327,
+    "salary": 7000000,
+    "weekly": 28,
+    "trade": 1000
+  }
+]

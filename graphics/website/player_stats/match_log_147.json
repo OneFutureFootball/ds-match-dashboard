@@ -1,0 +1,80 @@
+[
+  {
+    "ID": 147,
+    "full_name": "Afonso Ferreira",
+    "seasons": [
+      {
+        "season_no": 3,
+        "team_id": 3,
+        "team": "Club Sportivo Palermo",
+        "rounds": [
+          {
+            "round_no": 1,
+            "match_id": 3006,
+            "winloss": "L",
+            "result": "PAL 2-3 MAN",
+            "pos_group": "DEF",
+            "statistics": [
+              {
+                "order": 1,
+                "code": "MIN",
+                "statistic": "Minutes Played",
+                "value": 82.8098,
+                "display": "83"
+              },
+              {
+                "order": 2,
+                "code": "RAT",
+                "statistic": "Player Rating",
+                "value": 60,
+                "display": "60"
+              },
+              {
+                "order": 3,
+                "code": "G",
+                "statistic": "Goals",
+                "value": 1,
+                "display": "1"
+              },
+              {
+                "order": 4,
+                "code": "AS",
+                "statistic": "Assists",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 5,
+                "code": "P",
+                "statistic": "Passes",
+                "value": 46,
+                "display": "46"
+              },
+              {
+                "order": 6,
+                "code": "P%",
+                "statistic": "Pass Completion %",
+                "value": 0.7174,
+                "display": "72%"
+              },
+              {
+                "order": 7,
+                "code": "INT",
+                "statistic": "Interceptions",
+                "value": 1,
+                "display": "1"
+              },
+              {
+                "order": 8,
+                "code": "TK",
+                "statistic": "Tackles Completed",
+                "value": 1,
+                "display": "1"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

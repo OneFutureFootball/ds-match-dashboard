@@ -1,0 +1,80 @@
+[
+  {
+    "ID": 549,
+    "full_name": "Manaaki Takimoana",
+    "seasons": [
+      {
+        "season_no": 3,
+        "team_id": 3,
+        "team": "Club Sportivo Palermo",
+        "rounds": [
+          {
+            "round_no": 1,
+            "match_id": 3006,
+            "winloss": "L",
+            "result": "PAL 2-3 MAN",
+            "pos_group": "GK",
+            "statistics": [
+              {
+                "order": 1,
+                "code": "MIN",
+                "statistic": "Minutes Played",
+                "value": 90,
+                "display": "90"
+              },
+              {
+                "order": 2,
+                "code": "RAT",
+                "statistic": "Player Rating",
+                "value": 23,
+                "display": "23"
+              },
+              {
+                "order": 3,
+                "code": "G",
+                "statistic": "Goals",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 4,
+                "code": "AS",
+                "statistic": "Assists",
+                "value": 0,
+                "display": "0"
+              },
+              {
+                "order": 5,
+                "code": "SF",
+                "statistic": "Shots Faced",
+                "value": 13,
+                "display": "13"
+              },
+              {
+                "order": 6,
+                "code": "OTF",
+                "statistic": "Shots On Target Faced",
+                "value": 6,
+                "display": "6"
+              },
+              {
+                "order": 7,
+                "code": "SV",
+                "statistic": "Saves",
+                "value": 3,
+                "display": "3"
+              },
+              {
+                "order": 8,
+                "code": "SV%",
+                "statistic": "Save %",
+                "value": 0.5,
+                "display": "50%"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
