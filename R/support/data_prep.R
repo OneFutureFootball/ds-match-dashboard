@@ -4,7 +4,6 @@ if(file.exists('output/match_file.json')){
     match_file <- fromJSON('output/match_file.json')
 }else{
     match_file <- fromJSON('input/match_output.json') %>% 
-        subset(!action%in%c('move')) %>% 
         add_xy() %>% 
         mutate(action = case_when(
             str_detect(action,'pass') ~ 'PASS',
@@ -171,8 +170,8 @@ time_base <- match_file %>%
 key_moments <- match_file %>% 
     mutate(prev_time = lag(time),
            prev_mt = lag(match_time)) %>% 
-    # mutate(time = ifelse(state%in%c('Substitution','Corner','Free Kick'),prev_time+2,time),
-    #        match_time = ifelse(state%in%c('Substitution','Corner','Free Kick'),prev_mt,match_time)) %>% 
+    mutate(time = ifelse(state%in%c('Substitution','Corner','Free Kick'),prev_time+2,time),
+           match_time = ifelse(state%in%c('Substitution','Corner','Free Kick'),prev_mt,match_time)) %>% 
     group_by(period) %>% 
     arrange(time) %>% 
     mutate(next_time = lead(time),
@@ -292,7 +291,7 @@ time_prog <- match_file %>%
         action=='PENALTY' ~ prev_time+1,
         TRUE ~ time)) %>% 
     subset(!state%in%c('Substitution')) %>% 
-    subset(!action%in%c('MOVE')) %>% 
+    mutate(LAB = str_replace(LAB,'\nMOVE','')) %>% 
     ungroup() %>% 
     mutate(X = 233 + (ball_y-40)/40*224,
            Y = 408 + (ball_x-60)/60*294,

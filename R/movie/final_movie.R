@@ -90,9 +90,9 @@ frame_index <- frame_index %>%
 
 frame_index <- pre_match %>% 
     bind_rows(frame_index %>% subset(period==1)) %>% 
-    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 10*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 30*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2)) %>% 
-    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 10*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 15*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/league_table_post.png', REP = 20*normal)) %>% 
     group_by(period) %>% 
     fill(c(filename, minute, key, trx),.direction='down') %>%
@@ -124,13 +124,13 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
                       paste0('output/frames/',str_pad(i,5,pad='0'),'_',str_pad(j,4,pad='0'),'.png'),
                       overwrite=TRUE)
         }
-        file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
+        #file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
     }
 }
 stopCluster(cl)
 
 for(i in frame_index %>% drop_na(overlay) %>% pull(IDX)){
-    build_frame(i)
+    build_frame(i, force=TRUE)
     frame <- frame_index %>% subset(IDX==i)
     for(j in seq(frame$REP)){
         file.copy(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'),

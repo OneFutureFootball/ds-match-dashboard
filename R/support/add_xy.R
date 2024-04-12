@@ -24,10 +24,12 @@ add_xy <- function(input){
         x==3 & position%in%c('LB','CB','RB') ~ 1 - runif(n())^0.8,
         x==4 & position%in%c('LB','CB','RB') ~ 1 - runif(n())^0.6,
         x==5 & position%in%c('LB','CB','RB') ~ 1 - runif(n())^0.4,
+        x==1 & position%in%c('GK')           ~ 1 - runif(n())^0.9,
         x==2 & position%in%c('GK')           ~ 1 - runif(n())^0.8,
         x==3 & position%in%c('GK')           ~ 1 - runif(n())^0.6,
         TRUE ~ runif(n())),
       RANDY = case_when(
+        position=='GK' ~ rnorm(n(),0.5,0.1),
         x==1 & y==2 & position%in%c('LW','LM','LB') ~ 1 - runif(n())^0.6,
         x==2 & y==2 & position%in%c('LW','LM','LB') ~ 1 - runif(n())^0.6,
         x==3 & y==2 & position%in%c('LW','LM','LB') ~ 1 - runif(n())^0.8,
@@ -74,7 +76,6 @@ add_xy <- function(input){
              next_state=='Corner' ~ 60 + sign(ball_x - 60)*60,
              TRUE ~ lead(ball_x)
            ),
-           RAND <- runif(n()),
            next_y = case_when(
              action=='SHOT' ~ 40,
              state=='Goal' ~ NA_real_,

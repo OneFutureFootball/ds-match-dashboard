@@ -22,7 +22,7 @@ trx_export <- function(time_idx,status='action'){
           outcome=='intercepted' ~ paste0(LAB,' (INTERCEPTED)'),
           TRUE ~ str_replace(LAB,'\nPASS','')
         ),
-        status=='action' ~ LAB
+        status=='action' ~ str_replace(LAB,'\nPASS','')
       ),
       time = case_when(
         status=='action' ~ time,

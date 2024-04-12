@@ -1,4 +1,5 @@
 minute_base <- function(pers,mins){
+    if(file.exists(paste0('output/layers/02/Minute_',pers,'_',str_pad(mins*60,4,pad='0'),'.png'))) return(NULL)
     stats <- all_stats %>% subset(period==pers & time==mins)
     if(nrow(stats)==0) stats <- all_stats %>% 
             subset(period==1 & time==1) %>% 

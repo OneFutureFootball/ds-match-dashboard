@@ -45,7 +45,7 @@ goal_overlay <- function(idx){
                                this_goal %>% left_join(fromJSON('input/goal_body.json'),by=c('period','time')) %>% pull(body),
                                this_goal %>% 
                                    mutate(goal_type=case_when(
-                                       prev_action=='penalty' ~ 'penalty',
+                                       prev_action=='PENALTY' ~ 'penalty',
                                        prev_state=='Free Kick' ~ 'freekick',
                                        TRUE ~ ""
                                    )) %>% 
@@ -69,7 +69,7 @@ goal_overlay <- function(idx){
     season_text <- paste0(toOrdinal::toOrdinal(season_goals),' goal this season')
     career_goals <- tail(c(0,fromJSON('data/historical_goals.json') %>% 
                                subset(ID==this_goal$ID) %>% 
-                               pull(goals)),1) + season_goals - this_goal$TOT + this_goal$N
+                               pull(goals)),1) + season_goals
     career_text <- paste0(toOrdinal::toOrdinal(career_goals),' career goal')
     match_text <- NULL
     if(this_goal$N > 1) match_text <- paste0(toOrdinal::toOrdinal(this_goal$N),' goal this game.')

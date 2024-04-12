@@ -29,22 +29,13 @@ foreach(key = unique(stat_times$KEY)) %dopar% {
   for(i in seq_along(temp_times$period)) with(temp_times %>% slice(i),minute_base(period,time))
 }
 
-message('Key Moments')
-foreach(key = unique(key_moments$KEY)) %dopar% {
-  source('R/setup.R')
-  temp_moments <- key_moments %>% subset(KEY==key)
-  for(i in temp_moments$IDX){ 
-    key_base(i,TRUE)
-  }
-}
-
 message('Transactions')
 foreach(key = unique(time_prog$KEY)) %dopar% {
   source('R/setup.R')
   temp_trx <- time_prog %>% subset(KEY==key)
   for(i in temp_trx$IDX){
     trx_export(i,'possession')
-    trx_export(i,'result')
+    #trx_export(i,'result')
   }
   for(i in temp_trx$IDX){
     trx_export(i,'action')
@@ -58,6 +49,11 @@ foreach(key = unique(time_base$KEY)) %dopar% {
   for(i in this_clock$IDX) clock_overlay(this_clock %>% subset(IDX==i))
 }
 stopCluster(cl)
+
+message('Key Moments')
+for(i in key_moments$IDX){ 
+    key_base(i,TRUE)
+}
 
 message('Lineups')
 for(i in unique(lineup_times$TRX)) lineup_base(i)

@@ -1,5 +1,5 @@
-build_frame <- function(idx){
-    
+build_frame <- function(idx, force=FALSE){
+
     frame <- frame_index %>% subset(IDX==idx)
     
     FRAME <- image_read(frame$base)
