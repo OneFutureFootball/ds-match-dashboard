@@ -3,56 +3,54 @@ match_base <- function(){
     #Main purple background
     background_image(readPNG('images/background.png')) +
     #1FF logo
-    geom_image(mapping = aes(x=120, y=980, image='images/S3 Logo.png'),size=0.2) +
+    geom_image(mapping = aes(x=1580, y=1070, image='images/S3 Logo.png'),size=0.12) +
+    geom_image(mapping = aes(x=70, y=980, image=paste0('images/managers/',this_match$home_name,'-small.png')),size=0.2) +
+    geom_image(mapping = aes(x=385, y=980, image=paste0('images/managers/',this_match$away_name,'-small.png')),size=0.2) +
+    geom_text(mapping = aes(x=227,y=980,label='VS'),family='Montserrat-Black',colour='white',hjust=0.5,vjust=0.5,size=10) +
     #Clock + scoreboard
-    geom_rect(mapping = aes(xmin=960 - 77,
-                            xmax=960 + 77,
-                            ymin=964,
-                            ymax=1035),
-              fill='#150928',colour=NA,linewidth=0.2) +
+    geom_shape(mapping = aes(x = 960 + 320*c(-1,1,1,-1),
+                            y = c(849,849,1035,1035)),
+              fill='#150928', colour='white',linewidth=0.3,radius=0.01) +
     geom_rect(mapping = aes(xmin = 960 - 320,
                             xmax = 960 + 320,
-                            ymax = 974,
-                            ymin = 974 - 125),
-              fill='#150928', colour=NA) +
+                            ymax = 966,
+                            ymin = 1035),
+              fill='#150928', colour='white',linewidth=0.3) +
+    geom_rect(mapping = aes(xmin=960 - 76,
+                            xmax=960 + 76,
+                            ymin=966,
+                            ymax=1035),
+              fill='#150928',colour='white',linewidth=0.3) +
     geom_image(all_stats %>% 
                  ungroup() %>% 
                  select(possession,short_name) %>% 
                  unique() %>% 
-                 mutate(X=ifelse(possession=='A',960-205,960+205),
+                 mutate(X=ifelse(possession=='A',960-198,960+198),
                         possession=ifelse(possession=='A','Home','Away')),
-               mapping = aes(x=X,y=1000,image=paste0('images/banners/',short_name,'-',possession,'.png')),
-               size=0.216) +
+               mapping = aes(x=X,y=1001,image=paste0('images/banners/',short_name,'-',possession,'.png')),
+               size=0.204) +
     geom_shape(mapping = aes(x=960 + 100*c(-1,-1,1,1),
                              y=1075 + 30*c(1,-1,-1,1)),
-               radius=0.014, fill='#17006b', colour=NA) +
+               radius=0.014, fill='#17006b', colour='white',linewidth=0.2) +
     #Pitch Map
     geom_rect(mapping = aes(xmin = 230 - 285,
                             xmax = 230 + 285,
                             ymax = 838,
                             ymin = -18),
-              fill='#150928', colour=NA) +
+              fill='#150928', colour='white',linewidth=0.3) +
     geom_image(mapping = aes(x=230, y=410, image='images/pitch.png'), size=0.4) +
-    #Current transaction
-    geom_shape(mapping = aes(x=230 + 200*c(-1,-1,1,1),
-                             y=40 + 40*c(1,-1,-1,1)),
-               radius=0.017, fill='#17006b', colour=NA) +
     # Key Moments
-    geom_rect(mapping = aes(xmin=min(all_stats$X) - 80,
-                            xmax=max(all_stats$X) + 80,
-                            ymin=max(all_stats$Y[all_stats$KEEP]) + 50,
-                            ymax=max(all_stats$Y[all_stats$KEEP]) + 410),
-              fill='#150928',colour=NA) +
+    geom_shape(mapping = aes(x=c(min(all_stats$X) - 80,max(all_stats$X) + 80,max(all_stats$X) + 80,min(all_stats$X) - 80),
+                            y=c(max(all_stats$Y[all_stats$KEEP]) + 50,max(all_stats$Y[all_stats$KEEP]) + 50,max(all_stats$Y[all_stats$KEEP]) + 410,max(all_stats$Y[all_stats$KEEP]) + 410)),
+              fill='#150928',colour='white',linewidth=0.2,radius=0.01) +
     geom_segment(mapping = aes(x = 600, xend = 1320,
                                y = 478 + (1:5)*60,
                                yend = 478 + (1:5)*60),
                  colour='white', linewidth=0.2) +
     #Stats background
-    geom_rect(mapping = aes(xmin=min(all_stats$X) - 80,
-                            xmax=max(all_stats$X) + 80,
-                            ymin=min(all_stats$Y) - 40,
-                            ymax=max(all_stats$Y[all_stats$KEEP]) + 40),
-              fill='#150928',colour=NA) +
+    geom_shape(mapping = aes(x = c(min(all_stats$X) - 80,max(all_stats$X) + 80,max(all_stats$X) + 80,min(all_stats$X) - 80),
+                            y=c(min(all_stats$Y) - 40,min(all_stats$Y) - 40,max(all_stats$Y[all_stats$KEEP]) + 40,max(all_stats$Y[all_stats$KEEP]) + 40)),
+              fill='#150928',colour='white',linewidth=0.2,radius=0.01) +
     geom_text(all_stats %>% 
                 ungroup() %>% 
                 select(statistic,Y,KEEP) %>% 
@@ -70,11 +68,13 @@ match_base <- function(){
                                y=Y-29, yend=Y-29),
                  linewidth=0.3, colour='white') +
     #Ratings background
-    geom_rect(mapping = aes(xmin=1430,
-                            xmax=1950,
-                            ymin=-18,
-                            ymax=600),
-              fill='#150928',colour=NA) +
+    geom_shape(mapping = aes(x = c(1430,1950,1950,1430),
+                            y=c(-18,-18,660,660)),
+              fill='#150928',colour='white',linewidth=0.2, radius=0.01) +
+    geom_text(mapping = aes(x=1690,
+                            y=620,
+                            label='PLAYER RATINGS'),
+              family='Montserrat-Bold',colour='white', hjust=0.5, vjust=0.5, size=8) +
     geom_rect(data.frame(IDX=1:6) %>% 
                 mutate(Y = 640 - 100*IDX,
                        X = 1380), 
@@ -82,11 +82,17 @@ match_base <- function(){
                             xmax=X + 180 + 360,
                             ymin=Y - 18 - 12,
                             ymax=Y - 18 + 12),
-              colour='white', fill='transparent', linewidth=0.1) +
+              colour='white', fill='transparent', linewidth=0.2) +
+    geom_point(data.frame(IDX=1:6) %>% 
+                mutate(Y = 640 - 100*IDX,
+                       X = 1500), 
+              mapping = aes(x=X,
+                            y=Y),
+              colour='white', pch=19, size=8.5) +
     #Team Kits
-    geom_image(mapping = aes(x=1830, y=850, image=paste0('images/kits/away/',match_details$away_short_name,'.png')), size=0.3) +
-    geom_image(mapping = aes(x=1550, y=850, image=paste0('images/kits/home/',match_details$home_short_name,'.png')), size=0.3) +
-    geom_image(mapping = aes(x=230, y=785, image=paste0('images/banners/adboard/',match_details$home_short_name,'.png')), size=0.48) +
+    geom_image(mapping = aes(x=1800, y=910, image=paste0('images/kits/away/',match_details$away_short_name,'.png')), size=0.27) +
+    geom_image(mapping = aes(x=1580, y=860, image=paste0('images/kits/home/',match_details$home_short_name,'.png')), size=0.27) +
+    geom_image(mapping = aes(x=230, y=783, image=paste0('images/banners/adboard/',match_details$home_short_name,'.png')), size=0.475) +
     coord_cartesian(xlim = c(0,1920), ylim = c(0,1080)) +
     theme_void() +
     theme(legend.position = 'none') + 

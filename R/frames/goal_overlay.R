@@ -11,6 +11,8 @@ goal_overlay <- function(idx){
         left_join(players %>% select(ID,flag),by='ID') %>% 
         slice(idx)
     
+    if(nrow(this_goal)==0) return(NULL)
+    
     goal_moments <- key_moments %>% 
         subset(str_detect(state,'Goal')) %>% 
         group_by(period) %>% 
