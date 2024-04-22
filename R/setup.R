@@ -19,5 +19,5 @@ fixture <- fromJSON('data/fixture_S03.json')
 active_cores <- 7
 
 sapply(list.files('R/support',recursive=TRUE,full.names=TRUE),function(x) source(x))
-sapply(list.files('R/frames',recursive=TRUE,full.names=TRUE),function(x) source(x))
+for(x in list.files('R/frames',recursive=TRUE,full.names=TRUE)) source(x)
 

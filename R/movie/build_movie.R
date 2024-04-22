@@ -1,24 +1,21 @@
 
-message('Title Page')
+message('Pre Game')
 title_page()
-
-message('Starting Lineup')
 starting_lineups()
-
-message('League Table Pre')
 league_table_pre()
+manager_faceoff()
 
-message('League Table Post')
+message('Halftime / Fulltime')
 league_table_post()
-
-message('Halftime Stats')
 halftime_stats()
-
-message('Fulltime Stats')
+player_leader('fulltime')
+ratings_list('fulltime')
 fulltime_stats()
 
 message('Match Base')
 match_base()
+crest_overlay('A')
+crest_overlay('B')
 
 message('Minutes')
 cl <- makeCluster(active_cores)
@@ -30,16 +27,10 @@ foreach(key = unique(stat_times$KEY)) %dopar% {
 }
 
 message('Transactions')
-foreach(key = unique(time_prog$KEY)) %dopar% {
+foreach(key = unique(trx_frames$KEY)) %dopar% {
   source('R/setup.R')
-  temp_trx <- time_prog %>% subset(KEY==key)
-  for(i in temp_trx$IDX){
-    trx_export(i,'possession')
-    #trx_export(i,'result')
-  }
-  for(i in temp_trx$IDX){
-    trx_export(i,'action')
-  }
+  temp_trx <- trx_frames %>% subset(KEY==key) %>% left_join(time_prog,by='IDX')
+  for(i in temp_trx %>% pull(ORD)) trx_export(i)
 }
 
 message('Clock')
