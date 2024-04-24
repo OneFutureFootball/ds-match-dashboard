@@ -1,9 +1,8 @@
 rm(list=ls())
 tic <- Sys.time()
-library(tidyverse)
-library(jsonlite)
-
-library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(stringr)
 library(jsonlite)
 library(here)
 
