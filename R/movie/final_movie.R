@@ -27,6 +27,7 @@ high_xg <- match_file %>%
     mutate(shot=1) %>% rename(secs=time)
 kickoffs <- match_file %>% subset(state=='Kickoff') %>% select(period,time) %>% mutate(kickoff=1) %>% rename(secs=time)
 subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% mutate(time = round(time), sub=1) %>% rename(secs=time) %>% slice(-1)
+injs <- key_moments %>% subset(oth_role=='injury') %>% select(period,time,next_time) %>% mutate(inj=1,time = round(time), next_time = round(next_time)) %>% rename(secs=time,next_inj=next_time)
 trxs <- trx_list %>% select(period,secs,possession) %>% mutate(trxx=1)
 
 frame_index <- time_base %>% 
@@ -45,6 +46,7 @@ frame_index <- time_base %>%
     left_join(high_xg,by=c('period','secs')) %>% 
     left_join(kickoffs,by=c('period','secs')) %>% 
     left_join(subs,by=c('period','secs')) %>% 
+    left_join(injs,by=c('period','secs')) %>% 
     left_join(trxs,by=c('period','secs')) %>% 
     mutate(next_goal = ifelse(goal==1,secs,NA),
            prev_goal = ifelse(goal==1,secs,NA),
@@ -56,13 +58,16 @@ frame_index <- time_base %>%
            next_kickoff = ifelse(kickoff==1,secs,NA),
            next_sub = ifelse(sub==1,secs,NA),
            prev_sub = ifelse(sub==1,secs,NA),
+           prev_inj = ifelse(inj==1,secs,NA),
+           prev_inj_end = ifelse(inj==1,next_inj,NA),
            next_trx = ifelse(trxx==1,secs,NA),
            crest = ifelse(!is.na(possession),paste0('crest_',possession,'.png'),NA)) %>% 
     group_by(period) %>% 
     fill(c(next_goal,next_pen, next_shot, next_kickoff, next_trx, next_sub), .direction='up') %>% 
-    fill(c(prev_goal,prev_pen, prev_shot, prev_kickoff, prev_sub, crest), .direction='down') %>% 
+    fill(c(prev_goal,prev_pen, prev_shot, prev_kickoff, prev_sub, prev_inj, prev_inj_end, crest), .direction='down') %>% 
     mutate(
         match_state = case_when(
+            secs>=prev_inj & secs<=prev_inj_end ~ 'injury',
             secs<next_pen & next_pen - secs <= 12 ~ 'build_up',
             secs>=prev_pen & secs-prev_pen <= 6 ~ 'reaction',
             secs>=prev_pen & secs<next_goal & next_goal-prev_pen < 75 ~ 'trx',
@@ -89,8 +94,8 @@ frame_index <- frame_index %>%
            elapsed = secs - prev_state,
            remaining = next_state - secs,
            match_state = replace_na(match_state,'show_lineup'),
-           lineup = ifelse(!match_state%in%c('show_lineup'),NA_character_,lineup),
-           card = ifelse(!match_state%in%c('show_lineup'),NA_character_,card)
+           lineup = ifelse(!match_state%in%c('show_lineup','injury'),NA_character_,lineup),
+           card = ifelse(!match_state%in%c('show_lineup','injury'),NA_character_,card)
     ) %>% 
     left_join(key_moments %>% ungroup() %>% select(period,secs=time,state) %>% unique(),by=c('period','secs')) %>% 
     ungroup() %>% 
@@ -102,6 +107,7 @@ frame_index <- frame_index %>%
         secs==next_sub & oth_role=='injury' ~ 5*normal,
         secs==next_sub ~ 2*normal,
         secs==0 ~ 5*normal,
+        match_state=='injury' ~ normal / slow,
         match_state%in%c('kickoff','build_up','reaction') ~ normal / slow,
         TRUE ~ 1
     ))

@@ -8,6 +8,8 @@ key_base <- function(idx,live=TRUE){
                MPR = max(period)) %>% 
         rowwise() %>% 
         mutate(
+            full_name = ifelse(live & IDX==idx & state=='Substitution' & oth_role=='injury',oth_full_name,full_name),
+            position = ifelse(live & IDX==idx & state=='Substitution' & oth_role=='injury',oth_position,position),
             LABEL = case_when(
                 IDX==idx ~ ifelse(live,live_label,post_label),
                 TRUE ~ post_label),
