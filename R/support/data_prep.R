@@ -56,6 +56,7 @@ if(file.exists('output/match_file.json')){
     match_file <- fromJSON('output/match_file.json')
 }else{
     match_file <- fromJSON('input/match_output.json') %>% 
+        mutate(outcome = ifelse(outcome=='wayward','off target',outcome)) %>% 
         left_join(teams %>% select(team_id,short_name),by='team_id') %>% 
         left_join(fromJSON('data/player_identity.json') %>% select(ID,number),by='ID') %>% 
         mutate(
@@ -112,6 +113,7 @@ if(file.exists('output/match_file.json')){
             TRUE ~ toupper(action)
         )) %>%
         left_join(fromJSON('data/player_identity.json') %>% select(ID,last_name),by='ID') %>% 
+        arrange(period,time) %>% 
         mutate(last_name = toupper(ifelse(is.na(last_name),full_name,last_name)),
                LAB = ifelse(is.na(action),NA_character_,last_name),
                next_action = lead(action),
@@ -222,6 +224,9 @@ key_moments <- match_file %>%
     arrange(time) %>% 
     mutate(next_time = lead(time),
            next_state = lead(state)) %>% 
+    mutate(time = ifelse(state%in%c('Corner','Free Kick'),next_time-3,time),
+           next_time = ifelse(state=='Substitution' & oth_role=='injury',time,next_time),
+           time = ifelse(state=='Substitution' & oth_role=='injury',ceiling((prev_time + time)/2),time)) %>% 
     ungroup() %>% 
     arrange(period,time) %>% 
     subset(state%in%c('Substitution','Kickoff','Corner')|
@@ -232,6 +237,7 @@ key_moments <- match_file %>%
         live_label = case_when(
             action=='KICKOFF' ~ action,
             action=='SHOT' ~ 'SHOT',
+            state=='Substitution' & oth_role=='injury' ~ 'INJURY',
             state=='Substitution' ~ paste0('SUBBED IN for ',oth_position,' ',toupper(oth_full_name),ifelse(oth_role=='injury',' (INJ)','')),
             state=='Corner' ~ 'CORNER',
             action=='PENALTY' ~ paste0('PENALTY - ',oth_position,' ',toupper(oth_full_name),ifelse(oth_role=='foul',' (FOUL)',' (OTH)')),
@@ -251,6 +257,7 @@ key_moments <- match_file %>%
                 outcome=='saved'~ 'PENALTY SAVED - ',
                 TRUE ~ 'PENALTY MISSED - ',
             ),toupper(oth_full_name),ifelse(oth_role=='foul',' (FOUL)',' (OTH)')),
+            state=='Substitution' ~ paste0('SUBBED IN for ',oth_position,' ',toupper(oth_full_name),ifelse(oth_role=='injury',' (INJ)','')),
             TRUE ~ live_label
         ),
         team_id = case_when(
