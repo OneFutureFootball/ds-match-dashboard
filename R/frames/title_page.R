@@ -20,7 +20,7 @@ title_page <- function(){
                                        format(AT,'%M %Z')),
                               y = c(160,120,80))
     
-    img_dir <- '~/Google Drive/Shared drives/1FF/1FF Creative/Social Media/1FF Socials/Content - Season 3/S3 Automated Image Library/Scoreline Background Images/Club Stadiums'
+    img_dir <- 'images/stadiums'
     img_option <- list.files(img_dir,pattern=match_details$home_short_name,full.names=TRUE,recursive=TRUE)
 
     plot_output <- ggplot() +
