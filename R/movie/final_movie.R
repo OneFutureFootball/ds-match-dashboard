@@ -29,6 +29,7 @@ kickoffs <- match_file %>% subset(state=='Kickoff') %>% select(period,time) %>% 
 subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% mutate(time = round(time), sub=1) %>% rename(secs=time) %>% slice(-1)
 injs <- key_moments %>% subset(oth_role=='injury') %>% select(period,time,next_time) %>% mutate(inj=1,time = round(time), next_time = round(next_time)) %>% rename(secs=time,next_inj=next_time)
 trxs <- trx_list %>% select(period,secs,possession) %>% mutate(trxx=1)
+crests <- trx_frames %>% select(period,timestamp,crest) %>% rename(secs=timestamp) %>% mutate(crest=paste0('crest_',crest,'.png'))
 
 frame_index <- time_base %>% 
     arrange(period,secs) %>% 
@@ -36,11 +37,12 @@ frame_index <- time_base %>%
            base = 'output/layers/01/Match.png') %>% 
     left_join(data.frame(minute = list.files('output/layers/02')) %>% mutate(filename=str_replace(minute,'Minute','')),by='filename') %>% 
     left_join(data.frame(key = list.files('output/layers/03')) %>% mutate(filename=str_replace(key,'Key','')),by='filename') %>% 
-    left_join(data.frame(trx = list.files('output/layers/04')) %>% 
-                  mutate(filename=str_replace(trx,'Trx','')),by='filename') %>% 
+    left_join(data.frame(trx = list.files('output/layers/04')) %>% mutate(filename=str_replace(trx,'Trx','')),by='filename') %>% 
     left_join(data.frame(lineup = list.files('output/layers/05')) %>% mutate(filename=str_replace(lineup,'Lineup','')),by='filename') %>% 
     left_join(data.frame(card = list.files('output/layers/08')) %>% mutate(filename=str_replace(card,'Card','')),by='filename') %>% 
-    fill(c(minute,key,trx,lineup,card),.direction='down') %>% 
+    left_join(data.frame(text = list.files('output/layers/09')) %>% mutate(filename=str_replace(text,'Text','')),by='filename') %>% 
+    left_join(crests,by=c('period','secs')) %>% 
+    fill(c(minute,key,trx,text,lineup,card),.direction='down') %>% 
     left_join(goals,by=c('period','secs')) %>% 
     left_join(pens,by=c('period','secs')) %>% 
     left_join(high_xg,by=c('period','secs')) %>% 
@@ -60,8 +62,7 @@ frame_index <- time_base %>%
            prev_sub = ifelse(sub==1,secs,NA),
            prev_inj = ifelse(inj==1,secs,NA),
            prev_inj_end = ifelse(inj==1,next_inj,NA),
-           next_trx = ifelse(trxx==1,secs,NA),
-           crest = ifelse(!is.na(possession),paste0('crest_',possession,'.png'),NA)) %>% 
+           next_trx = ifelse(trxx==1,secs,NA)) %>% 
     group_by(period) %>% 
     fill(c(next_goal,next_pen, next_shot, next_kickoff, next_trx, next_sub), .direction='up') %>% 
     fill(c(prev_goal,prev_pen, prev_shot, prev_kickoff, prev_sub, prev_inj, prev_inj_end, crest), .direction='down') %>% 
@@ -95,7 +96,8 @@ frame_index <- frame_index %>%
            remaining = next_state - secs,
            match_state = replace_na(match_state,'show_lineup'),
            lineup = ifelse(!match_state%in%c('show_lineup','injury'),NA_character_,lineup),
-           card = ifelse(!match_state%in%c('show_lineup','injury'),NA_character_,card)
+           card = ifelse(!match_state%in%c('show_lineup','injury'),NA_character_,card),
+           trx = ifelse(match_state%in%c('show_lineup','injury'),NA_character_,trx)
     ) %>% 
     left_join(key_moments %>% ungroup() %>% select(period,secs=time,state) %>% unique(),by=c('period','secs')) %>% 
     ungroup() %>% 
@@ -195,3 +197,40 @@ av::av_encode_video(all_frames,
                     output = paste0('output/S',match_details$season_no,
                                     '_R',str_pad(match_details$round_no,2,pad='0'),
                                     '_',match_details$home_short_name,'v',match_details$away_short_name,'.mp4'))
+
+home_goals <- match_file %>% 
+    subset(state=='Goal' & possession=='A') %>% 
+    select(period,time) %>% 
+    left_join(frame_index %>% mutate(CUM = cumsum(REP)),by=c('period'='period','time'='secs')) %>% 
+    mutate(PREV = CUM - REP,
+           SECS = round(PREV/30,2)) %>% 
+    pull(SECS) %>% 
+    paste(collapse='+')
+
+away_goals <- match_file %>% 
+    subset(state=='Goal' & possession=='B') %>% 
+    select(period,time) %>% 
+    left_join(frame_index %>% mutate(CUM = cumsum(REP)),by=c('period'='period','time'='secs')) %>% 
+    mutate(PREV = CUM - REP,
+           SECS = round(PREV/30,2)) %>% 
+    pull(SECS) %>% 
+    paste(collapse='+')
+
+whistles <- match_file %>% 
+    subset(state!='Substitution') %>% 
+    group_by(period) %>% 
+    arrange(period,time) %>% 
+    mutate(next_time = lead(time)) %>% 
+    subset(period > 0) %>% 
+    subset(time==0 | (!is.na(time) & is.na(next_time))) %>% 
+    left_join(frame_index %>% 
+                  mutate(CUM = cumsum(REP)) %>% 
+                  group_by(period,secs) %>% 
+                  slice(1),
+              by=c('period'='period','time'='secs')) %>% 
+    mutate(PREV = CUM - REP,
+           SECS = round(PREV/30,2)) %>% 
+    pull(SECS) %>% 
+    paste(collapse='+')
+
+system(paste0('python3 ',here(),'/R/movie/add_audio.py ',whistles,' ',home_goals,' ',away_goals))

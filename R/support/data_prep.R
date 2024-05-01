@@ -171,8 +171,8 @@ all_stats <- data.frame(statistic = c('Shots','Shots On Target','Expected Goals'
 all_lineups <- fromJSON('input/match_formations.json') %>% 
     left_join(fromJSON('input/match_lineups.json') %>% select(ID,number,last_name),by='ID') %>% 
     mutate(period = ifelse(period==0,1,period),
-           last_name = toupper(last_name),
-           time = ifelse(match_id==3012 & period==2 & time<250,218,time))
+           last_name = toupper(last_name)) %>% 
+    arrange(period,time)
 
 lineup_times <- all_lineups %>% 
     select(period,time) %>% 
@@ -225,8 +225,12 @@ key_moments <- match_file %>%
     mutate(next_time = lead(time),
            next_state = lead(state)) %>% 
     mutate(time = ifelse(state%in%c('Corner','Free Kick'),next_time-3,time),
-           next_time = ifelse(state=='Substitution' & oth_role=='injury',time,next_time),
-           time = ifelse(state=='Substitution' & oth_role=='injury',ceiling((prev_time + time)/2),time)) %>% 
+           next_time = case_when(
+               state=='Substitution' & oth_role=='injury' ~ time,
+               TRUE ~ next_time),
+           time = case_when(
+               state=='Substitution' & oth_role=='injury' ~ ceiling((prev_time + time)/2),
+               TRUE ~ time)) %>% 
     ungroup() %>% 
     arrange(period,time) %>% 
     subset(state%in%c('Substitution','Kickoff','Corner')|
@@ -358,17 +362,19 @@ time_prog <- match_file %>%
            KEY = 1 + IDX%%active_cores)
 
 trx_frames <- time_prog %>% 
-    select(IDX,period,time,team_id,state,action,outcome,full_name) %>% 
+    select(IDX,period,time,crest=possession,team_id,state,action,technique,outcome,full_name) %>% 
     group_by(period) %>% 
     mutate(next_time = lead(time),
            prev_time = lag(time),
            prev_state = lag(state),
+           next_poss = lead(crest),
            next_state = lead(state)) %>% 
     ungroup() %>% 
     mutate(
         action_time = ifelse(is.na(prev_time),1,time),
         possession_time = case_when(
             state=='Kickoff' ~ time,
+            technique=='foot' ~ NA_real_,
             time - prev_time<=2 ~ NA_real_,
             time - prev_time==3 ~ time-1,
             time - prev_time==4 ~ time-2,
@@ -388,9 +394,28 @@ trx_frames <- time_prog %>%
         )
     ) %>% 
     gather('type','timestamp',c(action_time,possession_time,result_time)) %>% 
-    mutate(type = str_replace(type,'_time','')) %>% 
-    drop_na(timestamp) %>% 
+    mutate(type = str_replace(type,'_time',''),
+           crest = ifelse(type=='result',NA_character_,crest)) %>% 
     arrange(period,timestamp) %>% 
-    select(IDX,type,timestamp) %>% 
+    group_by(period) %>% 
+    fill(c(crest),.direction='down') %>% 
+    ungroup() %>% 
+    drop_na(timestamp) %>% 
+    select(IDX,type,period,timestamp,crest) %>% 
     mutate(ORD = row_number(),
            KEY = 1 + ORD%%active_cores)
+
+key_moments <- key_moments %>% 
+    left_join(
+        trx_frames %>% 
+            select(IDX,period,type,timestamp) %>% 
+            spread(type,timestamp) %>% 
+            select(period,action,result),
+        by=c('period'='period','time'='action')) %>% 
+    mutate(next_time = case_when(
+        is.na(result) ~ next_time,
+        action=='SHOT' ~ result,
+        TRUE ~ next_time
+    )) %>% 
+    select(-result)
+        

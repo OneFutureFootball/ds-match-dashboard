@@ -66,11 +66,6 @@ trx_export <- function(time_idx){
   plot_output <- ggplot() +
     coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
     theme_void() +
-    #Current transaction
-    geom_shape(mapping = aes(x=230 + 200*c(-1,-1,1,1),
-                             y=40 + 40*c(1,-1,-1,1),
-                             fill=factor(time_stamp$team_id)),
-               radius=0.017, colour='white',linewidth=0.2) +
     #Ball + Status
     geom_segment(time_stamp,
                  mapping = aes(x = X3,y = Y3,
@@ -119,12 +114,6 @@ trx_export <- function(time_idx){
                             label=number,
                             colour=factor(short_name)),
               family='Montserrat-Medium',hjust=0.5,vjust=0.5,size=3.5) +
-    geom_text(time_stamp,
-              mapping = aes(x=230,y = 30 + 5, label=last_name, colour=short_name),
-              hjust = 0.5, vjust=0, family='Montserrat-Bold', size=9) + 
-    geom_text(time_stamp %>% drop_na(action),
-              mapping = aes(x=230,y = 30 - 5, label=action, colour=short_name),
-              hjust = 0.5, vjust=1, family='Montserrat-Bold', size=5) + 
     scale_fill_manual(values = team_colours,guide='none') + 
     scale_colour_manual(values = c(team_colours,text_colours[1:2]),guide='none')
   
@@ -143,4 +132,6 @@ trx_export <- function(time_idx){
          plot_output,
          height=1080,width=1920,
          units='px',dpi=100)
+  
+  trx_text(time_idx)
 }

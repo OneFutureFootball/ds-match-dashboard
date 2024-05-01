@@ -10,6 +10,7 @@ build_frame <- function(idx, force=FALSE){
     if(!is.na(frame$minute)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/02/',frame$minute)))
     if(!is.na(frame$key)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/03/',frame$key)))
     if(!is.na(frame$trx)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/04/',frame$trx)))
+    if(!is.na(frame$text)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/09/',frame$text)))
     if(!is.na(frame$lineup)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/05/',frame$lineup)))
     if(!is.na(frame$card)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/08/',frame$card)))
     if(!is.na(frame$crest)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/',frame$crest)))
