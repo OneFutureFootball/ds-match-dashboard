@@ -77,7 +77,7 @@ frame_index <- time_base %>%
             secs>=prev_kickoff & secs - prev_kickoff <= 10 ~ 'kickoff',
             secs<next_goal & next_goal - secs <= 12 ~ 'build_up',
             secs<next_shot & next_shot - secs <= 12 ~ 'build_up',
-            secs> prev_goal & secs - prev_goal > 11 ~ NA_character_,
+            secs> prev_goal & next_kickoff - secs <= 60 & secs - prev_goal > 11 ~ NA_character_,
             secs>=prev_shot & secs - prev_shot <= 6 ~ 'reaction',
         ),
         delay = next_trx - secs,
@@ -233,4 +233,4 @@ whistles <- match_file %>%
     pull(SECS) %>% 
     paste(collapse='+')
 
-system(paste0('python3 ',here(),'/R/movie/add_audio.py ',whistles,' ',home_goals,' ',away_goals))
+#system(paste0('python3 ',here(),'/R/movie/add_audio.py ',whistles,' ',home_goals,' ',away_goals))

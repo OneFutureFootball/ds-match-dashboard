@@ -219,12 +219,13 @@ time_base <- match_file %>%
 key_moments <- match_file %>% 
     mutate(prev_time = lag(time),
            prev_mt = lag(match_time)) %>% 
-    mutate(time = ifelse(state%in%c('Corner','Free Kick'),prev_time+2,time)) %>% 
+    mutate(old_time = time,
+           time = ifelse(state%in%c('Corner','Free Kick'),prev_time+2,time)) %>% 
     group_by(period) %>% 
     arrange(time) %>% 
     mutate(next_time = lead(time),
            next_state = lead(state)) %>% 
-    mutate(time = ifelse(state%in%c('Corner','Free Kick'),next_time-3,time),
+    mutate(time = ifelse(state%in%c('Corner','Free Kick'),old_time,time),
            next_time = case_when(
                state=='Substitution' & oth_role=='injury' ~ time,
                TRUE ~ next_time),
@@ -236,7 +237,7 @@ key_moments <- match_file %>%
     subset(state%in%c('Substitution','Kickoff','Corner')|
                action%in%c('SHOT','PENALTY')|
                !is.na(card_given)) %>% 
-    select(period,time,next_time,next_state,possession,state,action,outcome,position,full_name,last_name,oth_ID,oth_position, oth_full_name,oth_role,oth_team,team_id, card_given) %>% 
+    select(period,time,prev_time,next_time,old_time,next_state,possession,state,action,outcome,position,full_name,last_name,oth_ID,oth_position, oth_full_name,oth_role,oth_team,team_id, card_given) %>% 
     mutate(
         live_label = case_when(
             action=='KICKOFF' ~ action,
@@ -292,7 +293,7 @@ key_moments <- key_moments %>%
     bind_rows(key_moments %>%
                   drop_na(card_given) %>% 
                   subset(action%in%c('SHOT','PENALTY')) %>% 
-                  mutate(time = time - 0.5,
+                  mutate(time = prev_time + 3,
                          live_label = case_when(
                              card_given=='red' ~ 'RED CARD',
                              card_given=='yellow' ~ 'YELLOW CARD',
@@ -326,9 +327,10 @@ key_moments <- key_moments %>%
         IDX = row_number(),
         KEY = 1 + IDX%%active_cores,
         time = round(time),
+        time = ifelse(action=='PENALTY' & !str_detect(live_label,'CARD'),prev_time + 2,time),
         next_time = round(case_when(
             next_time - time < 5 ~ next_time,
-            state%in%c('Corner','Free Kick','Substition') ~ next_time,
+            state%in%c('Corner','Free Kick','Substition') ~ old_time,
             TRUE ~ time + 3 + 4*runif(n())))
     ) %>% 
     left_join(teams,by='team_id')
