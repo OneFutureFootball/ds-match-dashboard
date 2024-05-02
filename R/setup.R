@@ -1,3 +1,4 @@
+suppressPackageStartupMessages(library(av))
 suppressPackageStartupMessages(library(png))
 suppressPackageStartupMessages(library(grid))
 suppressPackageStartupMessages(library(ggpubr))
@@ -9,6 +10,7 @@ suppressPackageStartupMessages(library(jsonlite))
 suppressPackageStartupMessages(library(showtext))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(doParallel))
+suppressPackageStartupMessages(library(toOrdinal))
 suppressPackageStartupMessages(library(cropcircles))
 suppressPackageStartupMessages(library(lubridate))
 

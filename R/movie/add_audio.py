@@ -1,10 +1,11 @@
 from moviepy.editor import VideoFileClip, AudioFileClip, CompositeAudioClip
 import os
 import sys
-dashboard_folder = "/Users/karljackson/Documents/1FF/match-dashboard/"
+
+dashboard_folder = os.getcwd()
 
 # Define the paths to your input files (adjust these paths according to your actual file locations)
-mp4_file = [os.path.join(dashboard_folder+'output',f) for f in os.listdir(dashboard_folder+'output') if 'mp4' in f]
+mp4_file = [os.path.join(dashboard_folder+'/output',f) for f in os.listdir(dashboard_folder+'/output') if 'mp4' in f][0]
 HG_1 = AudioFileClip(dashboard_folder+"/sounds/home_goal_1.mp3")
 HG_2 = AudioFileClip(dashboard_folder+"/sounds/home_goal_2.mp3")
 HG_3 = AudioFileClip(dashboard_folder+"/sounds/home_goal_3.mp3")
@@ -35,13 +36,14 @@ BGS = [BG.set_start(0),
 
 audio_track = CompositeAudioClip(BGS + WS + HG + AG)
 # Load the video clip
+
 video_clip = VideoFileClip(mp4_file)
 
 # Add the audio clip to the video clip at the specified timestamp
 video_clip = video_clip.set_audio(audio_track)
 
 # Write the video clip with the added audio to a new file
-output_file = "/Users/karljackson/Documents/1FF/match-dashboard/output/test_video.mp4"
+output_file = dashboard_folder+'/output/test_video.mp4'
 video_clip.write_videofile(output_file, codec="libx264", audio_codec="aac")
 
 # Close the clips
