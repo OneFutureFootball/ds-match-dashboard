@@ -293,7 +293,7 @@ key_moments <- key_moments %>%
     bind_rows(key_moments %>%
                   drop_na(card_given) %>% 
                   subset(action%in%c('SHOT','PENALTY')) %>% 
-                  mutate(time = prev_time + 3,
+                  mutate(time = prev_time + 2,
                          live_label = case_when(
                              card_given=='red' ~ 'RED CARD',
                              card_given=='yellow' ~ 'YELLOW CARD',
@@ -327,7 +327,10 @@ key_moments <- key_moments %>%
         IDX = row_number(),
         KEY = 1 + IDX%%active_cores,
         time = round(time),
-        time = ifelse(action=='PENALTY' & !str_detect(live_label,'CARD'),prev_time + 2,time),
+        time = case_when(
+            str_detect(state,'Goal') ~ time,
+            action=='PENALTY' & !str_detect(live_label,'CARD') ~ prev_time + 3,
+            TRUE ~ time),
         next_time = round(case_when(
             next_time - time < 5 ~ next_time,
             state%in%c('Corner','Free Kick','Substition') ~ old_time,
