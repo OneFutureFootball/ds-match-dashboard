@@ -4,7 +4,6 @@ import sys
 
 dashboard_folder = os.getcwd()
 
-# Define the paths to your input files (adjust these paths according to your actual file locations)
 mp4_file = [os.path.join(dashboard_folder+'/output',f) for f in os.listdir(dashboard_folder+'/output') if 'mp4' in f][0]
 HG_1 = AudioFileClip(dashboard_folder+"/sounds/home_goal_1.mp3")
 HG_2 = AudioFileClip(dashboard_folder+"/sounds/home_goal_2.mp3")

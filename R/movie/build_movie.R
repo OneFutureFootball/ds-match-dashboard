@@ -11,6 +11,8 @@ halftime_stats()
 player_leader('fulltime')
 ratings_list('fulltime')
 fulltime_stats()
+added_time(1)
+added_time(2)
 
 message('Match Base')
 match_base()
