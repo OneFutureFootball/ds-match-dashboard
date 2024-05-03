@@ -30,6 +30,7 @@ subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% muta
 injs <- key_moments %>% subset(oth_role=='injury') %>% select(period,time,next_time) %>% mutate(inj=1,time = round(time), next_time = round(next_time)) %>% rename(secs=time,next_inj=next_time)
 trxs <- trx_list %>% select(period,secs,possession) %>% mutate(trxx=1)
 crests <- trx_frames %>% select(period,timestamp,crest) %>% rename(secs=timestamp) %>% mutate(crest=paste0('crest_',crest,'.png'))
+reds <- match_file %>% drop_na(card_given) %>% subset(str_detect(card_given,'red'))
 
 frame_index <- time_base %>% 
     arrange(period,secs) %>% 
@@ -80,6 +81,7 @@ frame_index <- time_base %>%
             secs> prev_goal & next_kickoff - secs <= 60 & secs - prev_goal > 11 ~ NA_character_,
             secs>=prev_shot & secs - prev_shot <= 6 ~ 'reaction',
         ),
+        #match_state = ifelse(period==2 & secs>=2982 & secs<=2990,NA_character_,match_state),
         delay = next_trx - secs,
         overlay = paste0('output/layers/07/Overlay_',period,'_',str_pad(secs,4,pad='0'),'.png'),
         overlay = ifelse(file.exists(overlay),overlay,NA_character_)
@@ -103,6 +105,7 @@ frame_index <- frame_index %>%
     ungroup() %>% 
     left_join(match_file %>% select(period,secs=time,oth_role),by=c('period','secs')) %>% 
     mutate(REP = case_when(
+        paste(period,secs)%in%with(reds,paste(period,time)) ~ 5*normal,
         match_state=='overlay' & state%in%c('Goal_1','Goal_2') ~ 0.4*normal,
         match_state=='overlay' & state=='Goal' ~ 8*normal,
         match_state=='overlay' & state=='Goal Text' ~ 12*normal,
@@ -135,11 +138,11 @@ frame_index <- pre_match %>%
 # frame_index <- frame_index %>%
 #     mutate(
 #         match_state = case_when(
-#             IDX%in%5431:5432 ~ 'show_lineup',
+#             IDX%in%6142:6150 ~ 'show_lineup',
 #             TRUE ~ match_state
 #         ),
 #         REP = case_when(
-#             IDX%in%5431:5432 ~ 1,
+#             IDX%in%6142:6150 ~ 1,
 #             TRUE ~ REP
 #         )
 #     ) %>%

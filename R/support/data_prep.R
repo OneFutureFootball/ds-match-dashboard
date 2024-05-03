@@ -178,7 +178,7 @@ lineup_times <- all_lineups %>%
     select(period,time) %>% 
     unique() %>% 
     mutate(TRX = row_number()) %>% 
-    left_join(data.frame(team_id = c(match_details$home_id,match_details$away_id)),by=character()) %>% 
+    cross_join(data.frame(team_id = c(match_details$home_id,match_details$away_id))) %>% 
     uncount(11) %>% 
     group_by(period,time,team_id) %>% 
     mutate(IDX = row_number()) %>% 
@@ -287,7 +287,8 @@ key_moments <- match_file %>%
     group_by(period,time) %>% 
     mutate(shot = sum(ifelse(action%in%c('SHOT','PENALTY'),1,0))) %>% 
     ungroup() %>% 
-    subset(!(state=='Corner' & shot>0))
+    subset(!(state=='Corner' & shot>0)) %>% 
+    subset(!(state=='Substitution' & is.na(full_name)))
 
 key_moments <- key_moments %>% 
     bind_rows(key_moments %>%
