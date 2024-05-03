@@ -30,6 +30,7 @@ subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% muta
 injs <- key_moments %>% subset(oth_role=='injury') %>% select(period,time,next_time) %>% mutate(inj=1,time = round(time), next_time = round(next_time)) %>% rename(secs=time,next_inj=next_time)
 trxs <- trx_list %>% select(period,secs,possession) %>% mutate(trxx=1)
 crests <- trx_frames %>% select(period,timestamp,crest) %>% rename(secs=timestamp) %>% mutate(crest=paste0('crest_',crest,'.png'))
+reds <- match_file %>% drop_na(card_given) %>% subset(str_detect(card_given,'red'))
 
 frame_index <- time_base %>% 
     arrange(period,secs) %>% 
@@ -103,6 +104,7 @@ frame_index <- frame_index %>%
     ungroup() %>% 
     left_join(match_file %>% select(period,secs=time,oth_role),by=c('period','secs')) %>% 
     mutate(REP = case_when(
+        paste(period,secs)%in%with(reds,paste(period,time)) ~ 5*normal,
         match_state=='overlay' & state%in%c('Goal_1','Goal_2') ~ 0.4*normal,
         match_state=='overlay' & state=='Goal' ~ 8*normal,
         match_state=='overlay' & state=='Goal Text' ~ 12*normal,
