@@ -70,19 +70,22 @@ if(file.exists('output/match_file.json')){
         mutate(ball_x=ifelse(possession=='B',120-ball_x,ball_x),
                ball_y=ifelse(possession=='B',80-ball_y,ball_y),
                prev_state = lag(state),
+               prev_outcome = lag(outcome),
+               prev_outcome2 = lag(outcome,2),
+               prev_position = 'GK',
                next_state = lead(state),
                prev_x = lag(ball_x),
                prev_y = lag(ball_y),
-               prev_x = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick'),NA_real_,prev_x),
-               prev_y = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick'),NA_real_,prev_y),
+               prev_x = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome=='blocked'|(prev_outcome=='saved' & position!='GK'),NA_real_,prev_x),
+               prev_y = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome=='blocked'|(prev_outcome=='saved' & position!='GK'),NA_real_,prev_y),
                prev_x2 = ifelse(is.na(prev_x),NA_real_,lag(ball_x,2)),
                prev_y2 = ifelse(is.na(prev_y),NA_real_,lag(ball_y,2)),
                prev_number = ifelse(state%in%c('Kickoff','Throw In','Corner','Free Kick','Keeper Possession','Goal Kick'),NA_real_, lag(number)),
                prev_number2 = ifelse(is.na(prev_number),NA_real_, lag(number,2)),
                prev_short_name = ifelse(state%in%c('Kickoff','Throw In','Corner','Free Kick','Keeper Possession','Goal Kick'),NA_character_, lag(short_name)),
                prev_short_name2 = ifelse(is.na(prev_number),NA_character_, lag(short_name,2)),
-               prev_x2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick'),NA_real_,prev_x2),
-               prev_y2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick'),NA_real_,prev_y2),
+               prev_x2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_x2),
+               prev_y2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_y2),
                next_x = case_when(
                    action=='SHOT' ~ 60 + sign(ball_x - 60)*60,
                    state=='Goal' ~ NA_real_,
@@ -177,8 +180,13 @@ all_lineups <- fromJSON('input/match_formations.json') %>%
 lineup_times <- all_lineups %>% 
     select(period,time) %>% 
     unique() %>% 
-    mutate(TRX = row_number()) %>% 
-    cross_join(data.frame(team_id = c(match_details$home_id,match_details$away_id))) %>% 
+    mutate(TRX = row_number())
+if(exists('cross_join')){
+    lineup_times <- lineup_time %>% cross_join(data.frame(team_id = c(match_details$home_id,match_details$away_id)))
+}else{
+    lineup_times <- lineup_time %>% left_join(data.frame(team_id = c(match_details$home_id,match_details$away_id)),by=character())
+}
+lineup_times <- lineup_times %>% 
     uncount(11) %>% 
     group_by(period,time,team_id) %>% 
     mutate(IDX = row_number()) %>% 
