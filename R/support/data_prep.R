@@ -182,9 +182,9 @@ lineup_times <- all_lineups %>%
     unique() %>% 
     mutate(TRX = row_number())
 if(exists('cross_join')){
-    lineup_times <- lineup_time %>% cross_join(data.frame(team_id = c(match_details$home_id,match_details$away_id)))
+    lineup_times <- lineup_times %>% cross_join(data.frame(team_id = c(match_details$home_id,match_details$away_id)))
 }else{
-    lineup_times <- lineup_time %>% left_join(data.frame(team_id = c(match_details$home_id,match_details$away_id)),by=character())
+    lineup_times <- lineup_times %>% left_join(data.frame(team_id = c(match_details$home_id,match_details$away_id)),by=character())
 }
 lineup_times <- lineup_times %>% 
     uncount(11) %>% 
