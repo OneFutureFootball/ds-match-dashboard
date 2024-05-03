@@ -14,7 +14,8 @@ trx_export <- function(time_idx){
   
   if(is.na(time_stamp$next_team)) return(NULL)
   
-  time_stamp <- time_stamp %>% mutate(time = trx_frames %>% subset(IDX==frame_ord & type==status) %>% pull(timestamp))
+  time_stamp <- time_stamp %>% 
+      mutate(time = trx_frames %>% subset(IDX==frame_ord & type==status) %>% pull(timestamp))
   
   if(status%in%c('action','result') & time_stamp$action%in%c('SHOT','PENALTY')) time_stamp <- time_stamp %>% mutate(X4 = 233, Y4=ifelse(possession=='A',704,112))
   
@@ -117,7 +118,7 @@ trx_export <- function(time_idx){
     scale_fill_manual(values = team_colours,guide='none') + 
     scale_colour_manual(values = c(team_colours,text_colours[1:2]),guide='none')
   
-  if(status%in%c('action','result') & !time_stamp$action%in%c('MISCONTROL')){
+  if(status%in%c('action','result') & !time_stamp$action%in%c('MISCONTROL') & !time_stamp$next_action%in%c('PENALTY')){
     if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
         geom_segment(time_stamp,
                      mapping = aes(x=LSX, y=LSY,
