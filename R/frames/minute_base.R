@@ -1,5 +1,4 @@
 minute_base <- function(pers,mins){
-    if(file.exists(paste0('output/layers/02/Minute_',pers,'_',str_pad(mins*60,4,pad='0'),'.png'))) return(NULL)
     stats <- all_stats %>% subset(period==pers & time==mins)
     if(nrow(stats)==0) stats <- all_stats %>% 
             subset(period==1 & time==1) %>% 
@@ -16,8 +15,10 @@ minute_base <- function(pers,mins){
                Y = 640 - 100*IDX,
                X = 1380) %>% 
         mutate(value = ifelse(period==1 & time<=5,0,value),
-               PCT = ifelse(period==1 & time<=5,0,PCT))
-    
+               PCT = ifelse(period==1 & time<=5,0,PCT),
+               short_name = sapply(full_name,function(x) paste0(substring(x,1,1),'.',str_replace(x,str_split(x,' ')[[1]][1],''))),
+               full_name = ifelse(nchar(full_name)>=22,short_name,full_name))
+
     plot_output <- ggplot() +
         #background_image(readPNG('output/layers/01/Match.png')) + 
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +

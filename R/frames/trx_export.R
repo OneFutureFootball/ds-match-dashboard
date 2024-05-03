@@ -15,7 +15,7 @@ trx_export <- function(time_idx){
   if(is.na(time_stamp$next_team)) return(NULL)
   
   time_stamp <- time_stamp %>% 
-      mutate(time = trx_frames %>% subset(IDX==frame_ord & type==status) %>% pull(timestamp))
+    mutate(time = trx_frames %>% subset(IDX==frame_ord & type==status) %>% pull(timestamp))
   
   if(status%in%c('action','result') & time_stamp$action%in%c('SHOT','PENALTY')) time_stamp <- time_stamp %>% mutate(X4 = 233, Y4=ifelse(possession=='A',704,112))
   
@@ -56,12 +56,31 @@ trx_export <- function(time_idx){
       DIS = sqrt((X4 - X)^2 + (Y4 - Y)^2),
       XS = sign(X4 - X),
       YS = sign(Y4 - Y),
-      LSX = X + 15*XS*abs(sin(ANG)),
-      LSY = Y + 15*YS*abs(cos(ANG)),
+      LSX = X + 17*XS*abs(sin(ANG)),
+      LSY = Y + 17*YS*abs(cos(ANG)),
       GAP = case_when(DIS<150 ~ 50,DIS>600 ~ 200,TRUE ~ DIS/3),
       LEX = X + GAP*XS*abs(sin(ANG)),
       LEY = Y + GAP*YS*abs(cos(ANG)),
-      LEX = ifelse(action=='SHOT' & DIS<150,NA_real_,LEX)
+      LEX = ifelse(action=='SHOT' & DIS<150,NA_real_,LEX))
+  if(status=='possession') time_stamp <- time_stamp %>% 
+    mutate(
+      RANG = atan((X - X2)/(Y - Y2)),
+      RXS = sign(X2 - X),
+      RYS = sign(Y2 - Y),
+      RX = X + 17*RXS*abs(sin(RANG)),
+      RY = Y + 17*RYS*abs(cos(RANG)),
+      RX = case_when(
+        state%in%c('Keeper Possession','Free Kick','Goal Kick','Kickoff') ~ X,
+        state%in%c('Throw In') ~ X - 17*sign(Y-40),
+        state=='Corner' ~ X - sign(Y-40)*17*sin(pi/4),
+        TRUE ~ RX
+      ),
+      RY = case_when(
+        state%in%c('Keeper Possession','Free Kick','Goal Kick','Kickoff') ~ Y + 17*ifelse(possession=='A',1,-1),
+        state%in%c('Throw In') ~ Y,
+        state=='Corner' ~ Y + 17*sin(pi/4),
+        TRUE ~ RY
+      )
     )
   
   plot_output <- ggplot() +
@@ -119,14 +138,26 @@ trx_export <- function(time_idx){
     scale_colour_manual(values = c(team_colours,text_colours[1:2]),guide='none')
   
   if(status%in%c('action','result') & !time_stamp$action%in%c('MISCONTROL') & !time_stamp$next_action%in%c('PENALTY')){
+    # if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
+    # geom_segment(time_stamp,
+    #              mapping = aes(x=LSX, y=LSY,
+    #                            xend = LEX, 
+    #                            yend = LEY,
+    #                            colour=factor(team_id)),
+    #              arrow = arrow(length=unit(0.007,'npc')), 
+    #              linewidth=0.4, lineend='round', linejoin = 'round')
     if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
-        geom_segment(time_stamp,
-                     mapping = aes(x=LSX, y=LSY,
-                                   xend = LEX, 
-                                   yend = LEY,
-                                   colour=factor(team_id)),
-                     arrow = arrow(length=unit(0.007,'npc')), 
-                     linewidth=0.4, lineend='round', linejoin = 'round')
+        geom_image(time_stamp,
+                   mapping = aes(x=LSX, y=LSY,
+                                 image='images/icons/ball.png'),
+                   size=0.018)
+  }
+  if(status=='possession'|time_stamp$action=='MISCONTROL'|time_stamp$next_action=='PENALTY'){
+    plot_output <- plot_output +
+      geom_image(time_stamp,
+                 mapping = aes(x=RX, y=RY,
+                               image='images/icons/ball.png'),
+                 size=0.018)
   }
   
   ggsave(paste0('output/layers/04/Trx_',time_stamp$period,'_',str_pad(time_stamp$time,4,pad='0'),'.png'),
