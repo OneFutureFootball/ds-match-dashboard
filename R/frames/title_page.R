@@ -6,8 +6,27 @@ title_page <- function(){
                crest = str_replace(crest,'-256',''))
     
     UT <- ymd_hms(match_details$utc,tz='UTC')
-    HT <- with_tz(UT,c('Asia/Jakarta'))
-    AT <- with_tz(UT,c('America/New_York'))
+    local_timezone <- match_details %>% 
+        select(home_id,away_id) %>% 
+        gather('travel','team_id') %>% 
+        mutate(timezone = case_when(
+            team_id == 1 ~ 'Asia/Calcutta',
+            team_id == 2 ~ 'Australia/Sydney',
+            team_id == 3 ~ 'America/Buenos_Aires',
+            team_id == 4 ~ 'America/Los_Angeles',
+            team_id == 5 ~ 'Asia/Riyadh',
+            team_id == 6 ~ 'America/New_York',
+            team_id == 7 ~ 'Asia/Jakarta',
+            team_id == 8 ~ 'Africa/Lagos',
+            team_id == 9 ~ 'Europe/Paris',
+            team_id == 10 ~ 'America/Manaus',
+            team_id == 11 ~ 'Europe/London',
+            team_id == 12 ~ 'Asia/Tokyo'
+        )) %>%
+        select(-team_id) %>% 
+        spread(travel,timezone)
+    HT <- with_tz(UT,local_timezone$home_id)
+    AT <- with_tz(UT,local_timezone$away_id)
     match_times <- data.frame(tz = c('utc','home','away'),
                               date = c(format(UT,'%B %d'),
                                        format(HT,'%B %d'),
@@ -22,7 +41,7 @@ title_page <- function(){
     
     img_dir <- 'images/stadiums'
     img_option <- list.files(img_dir,pattern=match_details$home_short_name,full.names=TRUE,recursive=TRUE)
-
+    
     plot_output <- ggplot() +
         theme_void() +
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
