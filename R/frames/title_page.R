@@ -71,6 +71,6 @@ title_page <- function(){
     ggsave('output/layers/title_page.png',
            plot_output,
            height=1080, width=1920, units='px', dpi=300)
-    
-    image_write(image_convert(image_read('output/layers/title_page.png'),'jpeg'),'output/title_page.jpg', quality=95)
+    dir.create('output/broadcast',showWarnings=FALSE, recursive=TRUE)
+    image_write(image_convert(image_read('output/layers/title_page.png'),'jpeg'),'output/broadcast/title_page.jpg', quality=95)
 }
