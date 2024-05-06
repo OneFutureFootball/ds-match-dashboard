@@ -39,7 +39,7 @@ message('All frames built')
 all_frames <- list.files('output/frames',full.names=TRUE)
 av::av_encode_video(all_frames,
                     framerate = 30,
-                    output = paste0('output/S',match_details$season_no,
+                    output = paste0('output/broadcast/S',match_details$season_no,
                                     '_R',str_pad(match_details$round_no,2,pad='0'),
                                     '_',match_details$home_short_name,'v',match_details$away_short_name,'.mp4'))
 
