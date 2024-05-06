@@ -1,4 +1,4 @@
-active_cores <- 8
+active_cores <- 7
 normal <- 30
 slow <- 1
 
@@ -104,12 +104,12 @@ frame_index <- frame_index %>%
     ungroup() %>% 
     left_join(match_file %>% select(period,secs=time,oth_role),by=c('period','secs')) %>% 
     mutate(REP = case_when(
-        paste(period,secs)%in%with(reds,paste(period,time)) ~ 5*normal,
+        paste(period,secs)%in%with(reds,paste(period,time)) ~ 6*normal,
         match_state=='overlay' & state%in%c('Goal_1','Goal_2') ~ 0.4*normal,
         match_state=='overlay' & state=='Goal' ~ 8*normal,
         match_state=='overlay' & state=='Goal Text' ~ 12*normal,
-        secs==next_sub & oth_role=='injury' ~ 5*normal,
-        secs==next_sub ~ 2*normal,
+        secs==next_sub & oth_role=='injury' ~ 6*normal,
+        secs==next_sub ~ 3*normal,
         secs==0 ~ 5*normal,
         match_state=='injury' ~ normal / slow,
         match_state%in%c('kickoff','build_up','reaction') ~ normal / slow,

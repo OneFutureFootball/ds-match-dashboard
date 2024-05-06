@@ -25,6 +25,7 @@ key_base <- function(idx,live=TRUE){
     
     this_moment <- subset(key_prog,IDX==idx)
     if(nrow(this_moment)==0) return(NULL)
+    topup <- key_moments %>% subset(period==this_moment$period & time==this_moment$time) %>% summarise(TOPUP = sum(oth_role%in%c('red card','injury'))) %>% pull(TOPUP)
     
     if(!is.na(this_moment$card_given)) card_overlay(this_moment$period,this_moment$time)
     
@@ -67,12 +68,6 @@ key_base <- function(idx,live=TRUE){
                   hjust = 0.5, vjust=0.5, family='Montserrat-ExtraBold', size=16, colour='white') +
         geom_text(mapping = aes(x=960, y=1005, label='–'),
                   hjust = 0.5, vjust=0.5, family='Montserrat-Black', size=8, colour='white') +
-        # geom_rect(
-        #     key_prog %>% subset(short_name==match_details$away_short_name),
-        #     mapping = aes(xmin = 960 - 360, xmax = 960 + 360,
-        #                   ymin = Y - 28, ymax = Y + 28),
-        #     fill='white',colour=NA, alpha=0.1
-        # ) +
         geom_rect(
             key_prog %>% subset(period==this_moment$period & time==this_moment$time & this_moment$state=='Substitution'),
             mapping = aes(xmin = 690, xmax = 1240,
@@ -103,14 +98,17 @@ key_base <- function(idx,live=TRUE){
         scale_colour_manual(values = c(text_colours, 'GOAL'='#5CED73', 'YELLOW CARD'='#FFF380', 'RED CARD'='#FF6955','SECOND YELLOW CARD'='#FF6955', 'DARK'='#150928'), na.value='white',guide='none') + 
         scale_fill_manual(values = team_colours,guide='none')
     
-    ggsave(paste0('output/layers/03/Key_',pers,'_',str_pad(ifelse(live,this_moment$time,this_moment$next_time),4,pad='0'),'.png'),
-           plot_output,
-           height=1080,
-           width=1920,
-           units='px',
-           dpi=300)
+    if(!(topup>0 & !this_moment$oth_role%in%c('red card','injury') & live)){
+        
+        ggsave(paste0('output/layers/03/Key_',pers,'_',str_pad(ifelse(live,this_moment$time,this_moment$next_time),4,pad='0'),'.png'),
+               plot_output,
+               height=1080,
+               width=1920,
+               units='px',
+               dpi=300)
+    }
     
     if(is.na(this_moment$post_label)) return(NULL)
-    if(this_moment$post_label == this_moment$live_label) return(NULL)
+    if(this_moment$post_label == this_moment$live_label & topup==0) return(NULL)
     if(live) key_base(idx,FALSE)
 }

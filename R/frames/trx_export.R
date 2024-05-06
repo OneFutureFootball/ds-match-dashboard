@@ -62,7 +62,7 @@ trx_export <- function(time_idx){
       LEX = X + GAP*XS*abs(sin(ANG)),
       LEY = Y + GAP*YS*abs(cos(ANG)),
       LEX = ifelse(action=='SHOT' & DIS<150,NA_real_,LEX))
-  if(status=='possession') time_stamp <- time_stamp %>% 
+  time_stamp <- time_stamp %>% 
     mutate(
       RANG = atan((X - X2)/(Y - Y2)),
       RXS = sign(X2 - X),
@@ -151,8 +151,7 @@ trx_export <- function(time_idx){
                    mapping = aes(x=LSX, y=LSY,
                                  image='images/icons/ball.png'),
                    size=0.018)
-  }
-  if(status=='possession'|time_stamp$action=='MISCONTROL'|time_stamp$next_action=='PENALTY'){
+  }else{
     plot_output <- plot_output +
       geom_image(time_stamp,
                  mapping = aes(x=RX, y=RY,
