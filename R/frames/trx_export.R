@@ -137,6 +137,7 @@ trx_export <- function(time_idx){
     scale_fill_manual(values = team_colours,guide='none') + 
     scale_colour_manual(values = c(team_colours,text_colours[1:2]),guide='none')
   
+  if(!'LEX'%in%names(time_stamp)) time_stamp$LEX <- NA
   if(status%in%c('action','result') & !time_stamp$action%in%c('MISCONTROL') & !time_stamp$next_action%in%c('PENALTY') & !is.na(time_stamp$LEX)){
     if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
         geom_image(time_stamp,
