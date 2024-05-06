@@ -30,7 +30,7 @@ added_time <- function(half){
                         ylim = c(0,1080)) +
         theme_void() + 
         background_image(readPNG('images/overlays/added_time.png')) +
-        geom_text(mapping = aes(x=1010,y=635, label=minutes),
+        geom_text(mapping = aes(x=920,y=625, label=minutes),
                   family='LED',size=90,colour='#FF4242',hjust=0.5,vjust=0.5,lineheight=0.7, angle=1.7)
     ggsave(paste0('output/layers/07/Overlay_',half,'_2700.png'),
            plot_output,
