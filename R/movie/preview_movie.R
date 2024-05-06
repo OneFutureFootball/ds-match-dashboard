@@ -1,4 +1,4 @@
-active_cores <- 8
+active_cores <- 7
 normal <- 30
 slow <- 1
 
@@ -112,7 +112,7 @@ frame_index <- frame_index %>%
         match_state=='overlay' & state=='Goal' ~ 8*normal,
         match_state=='overlay' & state=='Goal Text' ~ 12*normal,
         secs==next_sub & oth_role=='injury' ~ 5*normal,
-        secs==next_sub ~ 2*normal,
+        secs==next_sub ~ 3*normal,
         secs==0 ~ 4*normal,
         match_state=='overlay' ~ 2*normal,
         match_state=='injury' ~ normal / slow,

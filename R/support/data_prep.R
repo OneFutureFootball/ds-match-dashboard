@@ -232,14 +232,23 @@ key_moments <- match_file %>%
     group_by(period) %>% 
     arrange(time) %>% 
     mutate(next_time = lead(time),
-           next_state = lead(state)) %>% 
+           next_state = lead(state),
+           prev_time2 = lag(time,2),
+           prev_role = lag(oth_role),
+           prev_role2 = lag(oth_role,2),
+           prev_team = lag(team_id)) %>% 
     mutate(time = ifelse(state%in%c('Corner','Free Kick'),old_time,time),
            next_time = case_when(
                state=='Substitution' & oth_role=='injury' ~ time,
+               state=='Substitution' & prev_role=='injury' & time==prev_time & team_id==prev_team ~ NA_real_,
+               state=='Substitution' & prev_role2=='injury' & time==prev_time2 & team_id==prev_team ~ NA_real_,
                TRUE ~ next_time),
            time = case_when(
                state=='Substitution' & oth_role=='injury' ~ ceiling((prev_time + time)/2),
+               state=='Substitution' & prev_role=='injury' & time==prev_time & team_id==prev_team ~ NA_real_,
+               state=='Substitution' & prev_role2=='injury' & time==prev_time2 & team_id==prev_team ~ NA_real_,
                TRUE ~ time)) %>% 
+    fill(c(time,next_time),.direction='down') %>% 
     ungroup() %>% 
     arrange(period,time) %>% 
     subset(state%in%c('Substitution','Kickoff','Corner')|
@@ -426,10 +435,12 @@ key_moments <- key_moments %>%
             spread(type,timestamp) %>% 
             select(period,action,result),
         by=c('period'='period','time'='action')) %>% 
+    group_by(period,time) %>% 
     mutate(next_time = case_when(
-        is.na(result) ~ next_time,
+        is.na(result) ~ min(next_time),
         action=='SHOT' ~ result,
         TRUE ~ next_time
     )) %>% 
+    ungroup() %>% 
     select(-result)
         
