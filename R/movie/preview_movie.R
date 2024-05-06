@@ -18,7 +18,7 @@ pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 7*normal) %
     bind_rows(data.frame(base='output/layers/title_page.png', REP = 3*normal))
 
 goals <- match_file %>% subset(state=='Goal') %>% select(period,time) %>% mutate(goal=1) %>% rename(secs=time)
-pens <- match_file %>% subset(next_action=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
+pens <- key_moments %>% subset(action=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
 high_xg <- match_file %>% 
     subset(!(action%in%c('SHOT','PENALTY') & outcome!='goal' & lag(position)=='GK')) %>% 
     drop_na(xg) %>% arrange(desc(xg)) %>% group_by(period) %>% 
@@ -70,6 +70,7 @@ frame_index <- time_base %>%
     mutate(
         match_state = case_when(
             secs>=prev_inj & secs<=prev_inj_end ~ 'injury',
+            secs==prev_pen ~ 'overlay',
             secs<next_pen & next_pen - secs <= 12 ~ 'build_up',
             secs>=prev_pen & secs-prev_pen <= 6 ~ 'reaction',
             secs>=prev_pen & secs<next_goal & next_goal-prev_pen < 75 ~ 'trx',
@@ -80,6 +81,7 @@ frame_index <- time_base %>%
             secs<next_shot & next_shot - secs <= 12 ~ 'build_up',
             secs> prev_goal & next_kickoff - secs <= 60 & secs - prev_goal > 11 ~ NA_character_,
             secs>=prev_shot & secs - prev_shot <= 6 ~ 'reaction',
+            secs==2700 ~ 'overlay'
         ),
         delay = next_trx - secs,
         overlay = paste0('output/layers/07/Overlay_',period,'_',str_pad(secs,4,pad='0'),'.png'),
@@ -105,12 +107,14 @@ frame_index <- frame_index %>%
     left_join(match_file %>% select(period,secs=time,oth_role),by=c('period','secs')) %>% 
     mutate(REP = case_when(
         paste(period,secs)%in%with(reds,paste(period,time)) ~ 5*normal,
+        paste(period,secs)%in%with(pens,paste(period,secs)) ~ 5*normal,
         match_state=='overlay' & state%in%c('Goal_1','Goal_2') ~ 0.4*normal,
         match_state=='overlay' & state=='Goal' ~ 8*normal,
         match_state=='overlay' & state=='Goal Text' ~ 12*normal,
         secs==next_sub & oth_role=='injury' ~ 5*normal,
         secs==next_sub ~ 2*normal,
-        secs==0 ~ 5*normal,
+        secs==0 ~ 4*normal,
+        match_state=='overlay' ~ 2*normal,
         match_state=='injury' ~ normal / slow,
         match_state%in%c('kickoff','build_up','reaction') ~ normal / slow,
         TRUE ~ 1
