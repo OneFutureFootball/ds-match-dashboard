@@ -1,5 +1,5 @@
 this_period <- 1
-this_time <- c(26,58); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
+this_time <- c(48,41); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
 
 match_file %>% subset(time>=this_time) %>% 
     subset(period==this_period) %>% 
@@ -11,13 +11,11 @@ match_file %>% subset(time>=this_time) %>%
 match_file %>% 
     mutate(
         ball_y = case_when(
-            period==1 & match_time=='05:31' ~ 52,
-            period==1 & match_time=='14:42' ~ 57,
-            period==1 & match_time=='26:58' & action=='SHOT' ~ 52,
             TRUE ~ ball_y
         ),
         ball_x = case_when(
-            period==1 & match_time=='26:58' & action=='SHOT' ~ 110,
+            period==1 & match_time=='48:41' ~ 81,
+            period==1 & match_time=='48:45' ~ 57,
             TRUE ~ ball_x
         )
     ) %>% 

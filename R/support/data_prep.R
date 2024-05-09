@@ -4,6 +4,7 @@ teams <- fromJSON('data/team_list.json') %>%
     select(team_id = internal_id, short_name, medium_name, crest)
 match_details <- fixture %>% subset(match_id%in%fromJSON('input/match.json')$match_id)
 players <- fromJSON('data/player_map.json')
+player_trainers <- fromJSON('graphics/broadcast/player_trainers.json')
 
 
 home_colours <- NULL
@@ -106,7 +107,8 @@ if(file.exists('output/match_file.json')){
         mutate(action = case_when(
             str_detect(action,'pass') ~ 'PASS',
             action%in%c('through ball','cross') ~ 'PASS',
-            action=='move' ~ 'CARRY',
+            action=='move' ~ 'DRIBBLE',
+            action=='carry' ~ 'DRIBBLE',
             state=='Goal' ~ 'GOAL',
             state=='Corner' ~ 'CORNER',
             state=='Free Kick' & action=='shoot' ~ 'SHOT',
@@ -397,7 +399,7 @@ trx_frames <- time_prog %>%
         action_time = ifelse(is.na(prev_time),1,time),
         possession_time = case_when(
             state=='Kickoff' ~ time,
-            technique=='foot' ~ NA_real_,
+            technique=='head' ~ NA_real_,
             time - prev_time<=2 ~ NA_real_,
             time - prev_time==3 ~ time-1,
             time - prev_time==4 ~ time-2,
@@ -443,4 +445,3 @@ key_moments <- key_moments %>%
     )) %>% 
     ungroup() %>% 
     select(-result)
-        
