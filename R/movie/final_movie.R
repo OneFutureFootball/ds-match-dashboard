@@ -18,7 +18,7 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
                       paste0('output/frames/',str_pad(i,5,pad='0'),'_',str_pad(j,4,pad='0'),'.png'),
                       overwrite=TRUE)
         }
-        file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
+        #file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
     }
 }
 stopCluster(cl)
@@ -31,7 +31,7 @@ for(i in frame_index %>% drop_na(overlay) %>% pull(IDX)){
                   paste0('output/frames/',str_pad(i,5,pad='0'),'_',str_pad(j,4,pad='0'),'.png'),
                   overwrite=TRUE)
     }
-    file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
+    #file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
 } 
 
 message('All frames built')

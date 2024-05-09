@@ -2,6 +2,8 @@
 message('Pre Game')
 title_page()
 starting_lineups()
+starting_lineups('A')
+starting_lineups('B')
 league_table_pre()
 manager_faceoff()
 
@@ -56,8 +58,5 @@ penalty_overlays()
 
 message('Goals')
 for(i in seq(sum(match_file$state=='Goal'))) goal_overlay(i)
-
-# message('Subs')
-# for(i in seq(match_file %>% subset(state=='Substitution') %>% select(period,time) %>% unique() %>% nrow())) sub_overlay(i)
 
 message('All layers built')
