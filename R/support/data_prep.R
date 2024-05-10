@@ -369,6 +369,7 @@ trx_list <- time_base %>%
 
 
 time_prog <- match_file %>% 
+    subset(state!='Substitution') %>%
     subset(period>0) %>% 
     mutate(time = case_when(
         action=='PENALTY' ~ prev_time+1,
