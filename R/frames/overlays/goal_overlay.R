@@ -28,17 +28,17 @@ goal_overlay <- function(idx){
         select(period,time) %>% 
         left_join(match_file %>% 
                       mutate(action = tolower(action)) %>% 
-                      subset(action!='MOVE' & !(action=='DRIBBLE' & outcome=='completed')) %>% 
+                      subset(action!='move' & !(action=='dribble' & outcome=='completed')) %>% 
                       mutate(last_outcome=lag(outcome),
                              last_action=lag(action),
                              last_team=lag(team),
                              last_player=lag(full_name),
                              last_position=lag(position),
                              next_time = lead(time)) %>%
-                      subset(outcome=='goal' & state!='Free Kick' & action!='PENALTY' &
-                                 (((str_detect(last_action,'pass')|last_action%in%c('THROUGH BALL', 'CROSS', 'THROW IN', 'GOAL KICK')) & 
+                      subset(outcome=='goal' & state!='Free Kick' & action!='penalty' &
+                                 (((str_detect(last_action,'pass')|last_action%in%c('through ball', 'cross', 'throw in', 'goal kick')) & 
                                        team==last_team & 
-                                       last_outcome%in%c('completed', 'incomplete') & last_player!=full_name) | (action=='SHOT' & last_action=='SHOT' & last_player!=full_name))) %>% 
+                                       last_outcome%in%c('completed', 'incomplete') & last_player!=full_name) | (action=='shot' & last_action=='shot' & last_player!=full_name))) %>% 
                       mutate(time = next_time) %>% 
                       select(idx, time, period, minute, full_name=last_player, possession, team, position=last_position) %>% 
                       mutate(stat='assist'),by=c('period','time')) %>% 
