@@ -1,4 +1,4 @@
-trx_export <- function(time_idx){
+trx_export <- function(time_idx,force=FALSE){
   
   frame <- trx_frames %>% 
     subset(ORD == time_idx)
@@ -11,6 +11,8 @@ trx_export <- function(time_idx){
   
   time_stamp <- time_prog %>% 
     subset(IDX==frame_ord)
+  
+  if(!force & file.exists(paste0('output/layers/04/Trx_',time_stamp$period,'_',str_pad(time_stamp$time,4,pad='0'),'.png'))) return(NULL)
   
   if(is.na(time_stamp$next_team)) return(NULL)
   
@@ -116,10 +118,10 @@ trx_export <- function(time_idx){
                  size=0.018)
   }
   if(status=='action'){
-    if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
-        geom_image(time_stamp,
-                   mapping = aes(x=ifelse(next_action=='PENALTY',RX,LSX), 
-                                 y=ifelse(next_action=='PENALTY',RY,LSY),
+      if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
+              geom_image(time_stamp,
+                         mapping = aes(x=ifelse(is.na(next_action)|next_action=='PENALTY',RX,LSX), 
+                                       y=ifelse(is.na(next_action)|next_action=='PENALTY',RY,LSY),
                                  image='images/icons/ball.png'),
                    size=0.018)
   }
