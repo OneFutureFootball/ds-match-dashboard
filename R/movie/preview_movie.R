@@ -121,6 +121,8 @@ frame_index <- time_base %>%
             secs>=prev_kickoff & secs - prev_kickoff <= 10 ~ 'kickoff',
             secs<next_goal & next_goal - secs <= 12 & is.na(next_corner) ~ 'build_up',
             secs<next_shot & next_shot - secs <= 12 & is.na(next_corner) ~ 'build_up',
+            secs<next_goal & next_goal - secs <= 12 & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
+            secs<next_shot & next_shot - secs <= 12 & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
             secs> prev_goal & next_kickoff - secs <= 60 & secs - prev_goal > 11 ~ NA_character_,
             secs>=prev_shot & secs - prev_shot <= 6 ~ 'reaction',
             secs==2700 ~ 'overlay'
