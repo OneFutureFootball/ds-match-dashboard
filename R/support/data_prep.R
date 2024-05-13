@@ -196,6 +196,12 @@ lineup_times <- lineup_times %>%
               ,by=c('period','time','team_id','IDX')) %>% 
     select(period,time,team_id,TRX,IDX,team_class,ID,full_name,position,side,number,last_name) %>% 
     mutate(last_name = ifelse(is.na(last_name),toupper(full_name),last_name)) %>% 
+    group_by(period,time,team_id) %>% 
+    mutate(FULL = sum(!is.na(position)),
+           FULL = ifelse(FULL==0,NA,FULL)) %>% 
+    group_by(team_id,IDX) %>% 
+    fill(FULL,.direction='down') %>% 
+    subset(!(FULL==10 & IDX==11)) %>% 
     group_by(team_id,IDX) %>% 
     fill(c(team_class,ID,full_name,position,side,number,last_name),.direction='down')
 
@@ -239,17 +245,21 @@ key_moments <- match_file %>%
            prev_role = lag(oth_role),
            prev_role2 = lag(oth_role,2),
            prev_team = lag(team_id)) %>% 
-    mutate(time = ifelse(state%in%c('Corner','Free Kick'),old_time,time),
-           next_time = case_when(
-               state=='Substitution' & oth_role=='injury' ~ time,
-               state=='Substitution' & prev_role=='injury' & time==prev_time & team_id==prev_team ~ NA_real_,
-               state=='Substitution' & prev_role2=='injury' & time==prev_time2 & team_id==prev_team ~ NA_real_,
-               TRUE ~ next_time),
-           time = case_when(
-               state=='Substitution' & oth_role=='injury' ~ ceiling((prev_time + time)/2),
-               state=='Substitution' & prev_role=='injury' & time==prev_time & team_id==prev_team ~ NA_real_,
-               state=='Substitution' & prev_role2=='injury' & time==prev_time2 & team_id==prev_team ~ NA_real_,
-               TRUE ~ time)) %>% 
+    mutate(
+        time = case_when(
+            !is.na(card_given) & !action%in%c('SHOT','PENALTY') ~ time,
+            state%in%c('Corner','Free Kick') ~ old_time,
+            TRUE ~ time),
+        next_time = case_when(
+            state=='Substitution' & oth_role=='injury' ~ time,
+            state=='Substitution' & prev_role=='injury' & time==prev_time & team_id==prev_team ~ NA_real_,
+            state=='Substitution' & prev_role2=='injury' & time==prev_time2 & team_id==prev_team ~ NA_real_,
+            TRUE ~ next_time),
+        time = case_when(
+            state=='Substitution' & oth_role=='injury' ~ ceiling((prev_time + time)/2),
+            state=='Substitution' & prev_role=='injury' & time==prev_time & team_id==prev_team ~ NA_real_,
+            state=='Substitution' & prev_role2=='injury' & time==prev_time2 & team_id==prev_team ~ NA_real_,
+            TRUE ~ time)) %>% 
     fill(c(time,next_time),.direction='down') %>% 
     ungroup() %>% 
     arrange(period,time) %>% 

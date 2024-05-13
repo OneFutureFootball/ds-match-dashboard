@@ -67,9 +67,9 @@ kickoffs <- match_file %>% subset(state=='Kickoff') %>% select(period,time) %>% 
 corners <- match_file %>% subset(state=='Corner') %>% select(period,time) %>% mutate(corner=1) %>% rename(secs=time)
 subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% mutate(time = round(time), sub=1) %>% rename(secs=time) %>% slice(-1)
 injs <- key_moments %>% subset(oth_role=='injury') %>% select(period,time,next_time) %>% mutate(inj=1,time = round(time), next_time = round(next_time)) %>% rename(secs=time,next_inj=next_time)
+reds <- key_moments %>% drop_na(card_given) %>% subset(str_detect(card_given,'red')) %>% mutate(red=1) %>% rename(secs=time) %>% select(period,secs,red)
 trxs <- trx_list %>% select(period,secs,possession) %>% mutate(trxx=1)
 crests <- trx_frames %>% select(period,timestamp,crest) %>% rename(secs=timestamp) %>% mutate(crest=paste0('crest_',crest,'.png'))
-reds <- match_file %>% drop_na(card_given) %>% subset(str_detect(card_given,'red'))
 
 frame_index <- time_base %>% 
     arrange(period,secs) %>% 
@@ -85,6 +85,7 @@ frame_index <- time_base %>%
     fill(c(minute,key,trx,text,lineup,card),.direction='down') %>% 
     left_join(goals,by=c('period','secs')) %>% 
     left_join(pens,by=c('period','secs')) %>% 
+    left_join(reds,by=c('period','secs')) %>% 
     left_join(high_xg,by=c('period','secs')) %>% 
     left_join(kickoffs,by=c('period','secs')) %>% 
     left_join(corners,by=c('period','secs')) %>% 
@@ -95,6 +96,7 @@ frame_index <- time_base %>%
            prev_goal = ifelse(goal==1,secs,NA),
            next_pen = ifelse(pen==1,secs,NA),
            prev_pen = ifelse(pen==1,secs,NA),
+           prev_red = ifelse(red==1,secs,NA),
            next_shot = ifelse(shot==1,secs,NA),
            prev_shot = ifelse(shot==1,secs,NA),
            prev_kickoff = ifelse(kickoff==1,secs,NA),
@@ -106,12 +108,13 @@ frame_index <- time_base %>%
            prev_inj_end = ifelse(inj==1,next_inj,NA),
            next_trx = ifelse(trxx==1,secs,NA)) %>% 
     group_by(period) %>% 
-    fill(c(next_goal,next_pen, next_shot, next_kickoff, next_corner, next_trx, next_sub), .direction='up') %>% 
+    fill(c(next_goal,next_pen, next_shot, next_kickoff, prev_red, next_corner, next_trx, next_sub), .direction='up') %>% 
     fill(c(prev_goal,prev_pen, prev_shot, prev_kickoff, prev_sub, prev_inj, prev_inj_end, crest), .direction='down') %>% 
     mutate(
         match_state = case_when(
             secs>=prev_inj & secs<=prev_inj_end ~ 'injury',
             secs==prev_pen ~ 'overlay',
+            secs==prev_red ~ 'overlay',
             secs<next_pen & next_pen - secs <= 12 & is.na(next_corner) ~ 'build_up',
             secs<next_pen & next_pen - secs <= 12 & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
             secs>=prev_pen & secs-prev_pen <= 6 ~ 'reaction',
@@ -150,7 +153,7 @@ frame_index <- frame_index %>%
     ungroup() %>% 
     left_join(match_file %>% select(period,secs=time,oth_role),by=c('period','secs')) %>% 
     mutate(REP = case_when(
-        paste(period,secs)%in%with(reds,paste(period,time)) ~ 5*normal,
+        paste(period,secs)%in%with(reds,paste(period,secs)) ~ 5*normal,
         paste(period,secs)%in%with(pens,paste(period,secs)) ~ 5*normal,
         match_state=='overlay' & state%in%c('Goal_1','Goal_2') ~ 0.3*normal,
         match_state=='overlay' & state=='Goal' ~ 5*normal,
