@@ -55,6 +55,7 @@ for(i in unique(lineup_times$TRX)) lineup_base(i)
 
 message('Penalties / Cards')
 penalty_overlays()
+red_overlays()
 
 message('Goals')
 for(i in seq(sum(match_file$state=='Goal'))) goal_overlay(i)
