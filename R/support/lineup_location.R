@@ -65,7 +65,7 @@ lineup_location <- function(input){
                     position=='CM' & AM>DM & AM==2 & CM==1 ~ 46,
                     position=='CM' & DM>AM ~ 61,
                     position=='CM' ~ 55,
-                    position=='GK' ~ 1,
+                    position=='GK' ~ 5,
                     position=='CB' & CB>2 & ORD==2 & DM > 0 ~ 19,
                     position=='CB' & CB>2 & ORD==2 ~ 21,
                     position=='CB' & DM==2 & CB==2 ~ 21,

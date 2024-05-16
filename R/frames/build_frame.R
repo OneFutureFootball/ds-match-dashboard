@@ -14,10 +14,7 @@ build_frame <- function(idx, force=FALSE){
     if(!is.na(frame$lineup)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/05/',frame$lineup)))
     if(!is.na(frame$card)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/08/',frame$card)))
     if(!is.na(frame$crest)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/',frame$crest)))
-    if(!is.na(frame$overlay)){
-        FRAME <- FRAME %>% image_composite(image_read('images/black_overlay.png'))
-        FRAME <- FRAME %>% image_composite(image_read(frame$overlay))
-    }
+    if(!is.na(frame$overlay)) FRAME <- FRAME %>% image_composite(image_read(frame$overlay))
     image_write(FRAME,paste0('output/layers/99/Frame_',str_pad(frame$IDX,5,pad='0'),'.png'))
     
 }

@@ -6,6 +6,7 @@ halftime_stats <- function(){
     ggplot() +
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
         theme_void() +
+        background_image(readPNG('images/overlays/black_overlay.png')) +
         geom_image(ST,mapping = aes(x=X,y=Y,image=img),
                    size=0.85)
     ggsave('output/layers/halftime_stats.png',

@@ -7,7 +7,7 @@ registerDoParallel(cl)
 foreach(idx = unique(frame_index$KEY)) %dopar% {
     source('R/setup.R')
     frame_index <- fromJSON('output/frame_index.json')
-    if('overlay'%in%names(frame_index)) frame_index <- frame_index %>% mutate(overlay=NA_character_)
+    if(!'overlay'%in%names(frame_index)) frame_index <- frame_index %>% mutate(overlay=NA_character_)
     assign('frame_index',frame_index,envir = .GlobalEnv)
     this_list <- subset(frame_index,KEY==idx)
     for(i in this_list$IDX) build_frame(i)
@@ -23,25 +23,43 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
 }
 stopCluster(cl)
 
-for(i in frame_index %>% drop_na(overlay) %>% pull(IDX)){
-    build_frame(i, force=TRUE)
-    frame <- frame_index %>% subset(IDX==i)
-    for(j in seq(frame$REP)){
-        file.copy(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'),
-                  paste0('output/frames/',str_pad(i,5,pad='0'),'_',str_pad(j,4,pad='0'),'.png'),
-                  overwrite=TRUE)
-    }
-    #file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
-} 
+# for(i in frame_index %>% drop_na(overlay) %>% pull(IDX)){
+#     build_frame(i, force=TRUE)
+#     frame <- frame_index %>% subset(IDX==i)
+#     for(j in seq(frame$REP)){
+#         file.copy(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'),
+#                   paste0('output/frames/',str_pad(i,5,pad='0'),'_',str_pad(j,4,pad='0'),'.png'),
+#                   overwrite=TRUE)
+#     }
+#     #file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
+# } 
 
 message('All frames built')
 
-all_frames <- list.files('output/frames',full.names=TRUE)
-av::av_encode_video(all_frames,
+message('Building chunks')
+
+cl <- makeCluster(active_cores)
+registerDoParallel(cl)
+foreach(idx = unique(frame_index$KEY)) %dopar% {
+    source('R/setup.R')
+    this_key <- frame_index %>% subset(KEY==idx)
+    for(i in this_key$IDX){
+        this_list <- list.files('output/frames',pattern=paste0(str_pad(i,5,pad='0'),'_'),full.names=TRUE)
+        av::av_encode_video(this_list,
+                            framerate = 30,
+                            output = paste0('output/chunks/',str_pad(i,5,pad='0'),'.mp4'))
+    }
+}
+stopCluster(cl)
+
+all_chunks <- list.files('output/chunks',full.names=TRUE)
+
+av::av_encode_video(all_chunks,
                     framerate = 30,
                     output = paste0('output/broadcast/S',match_details$season_no,
                                     '_R',str_pad(match_details$round_no,2,pad='0'),
-                                    '_',match_details$home_short_name,'v',match_details$away_short_name,'.mp4'))
+                                    '_',match_details$home_short_name,'v',match_details$away_short_name,'.mp4'),
+                    verbose = FALSE)
 
 home_goals <- match_file %>% 
     subset(state=='Goal' & possession=='A') %>% 

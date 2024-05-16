@@ -114,14 +114,15 @@ goal_overlay <- function(idx){
             plot_output <- ggplot() +
                 coord_cartesian(xlim = c(0,1920),
                                 ylim = c(0,1080)) +
-                theme_void()
+                theme_void() +
+                background_image(readPNG('images/overlays/black_overlay.png'))
             
-            if(this_moment$state=='Goal_1') plot_output <- plot_output + geom_image(mapping = aes(x=960,y=540,image='images/goal_1.png'),size=0.8)
-            if(this_moment$state=='Goal_2') plot_output <- plot_output + geom_image(mapping = aes(x=960,y=540,image='images/goal_2.png'),size=0.8)
-            if(!str_detect(this_moment$state,'_')) plot_output <- plot_output + geom_image(mapping = aes(x=960,y=540,image='images/goal_background.png'),size=0.8)
+            if(this_moment$state=='Goal_1') plot_output <- plot_output + geom_image(mapping = aes(x=960,y=540,image='images/overlays/goal_1.png'),size=0.8)
+            if(this_moment$state=='Goal_2') plot_output <- plot_output + geom_image(mapping = aes(x=960,y=540,image='images/overlays/goal_2.png'),size=0.8)
+            if(!str_detect(this_moment$state,'_')) plot_output <- plot_output + geom_image(mapping = aes(x=960,y=540,image='images/overlays/goal_background.png'),size=0.8)
             if(this_moment$state=='Goal') plot_output <- plot_output + geom_image(mapping = aes(x=960,y=540,image=player_card),size=0.4)
             if(this_moment$state=='Goal Text') plot_output <- plot_output + 
-                background_image(readPNG('images/goal_text.png')) +
+                background_image(readPNG('images/overlays/goal_text.png')) +
                 geom_image(mapping = aes(x = 960, y=540,image=player_card), size=0.445) +
                 geom_text(player_bio,
                           mapping = aes(x = X, y=Y+15, label=column),

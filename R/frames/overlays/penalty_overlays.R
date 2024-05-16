@@ -1,6 +1,6 @@
 penalty_overlays <- function(){
     penalties <- key_moments %>% 
-        subset(action=='PENALTY') %>% 
+        subset(state=='PENALTY') %>% 
         select(IDX,period,time)
     
     UT <- ymd_hms(match_details$utc,tz='UTC')

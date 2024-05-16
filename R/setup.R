@@ -20,5 +20,7 @@ showtext_auto()
 fixture <- fromJSON('data/fixture_S03.json')
 active_cores <- 7
 
+this_match <- fromJSON('input/match.json')
+
 for(x in list.files('R/support',recursive=TRUE,full.names=TRUE)) source(x)
 for(x in list.files('R/frames',recursive=TRUE,full.names=TRUE)) source(x)
