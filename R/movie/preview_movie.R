@@ -26,7 +26,7 @@ pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 7*normal) %
     bind_rows(data.frame(base='output/layers/title_page.png', REP = 3*normal))
 
 goals <- match_file %>% subset(state=='Goal') %>% select(period,time) %>% mutate(goal=1) %>% rename(secs=time)
-pens <- key_moments %>% subset(action=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
+pens <- key_moments %>% subset(state=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
 high_xg <- match_file %>% 
     mutate(prev_position = lag(position)) %>% 
     subset(!(action%in%c('SHOT','PENALTY') & outcome!='goal' & prev_position=='GK')) %>% 
@@ -171,9 +171,10 @@ frame_index <- frame_index %>%
 
 frame_index <- pre_match %>% 
     bind_rows(frame_index %>% subset(period==1)) %>% 
-    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 30*normal)) %>% 
-    # bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_ratings.png', REP = 8*normal)) %>% 
-    # bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_player.png', REP = 6*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 12*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_ratings.png', REP = 8*normal)) %>%
+    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_player.png', REP = 6*normal)) %>%
+    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 8*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2)) %>% 
     bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 15*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_ratings.png', REP = 10*normal)) %>% 
@@ -181,6 +182,7 @@ frame_index <- pre_match %>%
     bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/league_table_post.png', REP = 25*normal)) %>% 
     group_by(period) %>% 
     fill(c(filename, minute, key, trx),.direction='down') %>%
+    mutate(trx = ifelse(match_state%in%c('show_lineup','injury'),NA_character_,trx)) %>% 
     ungroup() %>% 
     mutate(IDX = row_number()) %>% 
     mutate(KEY = 1 + IDX%%active_cores)

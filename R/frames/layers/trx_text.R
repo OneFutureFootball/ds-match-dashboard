@@ -16,19 +16,20 @@ trx_text <- function(time_idx){
   
   time_stamp <- time_stamp %>% mutate(time = trx_frames %>% subset(IDX==frame_ord & type==status) %>% pull(timestamp))
   
-  if(status%in%c('action','result') & time_stamp$action%in%c('SHOT','PENALTY')) time_stamp <- time_stamp %>% mutate(X4 = 233, Y4=ifelse(possession=='A',704,112))
-  
   if(!is.na(time_stamp$action)) time_stamp <- time_stamp %>% 
     left_join(teams %>% select(team_id,medium_name),by='team_id') %>% 
     mutate(
       action = case_when(
         is.na(action) ~ NA_character_,
+        status=='possession' & action=='PENALTY' ~ 'PENALTY CONCEDED',
         status=='possession' & state%in%c('Free Kick','Corner','Throw In','Goal Kick','Kickoff') ~ toupper(state),
         status=='possession' ~ NA_character_,
         status=='result' ~ case_when(
           action%in%c('SHOT','PENALTY') & outcome=='goal' ~ 'GOAL',
           action%in%c('SHOT','PENALTY') & next_state=='Corner' ~ paste0(toupper(outcome),' - CORNER'),
-          action%in%c('SHOT','PENALTY') ~ toupper(replace_na(outcome,'')),
+          action=='PENALTY' ~ paste0('PENALTY - ',toupper(outcome)),
+          action=='SHOT' & state=='Free Kick' ~ paste0('FREE KICK SHOT - ',toupper(replace_na(outcome,''))),
+          action=='SHOT' ~ paste0('SHOT - ',toupper(outcome)),
           next_state=='Corner' & team_id==next_team ~ ifelse(action=='PASS','CORNER WON',paste0(ifelse(state%in%c('Corner','Throw In','Goal Kick','Kickoff','Free Kick'),toupper(state),action),' - CORNER WON')),
           next_state=='Corner' & team_id!=next_team ~ ifelse(action=='PASS','CORNER CONCEDED',paste0(ifelse(state%in%c('Corner','Throw In','Goal Kick','Kickoff','Free Kick'),toupper(state),action),' - CORNER CONCEDED')),
           next_state=='Throw In' & team_id==next_team ~ ifelse(action=='PASS','THROW IN WON',paste0(ifelse(state%in%c('Corner','Throw In','Goal Kick','Kickoff','Free Kick'),toupper(state),action),' - THROW IN WON')),
@@ -44,13 +45,17 @@ trx_text <- function(time_idx){
         ),
         status=='action' ~ case_when(
           state%in%c('Corner','Throw In','Goal Kick','Kickoff') ~ toupper(state),
+          state=='Free Kick' & action=='PASS' ~ 'FREE KICK - PASS',
+          state=='Free Kick' & action=='PENALTY' ~ 'PENALTY',
+          state=='Free Kick' & action=='SHOT' ~ 'FREE KICK - SHOT',
           TRUE ~ str_replace(action,'PASS','')
         )
       ),
       last_name = case_when(
+        status=='possession' & action=='PENALTY CONCEDED' ~ oth_last_name,
         status!='result' ~ last_name,
         is.na(action) ~ last_name,
-        str_detect(action,'WON|CONCEDED') ~ medium_name,
+        str_detect(action,'WON|CONCEDED') ~ toupper(medium_name),
         TRUE ~ last_name
       )
     )
@@ -59,16 +64,16 @@ trx_text <- function(time_idx){
     coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
     theme_void() +
     #Current transaction
-    geom_shape(mapping = aes(x=230 + 200*c(-1,-1,1,1),
-                             y=40 + 40*c(1,-1,-1,1),
+    geom_shape(mapping = aes(x=960 + 240*c(-1,-1,1,1),
+                             y=20 + 40*c(1,-1,-1,1),
                              fill=factor(time_stamp$team_id)),
                radius=0.017, colour='white',linewidth=0.2) +
-    #Ball + Status
+    #Status
     geom_text(time_stamp,
-              mapping = aes(x=230,y = 30 + 5, label=last_name, colour=short_name),
+              mapping = aes(x=960,y = 20 + 5, label=last_name, colour=short_name),
               hjust = 0.5, vjust=0, family='Montserrat-Bold', size=9) + 
     geom_text(time_stamp %>% drop_na(action),
-              mapping = aes(x=230,y = 30 - 5, label=action, colour=short_name),
+              mapping = aes(x=960,y = 20 - 5, label=action, colour=short_name),
               hjust = 0.5, vjust=1, family='Montserrat-Bold', size=5) + 
     scale_fill_manual(values = team_colours,guide='none') + 
     scale_colour_manual(values = c(team_colours,text_colours[1:2]),guide='none')

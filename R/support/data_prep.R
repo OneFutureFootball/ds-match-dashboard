@@ -37,6 +37,15 @@ away_colour <- data.frame(RED = as.numeric(away_banner[,,1]),
                         str_pad(as.hexmode(round(GRN*255)),2,pad='0'),
                         str_pad(as.hexmode(round(BLU*255)),2,pad='0'))) %>% 
     pull(RGB)
+kit_home <- rep('white',12); names(kit_home) <- 1:12
+kit_home[names(kit_home%in%c())] <- 'black'
+
+kit_away <- rep('black',12); names(kit_away) <- 1:12
+kit_away[names(kit_away%in%c())] <- 'white'
+
+kit_colours <- c(kit_home[names(kit_home)==this_match$home],
+                 kit_away[names(kit_away)==this_match$away])
+names(kit_colours) <- paste0('kit_',names(kit_colours))
 team_colours <- c(home_colour,away_colour)
 names(team_colours) <- c(match_details$home_id, match_details$away_id)
 text_colours <- sapply(team_colours,
@@ -51,89 +60,90 @@ text_colours <- sapply(team_colours,
                            pull(text_colour))
 text_colours <- c(text_colours,text_colours)
 names(text_colours) <- c(match_details$home_short_name,match_details$away_short_name,match_details$home_id, match_details$away_id)
+text_colours <- c(text_colours,kit_colours)
 
+match_file <- fromJSON('input/match_output.json') %>% 
+    mutate(outcome = ifelse(outcome=='wayward','off target',outcome)) %>% 
+    left_join(teams %>% select(team_id,short_name),by='team_id') %>% 
+    left_join(fromJSON('data/player_identity.json') %>% select(ID,number),by='ID') %>% 
+    mutate(
+        ball_x = replace_na(X,108),
+        ball_y = replace_na(Y,40)
+    ) %>% 
+    select(-c(X,Y)) %>% 
+    group_by(period) %>% 
+    mutate(ball_x=ifelse(possession=='B',120-ball_x,ball_x),
+           ball_y=ifelse(possession=='B',80-ball_y,ball_y),
+           prev_state = lag(state),
+           prev_outcome = lag(outcome),
+           prev_outcome2 = lag(outcome,2),
+           prev_position = 'GK',
+           next_state = lead(state),
+           prev_x = lag(ball_x),
+           prev_y = lag(ball_y),
+           prev_x = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome=='blocked'|(prev_outcome=='saved' & position!='GK'),NA_real_,prev_x),
+           prev_y = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome=='blocked'|(prev_outcome=='saved' & position!='GK'),NA_real_,prev_y),
+           prev_x2 = ifelse(is.na(prev_x),NA_real_,lag(ball_x,2)),
+           prev_y2 = ifelse(is.na(prev_y),NA_real_,lag(ball_y,2)),
+           prev_number = ifelse(state%in%c('Kickoff','Throw In','Corner','Free Kick','Keeper Possession','Goal Kick'),NA_real_, lag(number)),
+           prev_number2 = ifelse(is.na(prev_number),NA_real_, lag(number,2)),
+           prev_short_name = ifelse(state%in%c('Kickoff','Throw In','Corner','Free Kick','Keeper Possession','Goal Kick'),NA_character_, lag(short_name)),
+           prev_short_name2 = ifelse(is.na(prev_number),NA_character_, lag(short_name,2)),
+           prev_x2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_x2),
+           prev_y2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_y2),
+           next_x = case_when(
+               action=='shoot' ~ 60 + sign(ball_x - 60)*60,
+               state=='Goal' ~ NA_real_,
+               next_state=='Corner' ~ 60 + sign(ball_x - 60)*60,
+               TRUE ~ lead(ball_x)
+           ),
+           next_y = case_when(
+               action=='shoot' ~ 40,
+               state=='Goal' ~ NA_real_,
+               next_state=='Corner' & action!='shoot' & sign(lead(ball_y)-40)==1 ~ runif(n(),min = min(c(44,max(c(ball_y-20,44)))), max=max(c(44,min(c(ball_y+20,80))))),
+               next_state=='Corner' & action!='shoot' & sign(lead(ball_y)-40)!=1 ~ runif(n(),min = min(c(44,max(c(ball_y-20,44)))), max=max(c(44,min(c(ball_y+20,80))))),
+               TRUE ~ lead(ball_y)),
+           prev_team = lag(team_id),
+           prev_team2= lag(team_id,2),
+           next_team = lead(team_id)
+    ) %>% 
+    ungroup() %>% 
+    mutate(action = case_when(
+        str_detect(action,'pass') ~ 'PASS',
+        action%in%c('through ball','cross') ~ 'PASS',
+        action=='move' ~ 'DRIBBLE',
+        action=='carry' ~ 'DRIBBLE',
+        state=='Goal' ~ 'GOAL',
+        state=='Corner' ~ 'CORNER',
+        state=='Free Kick' & action=='shoot' ~ 'SHOT',
+        state=='Free Kick' & action=='pass' ~ 'FREE KICK',
+        state=='Goal Kick' ~ 'GOAL KICK',
+        action=='shoot' ~ 'SHOT',
+        TRUE ~ toupper(action)
+    )) %>%
+    left_join(fromJSON('data/player_identity.json') %>% select(ID,last_name),by='ID') %>% 
+    left_join(fromJSON('data/player_identity.json') %>% select(oth_ID=ID,oth_last_name=last_name),by='oth_ID') %>% 
+    arrange(period,time) %>% 
+    mutate(last_name = toupper(ifelse(is.na(last_name),full_name,last_name)),
+           oth_last_name = toupper(ifelse(is.na(oth_last_name),oth_full_name,oth_last_name)),
+           LAB = ifelse(is.na(action),NA_character_,last_name),
+           next_action = lead(action),
+           next_state = lead(state),
+           prev_action = lag(action),
+           prev_state = lag(state),
+           prev_technique = lag(technique),
+           prev_time = lag(time),
+           next_time = lead(time),
+           next_time2= lead(time,2),
+           prev_xz = lag(x),
+           prev_yz = lag(y),
+           time = case_when(
+               state=='Goal' & time==prev_time ~ time+1,
+               state=='Free Kick' & next_time-time<=1 ~ time-2,
+               state=='Free Kick' & next_time-time<=2 ~ time-1,
+               TRUE ~ time))
+match_file %>% toJSON() %>% write(file='output/match_file.json')
 
-if(file.exists('output/match_file.json')){
-    match_file <- fromJSON('output/match_file.json')
-}else{
-    match_file <- fromJSON('input/match_output.json') %>% 
-        mutate(outcome = ifelse(outcome=='wayward','off target',outcome)) %>% 
-        left_join(teams %>% select(team_id,short_name),by='team_id') %>% 
-        left_join(fromJSON('data/player_identity.json') %>% select(ID,number),by='ID') %>% 
-        mutate(
-            ball_x = replace_na(X,108),
-            ball_y = replace_na(Y,40)
-        ) %>% 
-        select(-c(X,Y)) %>% 
-        #Flip it so that zero ball_y is on the left of screen rather than the right as it was built
-        mutate(ball_y = 80 - ball_y) %>% 
-        group_by(period) %>% 
-        mutate(ball_x=ifelse(possession=='B',120-ball_x,ball_x),
-               ball_y=ifelse(possession=='B',80-ball_y,ball_y),
-               prev_state = lag(state),
-               prev_outcome = lag(outcome),
-               prev_outcome2 = lag(outcome,2),
-               prev_position = 'GK',
-               next_state = lead(state),
-               prev_x = lag(ball_x),
-               prev_y = lag(ball_y),
-               prev_x = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome=='blocked'|(prev_outcome=='saved' & position!='GK'),NA_real_,prev_x),
-               prev_y = ifelse(state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome=='blocked'|(prev_outcome=='saved' & position!='GK'),NA_real_,prev_y),
-               prev_x2 = ifelse(is.na(prev_x),NA_real_,lag(ball_x,2)),
-               prev_y2 = ifelse(is.na(prev_y),NA_real_,lag(ball_y,2)),
-               prev_number = ifelse(state%in%c('Kickoff','Throw In','Corner','Free Kick','Keeper Possession','Goal Kick'),NA_real_, lag(number)),
-               prev_number2 = ifelse(is.na(prev_number),NA_real_, lag(number,2)),
-               prev_short_name = ifelse(state%in%c('Kickoff','Throw In','Corner','Free Kick','Keeper Possession','Goal Kick'),NA_character_, lag(short_name)),
-               prev_short_name2 = ifelse(is.na(prev_number),NA_character_, lag(short_name,2)),
-               prev_x2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_x2),
-               prev_y2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_y2),
-               next_x = case_when(
-                   action=='SHOT' ~ 60 + sign(ball_x - 60)*60,
-                   state=='Goal' ~ NA_real_,
-                   next_state=='Corner' ~ 60 + sign(ball_x - 60)*60,
-                   TRUE ~ lead(ball_x)
-               ),
-               next_y = case_when(
-                   action=='SHOT' ~ 40,
-                   state=='Goal' ~ NA_real_,
-                   next_state=='Corner' & action!='SHOT' & sign(lead(ball_y)-40)==1 ~ runif(n(),min = min(c(44,max(c(ball_y-20,44)))), max=max(c(44,min(c(ball_y+20,80))))),
-                   next_state=='Corner' & action!='SHOT' & sign(lead(ball_y)-40)!=1 ~ runif(n(),min = min(c(44,max(c(ball_y-20,44)))), max=max(c(44,min(c(ball_y+20,80))))),
-                   TRUE ~ lead(ball_y)),
-               prev_team = lag(team_id),
-               prev_team2= lag(team_id,2),
-               next_team = lead(team_id)
-        ) %>% 
-        ungroup() %>% 
-        mutate(action = case_when(
-            str_detect(action,'pass') ~ 'PASS',
-            action%in%c('through ball','cross') ~ 'PASS',
-            action=='move' ~ 'DRIBBLE',
-            action=='carry' ~ 'DRIBBLE',
-            state=='Goal' ~ 'GOAL',
-            state=='Corner' ~ 'CORNER',
-            state=='Free Kick' & action=='shoot' ~ 'SHOT',
-            state=='Free Kick' & action=='pass' ~ 'FREE KICK',
-            state=='Goal Kick' ~ 'GOAL KICK',
-            action=='shoot' ~ 'SHOT',
-            TRUE ~ toupper(action)
-        )) %>%
-        left_join(fromJSON('data/player_identity.json') %>% select(ID,last_name),by='ID') %>% 
-        arrange(period,time) %>% 
-        mutate(last_name = toupper(ifelse(is.na(last_name),full_name,last_name)),
-               LAB = ifelse(is.na(action),NA_character_,last_name),
-               next_action = lead(action),
-               next_state = lead(state),
-               prev_action = lag(action),
-               prev_state = lag(state),
-               prev_technique = lag(technique),
-               prev_time = lag(time),
-               next_time = lead(time),
-               next_time2= lead(time,2),
-               prev_xz = lag(x),
-               prev_yz = lag(y),
-               time = ifelse(state=='Goal' & time==prev_time,time+1,time))
-    match_file %>% toJSON() %>% write(file='output/match_file.json')
-}
 
 
 all_ratings <- fromJSON('input/ratings_timestamp.json') %>% 
@@ -158,16 +168,16 @@ all_stats <- data.frame(statistic = c('Shots','Shots On Target','Expected Goals'
     subset(statistic!='RED CARDS') %>% 
     group_by(statistic, period, time) %>% 
     mutate(RANK = min_rank(-value),
-           Y = case_when(statistic=='GOALS' ~ 1000,
-                         TRUE ~ 486 - 58*IDX),
+           Y = case_when(statistic=='GOALS' ~ 1030,
+                         TRUE ~ ifelse(statistic=='POSSESSION %',15,0) + 310 - 40*IDX),
            X = case_when(statistic=='GOALS' ~ ifelse(possession=='A',
                                                      960 - 40, 
                                                      960 + 40),
-                         TRUE ~ 960 + ifelse(possession=='A',-310,310)),
-           X1 = 960 + ifelse(possession=='A',-360,360),
+                         TRUE ~ 125 + ifelse(possession=='A',-140,140)),
+           X1 = 125 + ifelse(possession=='A',-165,165),
            X2 = ifelse(possession=='A',
-                       X1 + 720*value,
-                       X1 - 720*value),
+                       X1 + 330*value,
+                       X1 - 330*value),
            KEEP = !statistic%in%c('GOALS')) %>% 
     group_by(statistic,period,time,value) %>% 
     mutate(N = n()) %>% 
@@ -247,7 +257,7 @@ key_moments <- match_file %>%
            prev_team = lag(team_id)) %>% 
     mutate(
         time = case_when(
-            !is.na(card_given) & !action%in%c('SHOT','PENALTY') ~ time,
+            !is.na(card_given) & !action%in%c('shoot','penalty') ~ time,
             state%in%c('Corner','Free Kick') ~ old_time,
             TRUE ~ time),
         next_time = case_when(
@@ -272,9 +282,9 @@ key_moments <- match_file %>%
             action=='KICKOFF' ~ action,
             action=='SHOT' ~ 'SHOT',
             state=='Substitution' & oth_role=='injury' ~ 'INJURY',
-            state=='Substitution' ~ paste0('SUBBED IN for ',oth_position,' ',toupper(oth_full_name),ifelse(oth_role=='injury',' (INJ)','')),
+            state=='Substitution' ~ paste0(' > ',toupper(oth_full_name)),
             state=='Corner' ~ 'CORNER',
-            action=='PENALTY' ~ paste0('PENALTY - ',oth_position,' ',toupper(oth_full_name),ifelse(oth_role=='foul',' (FOUL)',' (OTH)')),
+            action=='PENALTY' ~ 'PENALTY',
             card_given=='red' ~ 'RED CARD',
             card_given=='yellow' ~ 'YELLOW CARD',
             card_given=='yellow-red' ~ 'SECOND YELLOW CARD'
@@ -286,12 +296,12 @@ key_moments <- match_file %>%
                 outcome=='blocked' ~ 'SHOT BLOCKED',
                 TRUE ~ 'SHOT OFF TARGET'
             ),ifelse(next_state=='Corner',' - CORNER','')),
-            action=='PENALTY' ~ paste0(case_when(
-                outcome=='goal' ~ 'PENALTY GOAL - ',
-                outcome=='saved'~ 'PENALTY SAVED - ',
-                TRUE ~ 'PENALTY MISSED - ',
-            ),toupper(oth_full_name),ifelse(oth_role=='foul',' (FOUL)',' (OTH)')),
-            state=='Substitution' ~ paste0('SUBBED IN for ',oth_position,' ',toupper(oth_full_name),ifelse(oth_role=='injury',' (INJ)','')),
+            action=='PENALTY' ~ case_when(
+                outcome=='goal' ~ 'PENALTY GOAL',
+                outcome=='saved'~ 'PENALTY SAVED',
+                TRUE ~ 'PENALTY MISSED',
+            ),
+            state=='Substitution' ~ paste0(' > ',toupper(oth_full_name)),
             TRUE ~ live_label
         ),
         team_id = case_when(
@@ -333,6 +343,15 @@ key_moments <- key_moments %>%
                          post_label = live_label,
                          full_name = oth_full_name,
                          position = oth_position)) %>% 
+    bind_rows(key_moments %>% 
+                  subset(action=='PENALTY') %>% 
+                  mutate(state='PENALTY',
+                         action='CONCEDED',
+                         live_label = 'PENALTY CONCEDED',
+                         team_id = ifelse(team_id==match_details$home_id,match_details$away_id,match_details$home_id),
+                         post_label = live_label,
+                         full_name = oth_full_name,
+                         position = oth_position)) %>% 
     #First Goal overlay is 10 seconds after the goal
     bind_rows(match_file %>% subset(state=='Goal') %>% select(period,time,state,possession,team_id,last_name) %>% mutate(time = time+10)) %>% 
     bind_rows(match_file %>% subset(state=='Goal') %>% select(period,time,state,possession,team_id,last_name) %>% mutate(time = time+0, state='Goal_2')) %>% 
@@ -346,7 +365,7 @@ key_moments <- key_moments %>%
     bind_rows(match_file %>% subset(state=='Goal') %>% select(period,time,state,possession,team_id,last_name) %>% mutate(time = time+8, state='Goal_2')) %>% 
     bind_rows(match_file %>% subset(state=='Goal') %>% select(period,time,state,possession,team_id,last_name) %>% mutate(time = time+9, state='Goal_1')) %>% 
     bind_rows(match_file %>% subset(state=='Goal') %>% select(period,time,state,possession,team_id,last_name) %>% mutate(time = time+11, state='Goal Text')) %>% 
-    arrange(period,time) %>% 
+    arrange(period,time,desc(state)) %>% 
     mutate(
         MIN = case_when(
             period==1 ~ paste0(ifelse(time<=60*45,ceiling(time/60),paste0('45+',ceiling(time/60)-45)),"'"),
@@ -359,63 +378,80 @@ key_moments <- key_moments %>%
         time = round(time),
         time = case_when(
             str_detect(state,'Goal') ~ time,
-            action=='PENALTY' & !str_detect(live_label,'CARD') ~ prev_time + 3,
+            state=='PENALTY' ~ prev_time + 3,
+            action=='PENALTY' & !str_detect(live_label,'CARD') ~ time - 2,
             TRUE ~ time),
         next_time = round(case_when(
-            next_time - time < 5 ~ next_time,
             state%in%c('Corner','Free Kick','Substition') ~ old_time,
+            next_time - time < 5 ~ next_time,
             TRUE ~ time + 3 + 4*runif(n())))
     ) %>% 
+    arrange(period,time) %>% 
     left_join(teams,by='team_id')
 
 stat_times <- all_stats %>% 
-    ungroup() %>% select(period,time) %>% 
-    unique() %>% mutate(KEY = row_number()%%active_cores + 1) %>% subset(!(period==1 & time==0))
+    ungroup() %>% 
+    select(period,time) %>% 
+    unique() %>% 
+    bind_rows(data.frame(period=1,time=0)) %>% 
+    arrange(period,time) %>% 
+    mutate(KEY = row_number()%%active_cores + 1)
 
 trx_list <- time_base %>% 
     inner_join(match_file %>% subset(state!='Substitution'),by=c('period'='period','secs'='time')) %>% 
     select(period,secs,IDX,possession) %>% 
     mutate(KEY = 1 + row_number()%%active_cores)
 
+pitch_transform <- function(x,coord='X') ifelse(coord=='X',
+                                                420 + (1465-420)*x/120,
+                                                140 + (805-140)*x/80)
 
 time_prog <- match_file %>% 
     subset(state!='Substitution') %>%
     subset(period>0) %>% 
-    mutate(time = case_when(
-        action=='PENALTY' ~ prev_time+1,
+    mutate(old_time = time,
+           time = case_when(
+        action=='PENALTY' ~ prev_time+3,
         TRUE ~ time)) %>% 
     subset(!state%in%c('Substitution')) %>% 
     ungroup() %>% 
-    mutate(X = 233 + (ball_y-40)/40*224,
-           Y = 408 + (ball_x-60)/60*294,
-           X2= 233 + (prev_y-40)/40*224,
-           Y2= 408 + (prev_x-60)/60*294,
-           X3= 233 + (prev_y2-40)/40*224,
-           Y3= 408 + (prev_x2-60)/60*294,
-           X4= 233 + (next_y-40)/40*224,
-           Y4= 408 + (next_x-60)/60*294,
+    mutate(X = sapply(ball_x,function(x) pitch_transform(x,'X')),
+           Y = sapply(ball_y,function(x) pitch_transform(x,'Y')),
+           X2= sapply(prev_x,function(x) pitch_transform(x,'X')),
+           Y2= sapply(prev_y,function(x) pitch_transform(x,'Y')),
+           X3= sapply(prev_x2,function(x) pitch_transform(x,'X')),
+           Y3= sapply(prev_y2,function(x) pitch_transform(x,'Y')),
+           X4= sapply(next_x,function(x) pitch_transform(x,'X')),
+           Y4= sapply(next_y,function(x) pitch_transform(x,'Y')),
            IDX = row_number(),
            KEY = 1 + IDX%%active_cores)
 
 trx_frames <- time_prog %>% 
-    select(IDX,period,time,crest=possession,team_id,state,action,technique,outcome,full_name) %>% 
+    select(IDX,period,time,old_time,crest=possession,team_id,state,action,technique,outcome,full_name) %>% 
     group_by(period) %>% 
+    arrange(period,time) %>% 
     mutate(next_time = lead(time),
            prev_time = lag(time),
+           prev_action=lag(action),
            prev_state = lag(state),
            next_poss = lead(crest),
            next_state = lead(state)) %>% 
     ungroup() %>% 
     mutate(
-        action_time = ifelse(is.na(prev_time),1,time),
+        action_time = case_when(
+            is.na(prev_time) ~ 1,
+            action=='PENALTY' ~ old_time,
+            TRUE ~ time),
         possession_time = case_when(
             state=='Kickoff' ~ time,
             technique=='head' ~ NA_real_,
-            time - prev_time<=2 ~ NA_real_,
-            time - prev_time==3 ~ time-1,
+            action=='PENALTY' ~ time,
+            prev_action=='PENALTY' ~ time-1,
+            state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & time-prev_time > 7 ~ prev_time + 5,
+            time - prev_time<=1 ~ NA_real_,
+            time - prev_time<=3 ~ time-1,
             time - prev_time==4 ~ time-2,
             time - prev_time==5 ~ time-2,
-            state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & time-prev_time > 7 ~ prev_time + 5,
             TRUE ~ ceiling(0.4*prev_time + 0.6*time)
         ),
         result_time = case_when(
@@ -423,6 +459,7 @@ trx_frames <- time_prog %>%
             state=='Kickoff' ~ NA_real_,
             next_state=='Goal' ~ NA_real_,
             next_state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & next_time-time > 7 ~ time + 3,
+            action=='PENALTY' ~ next_time-2,
             next_time - time==1 ~ NA_real_,
             next_time - time<=4 ~ time+1,
             next_time - time<=6 ~ time+2,
@@ -437,22 +474,35 @@ trx_frames <- time_prog %>%
     fill(c(crest),.direction='down') %>% 
     ungroup() %>% 
     drop_na(timestamp) %>% 
-    select(IDX,type,period,timestamp,crest) %>% 
+    select(IDX,type,period,timestamp,old_time,crest) %>% 
+    arrange(IDX,period,timestamp) %>% 
+    group_by(period) %>% 
+    mutate(next_time = lead(timestamp),
+           prev_time = lag(timestamp)) %>% 
+    subset(timestamp < next_time & timestamp > prev_time) %>% 
+    ungroup() %>% 
     mutate(ORD = row_number(),
            KEY = 1 + ORD%%active_cores)
 
 key_moments <- key_moments %>% 
     left_join(
         trx_frames %>% 
-            select(IDX,period,type,timestamp) %>% 
+            select(IDX,period,old_time,type,timestamp) %>% 
+            mutate(type = paste0(type,'_time')) %>% 
             spread(type,timestamp) %>% 
-            select(period,action,result),
-        by=c('period'='period','time'='action')) %>% 
+            select(period,old_time,action_time,result_time),
+        by=c('period'='period','old_time'='old_time')) %>% 
     group_by(period,time) %>% 
-    mutate(next_time = case_when(
-        is.na(result) ~ min(next_time),
-        action=='SHOT' ~ result,
+    mutate(
+        time = case_when(
+            is.na(action_time) ~ min(time),
+            action=='PENALTY' ~ action_time,
+            TRUE ~ time
+        ),
+        next_time = case_when(
+        is.na(result_time) ~ min(next_time),
+        action=='SHOT' ~ result_time,
         TRUE ~ next_time
     )) %>% 
     ungroup() %>% 
-    select(-result)
+    select(-c(action_time,result_time))

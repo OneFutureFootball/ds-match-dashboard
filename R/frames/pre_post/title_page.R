@@ -46,7 +46,7 @@ title_page <- function(){
         theme_void() +
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
         background_image(readPNG(img_option)) +
-        background_image(readPNG('images/title_page.png')) +
+        background_image(readPNG('images/backgrounds/title_page.png')) +
         geom_image(match_teams,mapping = aes(x=X,y=Y,image=crest),size=0.28) +
         annotate('text',x=620,y=10,hjust=0.5,vjust=0.5,label=match_details$stadium_location, 
                  colour='#FFFFFF', family='Montserrat-Medium',size=10) +
