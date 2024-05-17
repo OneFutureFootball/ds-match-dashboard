@@ -86,7 +86,7 @@ frame_index <- time_base %>%
     left_join(goals,by=c('period','secs')) %>% 
     left_join(pens,by=c('period','secs')) %>% 
     left_join(reds,by=c('period','secs')) %>% 
-    left_join(high_xg,by=c('period','secs')) %>% 
+    left_join(selected_shots,by=c('period','secs')) %>% 
     left_join(kickoffs,by=c('period','secs')) %>% 
     left_join(corners,by=c('period','secs')) %>% 
     left_join(subs,by=c('period','secs')) %>% 
