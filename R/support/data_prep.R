@@ -92,13 +92,13 @@ match_file <- fromJSON('input/match_output.json') %>%
            prev_x2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_x2),
            prev_y2 = ifelse(prev_state%in%c('Kickoff','Throw In','Corner', 'Free Kick', 'Keeper Possession', 'Goal Kick')|prev_outcome2=='blocked'|(prev_outcome2=='saved' & prev_position!='GK'),NA_real_,prev_y2),
            next_x = case_when(
-               action=='shoot' ~ 60 + sign(ball_x - 60)*60,
+               action%in%c('penalty','shoot') ~ 60 + sign(ball_x - 60)*60,
                state=='Goal' ~ NA_real_,
                next_state=='Corner' ~ 60 + sign(ball_x - 60)*60,
                TRUE ~ lead(ball_x)
            ),
            next_y = case_when(
-               action=='shoot' ~ 40,
+               action%in%c('penalty','shoot') ~ 40,
                state=='Goal' ~ NA_real_,
                next_state=='Corner' & action!='shoot' & sign(lead(ball_y)-40)==1 ~ runif(n(),min = min(c(44,max(c(ball_y-20,44)))), max=max(c(44,min(c(ball_y+20,80))))),
                next_state=='Corner' & action!='shoot' & sign(lead(ball_y)-40)!=1 ~ runif(n(),min = min(c(44,max(c(ball_y-20,44)))), max=max(c(44,min(c(ball_y+20,80))))),

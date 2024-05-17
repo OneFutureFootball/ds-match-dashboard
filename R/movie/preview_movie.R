@@ -39,13 +39,18 @@ high_xg <- match_file %>%
 selected_shots <- high_xg
 while(nrow(selected_shots) < min(12,nrow(match_file %>% drop_na(xg)))){
     other_shots <- match_file %>% 
+        group_by(period) %>% 
+        mutate(PL=max(time)) %>% 
         drop_na(xg) %>% 
         left_join(selected_shots %>% select(period,secs,shot),by=c('period','time'='secs')) %>% 
         mutate(prev_shot = time*shot,
                next_shot = time*shot) %>% 
         fill(prev_shot,.direction='down') %>% 
         fill(next_shot,.direction='up') %>% 
-        mutate(old_delay = next_shot - prev_shot,
+        mutate(
+            prev_shot = replace_na(prev_shot,0),
+            next_shot = ifelse(is.na(next_shot),PL,next_shot),
+            old_delay = next_shot - prev_shot,
                new_delay_prev = time - prev_shot,
                new_delay_next = next_shot - time) %>% 
         mutate(
