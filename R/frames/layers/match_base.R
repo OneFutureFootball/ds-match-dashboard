@@ -62,9 +62,15 @@ match_base <- function(){
              colour='white',linewidth=0.6, lineend='round') +
     geom_arc(mapping = aes(x0=524.5,y0=472.5,r=261.25/3,start=0.7,end=2.5),
              colour='white',linewidth=0.6, lineend='round') +
-    geom_arc(mapping = aes(x0=420,y0=805,r=15,start=pi/2,end=pi),
-             colour='white',linewidth=0.6, lineend='round') +
-    geom_point(mapping = aes(x=c(524.5,942.5,1360.5), y=472.5),
+      geom_arc(mapping = aes(x0=420,y0=805,r=15,start=pi/2,end=pi),
+               colour='white',linewidth=0.6, lineend='round') +
+      geom_arc(mapping = aes(x0=1465,y0=805,r=15,start=3*pi/2,end=pi),
+               colour='white',linewidth=0.6, lineend='round') +
+      geom_arc(mapping = aes(x0=420,y0=140,r=15,start=0,end=pi/2),
+               colour='white',linewidth=0.6, lineend='round') +
+      geom_arc(mapping = aes(x0=1465,y0=140,r=15,start=3*pi/2,end=2*pi),
+               colour='white',linewidth=0.6, lineend='round') +
+      geom_point(mapping = aes(x=c(524.5,942.5,1360.5), y=472.5),
                colour='white',size=1.2) +
     geom_point(mapping = aes(x=c(420,420,1465,1465), y=c(140,805,140,805)),
                colour='white',size=0.1) +
