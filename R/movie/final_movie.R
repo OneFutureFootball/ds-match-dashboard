@@ -54,6 +54,7 @@ stopCluster(cl)
 
 all_chunks <- list.files('output/chunks',full.names=TRUE)
 
+message('Final Movie')
 av::av_encode_video(all_chunks,
                     framerate = 30,
                     output = paste0('output/broadcast/S',match_details$season_no,
