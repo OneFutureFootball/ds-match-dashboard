@@ -21,12 +21,14 @@ trx_text <- function(time_idx){
     mutate(
       action = case_when(
         is.na(action) ~ NA_character_,
-        status=='possession' & action=='PENALTY' ~ 'PENALTY CONCEDED',
+        status=='possession' & action=='PENALTY' ~ 'PENALTY',
         status=='possession' & state%in%c('Free Kick','Corner','Throw In','Goal Kick','Kickoff') ~ toupper(state),
         status=='possession' ~ NA_character_,
         status=='result' ~ case_when(
-          action%in%c('SHOT','PENALTY') & outcome=='goal' ~ 'GOAL',
-          action%in%c('SHOT','PENALTY') & next_state=='Corner' ~ paste0(toupper(outcome),' - CORNER'),
+          action%in%c('SHOT') & outcome=='goal' ~ 'GOAL',
+          action%in%c('SHOT') & next_state=='Corner' ~ paste0(toupper(outcome),' - CORNER'),
+          action%in%c('SHOT') & outcome=='goal' ~ 'PENALTY GOAL',
+          action%in%c('SHOT') & next_state=='Corner' ~ paste0('PENALTY - ',toupper(outcome),' - CORNER'),
           action=='PENALTY' ~ paste0('PENALTY - ',toupper(outcome)),
           action=='SHOT' & state=='Free Kick' ~ paste0('FREE KICK SHOT - ',toupper(replace_na(outcome,''))),
           action=='SHOT' ~ paste0('SHOT - ',toupper(outcome)),
@@ -36,6 +38,7 @@ trx_text <- function(time_idx){
           next_state=='Throw In' & team_id!=next_team ~ ifelse(action=='PASS','OUT OF PLAY',paste0(ifelse(state%in%c('Corner','Throw In','Goal Kick','Kickoff','Free Kick'),toupper(state),action),' - OUT OF PLAY')),
           outcome%in%c('turnover','lost possession') ~ ifelse(action=='PASS','TURNOVER',paste0(ifelse(state%in%c('Corner','Throw In','Goal Kick','Kickoff','Free Kick'),toupper(state),action),' - TURNOVER')),
           outcome=='intercepted' ~ ifelse(action=='PASS','INTERCEPTED',paste0(ifelse(state%in%c('Corner','Throw In','Goal Kick','Kickoff','Free Kick'),toupper(state),action),' - INTERCEPTED')),
+          next_action=='PENALTY' ~ 'PENALTY CONCEDED',
           next_state=='Free Kick' & team_id==next_team ~ 'FREE KICK WON',
           next_state=='Free Kick' & team_id!=next_team ~ 'FREE KICK CONCEDED',
           next_state=='Goal Kick' & team_id==next_team ~ 'GOAL KICK WON',
@@ -53,6 +56,7 @@ trx_text <- function(time_idx){
       ),
       last_name = case_when(
         status=='possession' & action=='PENALTY CONCEDED' ~ oth_last_name,
+        status=='result' & next_action=='PENALTY' ~ oth_last_name,
         status!='result' ~ last_name,
         is.na(action) ~ last_name,
         str_detect(action,'WON|CONCEDED') ~ toupper(medium_name),

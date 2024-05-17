@@ -333,7 +333,7 @@ key_moments <- key_moments %>%
     bind_rows(key_moments %>%
                   drop_na(card_given) %>% 
                   subset(action%in%c('SHOT','PENALTY')) %>% 
-                  mutate(time = prev_time + 2,
+                  mutate(time = prev_time + 8,
                          live_label = case_when(
                              card_given=='red' ~ 'RED CARD',
                              card_given=='yellow' ~ 'YELLOW CARD',
@@ -411,20 +411,26 @@ time_prog <- match_file %>%
     subset(period>0) %>% 
     mutate(old_time = time,
            time = case_when(
-        action=='PENALTY' ~ prev_time+3,
-        TRUE ~ time)) %>% 
+               action=='PENALTY' ~ prev_time+3,
+               TRUE ~ time)) %>% 
     subset(!state%in%c('Substitution')) %>% 
     ungroup() %>% 
-    mutate(X = sapply(ball_x,function(x) pitch_transform(x,'X')),
-           Y = sapply(ball_y,function(x) pitch_transform(x,'Y')),
-           X2= sapply(prev_x,function(x) pitch_transform(x,'X')),
-           Y2= sapply(prev_y,function(x) pitch_transform(x,'Y')),
-           X3= sapply(prev_x2,function(x) pitch_transform(x,'X')),
-           Y3= sapply(prev_y2,function(x) pitch_transform(x,'Y')),
-           X4= sapply(next_x,function(x) pitch_transform(x,'X')),
-           Y4= sapply(next_y,function(x) pitch_transform(x,'Y')),
-           IDX = row_number(),
-           KEY = 1 + IDX%%active_cores)
+    mutate(
+        ball_x = case_when(
+            action=='PENALTY' & possession=='B' ~ 15,
+            action=='PENALTY' & possession=='A' ~ 120-15,
+            TRUE ~ ball_x
+        ),
+        X = sapply(ball_x,function(x) pitch_transform(x,'X')),
+        Y = sapply(ball_y,function(x) pitch_transform(x,'Y')),
+        X2= sapply(prev_x,function(x) pitch_transform(x,'X')),
+        Y2= sapply(prev_y,function(x) pitch_transform(x,'Y')),
+        X3= sapply(prev_x2,function(x) pitch_transform(x,'X')),
+        Y3= sapply(prev_y2,function(x) pitch_transform(x,'Y')),
+        X4= sapply(next_x,function(x) pitch_transform(x,'X')),
+        Y4= sapply(next_y,function(x) pitch_transform(x,'Y')),
+        IDX = row_number(),
+        KEY = 1 + IDX%%active_cores)
 
 trx_frames <- time_prog %>% 
     select(IDX,period,time,old_time,crest=possession,team_id,state,action,technique,outcome,full_name) %>% 
@@ -457,9 +463,10 @@ trx_frames <- time_prog %>%
         result_time = case_when(
             state=='Kickoff' & next_time - time > 3 ~ time+2,
             state=='Kickoff' ~ NA_real_,
+            action=='PENALTY' & outcome!='goal' ~ next_time-2,
+            action=='PENALTY' & outcome=='goal' ~ next_time,
             next_state=='Goal' ~ NA_real_,
             next_state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & next_time-time > 7 ~ time + 3,
-            action=='PENALTY' ~ next_time-2,
             next_time - time==1 ~ NA_real_,
             next_time - time<=4 ~ time+1,
             next_time - time<=6 ~ time+2,
@@ -474,12 +481,12 @@ trx_frames <- time_prog %>%
     fill(c(crest),.direction='down') %>% 
     ungroup() %>% 
     drop_na(timestamp) %>% 
-    select(IDX,type,period,timestamp,old_time,crest) %>% 
+    select(IDX,type,period,timestamp,old_time,crest,action) %>% 
     arrange(IDX,period,timestamp) %>% 
     group_by(period) %>% 
     mutate(next_time = lead(timestamp),
            prev_time = lag(timestamp)) %>% 
-    subset(timestamp < next_time & timestamp > prev_time) %>% 
+    subset(action=='PENALTY'|(timestamp < next_time & timestamp > prev_time)) %>% 
     ungroup() %>% 
     mutate(ORD = row_number(),
            KEY = 1 + ORD%%active_cores)
@@ -496,13 +503,16 @@ key_moments <- key_moments %>%
     mutate(
         time = case_when(
             is.na(action_time) ~ min(time),
-            action=='PENALTY' ~ action_time,
+            action=='PENALTY' & !str_detect(live_label,'CARD') ~ action_time,
             TRUE ~ time
         ),
         next_time = case_when(
-        is.na(result_time) ~ min(next_time),
-        action=='SHOT' ~ result_time,
-        TRUE ~ next_time
-    )) %>% 
+            is.na(result_time) ~ min(next_time),
+            action=='SHOT' ~ result_time,
+            action=='PENALTY' ~ result_time,
+            TRUE ~ next_time
+        )) %>% 
     ungroup() %>% 
-    select(-c(action_time,result_time))
+    select(-c(action_time,result_time)) %>% 
+    arrange(period,time) %>% 
+    mutate(IDX=row_number())

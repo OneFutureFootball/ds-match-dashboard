@@ -5,7 +5,7 @@ build_frame <- function(idx, force=FALSE){
     if(!force & file.exists(paste0('output/layers/99/Frame_',str_pad(frame$IDX,5,pad='0'),'.png'))) return(NULL)
     
     FRAME <- image_read(frame$base)
-    
+
     if(!is.na(frame$filename)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/06/Clock',frame$filename)))
     if(!is.na(frame$minute)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/02/',frame$minute)))
     if(!is.na(frame$key)) FRAME <- FRAME %>% image_composite(image_read(paste0('output/layers/03/',frame$key)))
