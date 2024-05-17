@@ -416,11 +416,6 @@ time_prog <- match_file %>%
     subset(!state%in%c('Substitution')) %>% 
     ungroup() %>% 
     mutate(
-        ball_x = case_when(
-            action=='PENALTY' & possession=='B' ~ 15,
-            action=='PENALTY' & possession=='A' ~ 120-15,
-            TRUE ~ ball_x
-        ),
         X = sapply(ball_x,function(x) pitch_transform(x,'X')),
         Y = sapply(ball_y,function(x) pitch_transform(x,'Y')),
         X2= sapply(prev_x,function(x) pitch_transform(x,'X')),
