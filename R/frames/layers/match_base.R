@@ -1,12 +1,12 @@
 match_base <- function(){
   
-  pitch_image <- image_scale(image_crop(
-    image_rotate(image_read('https://assets.1ff.com/webui/backgrounds/pitch.png'),90),
-    '957x703+60+180'),'1050x700!'); pitch_image
+  pitch_image <- readPNG('images/backgrounds/pitch.png')
   plot_output <- ggplot() +
     #Main purple background
-    background_image(image_read('https://assets.1ff.com/webui/backgrounds/purple.png')) +
-    # background_image(readPNG('images/backgrounds/background_new.png')) +
+    coord_cartesian(xlim = c(0,1920), ylim = c(0,1080)) +
+    theme_void() +
+    #background_image(readPNG('images/backgrounds/background.png')) +
+    theme(panel.background = element_rect(fill='#260455',colour=NA)) +
     geom_image(mapping = aes(x=125 - 100, y=1020, image=paste0('images/managers/',this_match$home_name,'-small.png')),size=0.14) +
     geom_image(mapping = aes(x=125 + 100, y=1020, image=paste0('images/managers/',this_match$away_name,'-small.png')),size=0.14) +
     geom_image(mapping = aes(x=125,y=1020,image='images/icons/ball.png'),size=0.06) +
@@ -142,8 +142,6 @@ match_base <- function(){
     geom_image(mapping = aes(x=c(708,1182,945,470,1420), y=c(855,855,100,100,100), image=paste0('images/banners/adboard/',match_details$home_short_name,'.png')), size=0.22) +
     geom_image(mapping = aes(x=1526, y=c(255,690), image=paste0('images/banners/adboard/',match_details$home_short_name,'.png')), size=0.22*5.25, angle=90) +
     geom_image(mapping = aes(x=365, y=c(255,690), image=paste0('images/banners/adboard/',match_details$home_short_name,'.png')), size=0.22*5.25, angle=270) +
-    coord_cartesian(xlim = c(0,1920), ylim = c(0,1080)) +
-    theme_void() +
     theme(legend.position = 'none')
   
   
@@ -154,4 +152,3 @@ match_base <- function(){
          dpi=300,
          units='px')
 }
-match_base()

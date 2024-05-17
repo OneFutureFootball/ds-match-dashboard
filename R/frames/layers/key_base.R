@@ -36,12 +36,12 @@ key_base <- function(idx,live=TRUE){
     if(live){
         goals <- key_moments %>% 
             subset(outcome=='goal') %>%
-            subset(!str_detect(live_label,'CARD')) %>% 
+            subset(!str_detect(live_label,'CARD|CONCED')) %>% 
             subset(IDX<idx)
     }else{
         goals <- key_moments %>% 
             subset(outcome=='goal') %>%
-            subset(!str_detect(live_label,'CARD')) %>% 
+            subset(!str_detect(live_label,'CARD|CONCED')) %>% 
             subset(IDX<=idx)
         
     }
@@ -50,7 +50,7 @@ key_base <- function(idx,live=TRUE){
         mutate(IDX = row_number()) %>%
         mutate(XT = 960 + ifelse(possession=='A',-20,20),
                XP = 960 + ifelse(possession=='A',-70,70),
-               Y = 1005 - IDX*ifelse(n()>=4,20,25))
+               Y = 1005 - IDX*ifelse(n()>=4,16,23))
     
     pers <- key_prog %>% tail(1) %>% pull(period)
     mins <- key_prog %>% tail(1) %>% mutate(MIN = floor(ifelse(live,time,next_time)/60)) %>% pull(MIN)

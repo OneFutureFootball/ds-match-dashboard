@@ -12,6 +12,7 @@ lineup_base <- function(trx){
         ) %>% 
         left_join(teams %>% select(team_id,short_name,crest) %>% rename(kit=crest),by='team_id') %>% 
         mutate(kit = case_when(
+            position=='GK' & team_id==12 ~ 'images/kits/gk/TOK-GK.png',
             position=='GK' ~ str_replace(str_replace(kit,'crests','kits'),'-256','-GK'),
             TRUE ~ str_replace(str_replace(kit,'crests','kits'),'-256',paste0('-shirt-',ifelse(team_class=='A','Home','Away'),'-small'))))
     
