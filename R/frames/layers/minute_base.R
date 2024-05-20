@@ -9,7 +9,7 @@ minute_base <- function(pers,mins){
                        TRUE ~ '0'))
     
     ratings <- all_ratings %>% subset(period==pers & time==mins)
-    if(nrow(ratings)==0) ratings <- all_ratings %>% subset(period==1 & time==1) %>% mutate(time=0)
+    if(nrow(ratings)==0) ratings <- all_ratings %>% subset(period==1 & time==min(time[period==1])) %>% mutate(time=0)
     
     ratings <- ratings %>% 
         arrange(desc(value),full_name) %>% 

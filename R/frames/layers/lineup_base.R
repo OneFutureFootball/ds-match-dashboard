@@ -11,12 +11,28 @@ lineup_base <- function(trx){
             Y = sapply(Y,function(x) pitch_transform(x,'Y')),
         ) %>% 
         left_join(teams %>% select(team_id,short_name,crest) %>% rename(kit=crest),by='team_id') %>% 
-        mutate(kit = case_when(
+        mutate(
+            kit = case_when(
             position=='GK' & team_id==12 ~ 'images/kits/gk/TOK-GK.png',
             position=='GK' ~ str_replace(str_replace(kit,'crests','kits'),'-256','-GK'),
-            TRUE ~ str_replace(str_replace(kit,'crests','kits'),'-256',paste0('-shirt-',ifelse(team_class=='A','Home','Away'),'-small'))))
+            TRUE ~ str_replace(str_replace(kit,'crests','kits'),'-256',paste0('-shirt-',ifelse(team_class=='A','Home','Away'),'-small'))),
+            WHITE = case_when(
+                position=='GK' & team_id==2 ~ TRUE,
+                TRUE ~ FALSE
+            ),
+            BLACK = case_when(
+                position=='GK' & team_id==6 ~ TRUE,
+                TRUE ~ FALSE
+            ),
+            FILL = case_when(
+                WHITE|BLACK ~ FALSE,
+                position=='GK' ~ FALSE,
+                team_class=='B' & team_id%in%c(6,9,10) ~ TRUE,
+                team_class=='A' & team_id%in%c(6) ~ TRUE,
+                TRUE ~ FALSE
+            ))
     
-    # card_overlay(unique(lineups$period),unique(lineups$time))
+    card_overlay(unique(lineups$period),unique(lineups$time))
     
     
     subs <- match_file %>% 
@@ -41,18 +57,28 @@ lineup_base <- function(trx){
                                  y=Y,
                                  image=kit),
                    size=0.075) +
-        geom_text(lineups %>% subset(!(position!='GK' & team_class=='B' & team_id%in%c(6,9))),
+        geom_text(lineups %>% subset(!FILL & !WHITE & !BLACK),
                   mapping = aes(x=X,
                                 y=Y+5,
                                 label=number,
                                 colour=paste0('kit_',team_id)),
                   hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=7) +
-        geom_rect(lineups %>% subset(position!='GK' & team_class=='B' & team_id%in%c(6,9)),
+        geom_text(lineups %>% subset(WHITE),
+                  mapping = aes(x=X,
+                                y=Y+5,
+                                label=number),
+                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=7, colour='white') +
+        geom_text(lineups %>% subset(BLACK),
+                  mapping = aes(x=X,
+                                y=Y+5,
+                                label=number),
+                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=7, colour='black') +
+        geom_rect(lineups %>% subset(FILL),
                    mapping = aes(xmin=X-20,xmax=X+20,
                                  ymin=Y-10,ymax=Y+20,
                                  fill=factor(team_id)),
                    colour='transparent',alpha=0.6) +
-        geom_text(lineups %>% subset(position!='GK' & team_class=='B' & team_id%in%c(6,9)),
+        geom_text(lineups %>% subset(FILL),
                   mapping = aes(x=X,
                                 y=Y+5,
                                 label=number,
