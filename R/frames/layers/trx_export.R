@@ -38,19 +38,23 @@ trx_export <- function(time_idx,force=FALSE){
       RANG = atan((X - X2)/(Y - Y2)),
       RXS = sign(X2 - X),
       RYS = sign(Y2 - Y),
-      RX = X + 17*ifelse(prev_action%in%c('MOVE','CARRY','DRIBBLE'),-RXS,RXS)*abs(sin(RANG)),
-      RY = Y + 17*ifelse(prev_action%in%c('MOVE','CARRY','DRIBBLE'),-RXS,RXS)*abs(cos(RANG)),
       RX = case_when(
         state%in%c('Keeper Possession','Free Kick','Goal Kick','Kickoff') ~ X + 17*ifelse(possession=='A',1,-1),
         state%in%c('Throw In') ~ X,
-        state=='Corner' ~ X - 17*sign(ball_y-40)*sin(pi/4),
-        TRUE ~ RX
+        state=='Corner' ~ X - 17*sign(ball_x-60)*sin(pi/4),
+        X > X2  & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ X + 17*abs(sin(RANG)),
+        X <= X2 & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ X - 17*abs(sin(RANG)),
+        X >  X2 ~ X - 17*abs(sin(RANG)),
+        X <= X2 ~ X + 17*abs(sin(RANG))
       ),
       RY = case_when(
         state%in%c('Keeper Possession','Free Kick','Goal Kick','Kickoff') ~ Y,
         state%in%c('Throw In') ~ Y - 17*sign(ball_y-40),
-        state=='Corner' ~ Y - 17*sign(ball_x-40)*sin(pi/4),
-        TRUE ~ RY
+        state=='Corner' ~ Y - 17*sign(ball_y-40)*cos(pi/4),
+        Y > Y2  & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ Y + 17*abs(cos(RANG)),
+        Y <= Y2 & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ Y - 17*abs(cos(RANG)),
+        Y >  Y2 ~ Y - 17*abs(cos(RANG)),
+        Y <= Y2 ~ Y + 17*abs(cos(RANG))
       )
     )
   

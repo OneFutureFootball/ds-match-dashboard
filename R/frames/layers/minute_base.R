@@ -28,11 +28,11 @@ minute_base <- function(pers,mins){
         theme_void() + 
         #Ratings
         geom_image(ratings, 
-                   mapping = aes(x=X + 40, y=Y, image=circle_crop(profileImage)), 
+                   mapping = aes(x=X + 45, y=Y, image=circle_crop(profileImage)), 
                    size=0.057) +
         geom_rect(ratings, 
                   mapping = aes(xmin=X + 90,
-                                xmax=X + 90 + 280*PCT,
+                                xmax=X + 90 + 270*PCT,
                                 ymin=Y - 12 - 10,
                                 ymax=Y - 12 + 10,
                                 fill=factor(team_id)),

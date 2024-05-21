@@ -67,21 +67,21 @@ key_base <- function(idx,live=TRUE){
                   hjust = 0.5, vjust=0.5, family='Montserrat-Black', size=8, colour='white') +
         geom_rect(
             key_prog %>% subset(period==this_moment$period & time==this_moment$time & this_moment$state=='Substitution'),
-            mapping = aes(xmin = X - 20, xmax = X + 295,
+            mapping = aes(xmin = X - 10, xmax = X + 310,
                           ymin = Y - 23, ymax = Y + 23),
             fill='white',colour=NA
         ) +
         geom_image(key_prog %>% subset(str_detect(crest,this_match$home_name)),
-                   mapping = aes(x=X-32,y=Y,image=str_replace(crest,'-256','-60'), alpha=IDX), 
+                   mapping = aes(x=X-27,y=Y,image=str_replace(crest,'-256','-60'), alpha=IDX), 
                    size=0.024) +
         geom_image(key_prog %>% subset(str_detect(crest,this_match$away_name)),
-                   mapping = aes(x=X-32,y=Y,image=str_replace(crest,'-256','-white-60'), alpha=IDX), 
+                   mapping = aes(x=X-27,y=Y,image=str_replace(crest,'-256','-white-60'), alpha=IDX), 
                    size=0.030) +
-        geom_text(key_prog, mapping = aes(x=X+37,y=Y, label=MIN, alpha=IDX, colour=CODE),
+        geom_text(key_prog, mapping = aes(x=X+40,y=Y, label=MIN, alpha=IDX, colour=CODE),
                   hjust = 1, vjust=0.5, family='Montserrat-ExtraBold', size=4) +
-        geom_text(key_prog, mapping = aes(x=X+40,y=Y+10, label=toupper(full_name), alpha=IDX, colour=CODE),
+        geom_text(key_prog, mapping = aes(x=X+50,y=Y+10, label=toupper(full_name), alpha=IDX, colour=CODE),
                   hjust = 0, vjust=0.5, family='Montserrat-Bold', size=4) +
-        geom_text(key_prog, mapping = aes(x=X+40,y=Y-10, label=LABEL, alpha=IDX, colour=CODE),
+        geom_text(key_prog, mapping = aes(x=X+50,y=Y-10, label=LABEL, alpha=IDX, colour=CODE),
                   hjust = 0, vjust=0.5, family='Montserrat-Regular', size=4) +
         geom_text(goals %>% subset(possession=='A'),mapping = aes(x=XT,y=Y,label=MIN),
                   hjust = 1, vjust=0.5, family='Montserrat-Bold', size=4, colour='white') +
@@ -92,7 +92,7 @@ key_base <- function(idx,live=TRUE){
         geom_text(goals %>% subset(possession=='B'),mapping = aes(x=XP,y=Y,label=toupper(last_name)),
                   hjust = 0, vjust=0.5, family='Montserrat-Medium', size=4, colour='white') +
         geom_image(key_prog %>% drop_na(logo),
-                   mapping = aes(x=X+270,y=Y,image=logo, alpha=IDX),
+                   mapping = aes(x=X+290,y=Y,image=logo, alpha=IDX),
                    size=0.025) +
         scale_colour_manual(values = c(text_colours, 'GOAL'='#5CED73', 'YELLOW CARD'='#FFF380', 'RED CARD'='#FF6955','SECOND YELLOW CARD'='#FF6955', 'DARK'='#150928'), na.value='white',guide='none') + 
         scale_fill_manual(values = team_colours,guide='none')

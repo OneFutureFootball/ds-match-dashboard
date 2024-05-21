@@ -2,28 +2,16 @@ active_cores <- 7
 normal <- 30
 slow <- 1
 
-pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 7*normal) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 6*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
+pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 5*normal) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 8*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 8*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 4*normal)) %>% 
     bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 4*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 6*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 6*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 4*normal)) %>% 
     bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 4*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 4*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/title_page.png', REP = 3*normal))
+    bind_rows(data.frame(base='output/layers/title_page.png', REP = 7*normal))
 
 goals <- match_file %>% subset(state=='Goal') %>% select(period,time) %>% mutate(goal=1) %>% rename(secs=time)
 pens <- key_moments %>% subset(state=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
@@ -178,19 +166,17 @@ frame_index <- pre_match %>%
     bind_rows(frame_index %>% subset(period==1)) %>% 
     bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 12*normal)) %>% 
     bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_ratings.png', REP = 8*normal)) %>%
-    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_player.png', REP = 6*normal)) %>%
-    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 8*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2)) %>% 
-    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 15*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 12*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_ratings.png', REP = 10*normal)) %>% 
-    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_player.png', REP = 10*normal)) %>% 
-    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/league_table_post.png', REP = 25*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_player.png', REP = 6*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/league_table_post.png', REP = 12*normal)) %>% 
     group_by(period) %>% 
     fill(c(filename, minute, key, trx),.direction='down') %>%
     mutate(trx = ifelse(match_state%in%c('show_lineup','injury'),NA_character_,trx)) %>% 
     ungroup() %>% 
     mutate(IDX = row_number()) %>% 
-    mutate(KEY = 1 + IDX%%active_cores)
+    mutate(KEY = ceiling(IDX/(max(IDX)/active_cores)))
 
 frame_index %>% 
     toJSON(pretty = TRUE) %>%
