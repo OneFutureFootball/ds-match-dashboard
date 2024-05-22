@@ -70,12 +70,12 @@ match_base <- function(){
                colour='white',size=0.1) +
     geom_segment(mapping = aes(x=c(rep(420,8),rep(1500,8),420-25,1500+25),
                                xend=c(rep(420,8)-25,rep(1500,8)+25,420-25,1500+25),
-                               y=c(rep(seq(472.5 - 104.5/3,
-                                           472.5 + 104.5/3,length.out=8),times=2),
-                                   472.5 - 104.5/3,472.5 - 104.5/3),
-                               yend=c(rep(seq(472.5 - 104.5/3,
-                                              472.5 + 104.5/3,length.out=8),times=2),
-                                      472.5 + 104.5/3,472.5 + 104.5/3)),
+                               y=c(rep(seq(439.25,
+                                           505.75,length.out=8),times=2),
+                                   439.25,439.25),
+                               yend=c(rep(seq(439.25,
+                                              505.75,length.out=8),times=2),
+                                      505.75,505.75)),
                  colour='white',linewidth=0.3, lineend='round') +
     # Key Moments
     geom_rect(mapping = aes(xmin=-50,xmax=320,
