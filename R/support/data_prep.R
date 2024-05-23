@@ -67,6 +67,7 @@ names(text_colours) <- c(match_details$home_short_name,match_details$away_short_
 text_colours <- c(text_colours,kit_colours)
 
 match_file <- fromJSON('input/match_output.json') %>% 
+    arrange(str_detect(state,'Subs|Start'),period,time) %>% 
     mutate(outcome = ifelse(outcome=='wayward','off target',outcome)) %>% 
     left_join(teams %>% select(team_id,short_name),by='team_id') %>% 
     left_join(fromJSON('data/player_identity.json') %>% select(ID,number),by='ID') %>% 
