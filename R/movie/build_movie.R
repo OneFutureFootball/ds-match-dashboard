@@ -23,6 +23,21 @@ match_base()
 crest_overlay('A')
 crest_overlay('B')
 
+message('Lineups')
+for(i in unique(lineup_times$TRX)) lineup_base(i)
+
+message('Key Moments')
+for(i in key_moments$IDX){ 
+    key_base(i,TRUE)
+}
+
+message('Penalties / Cards')
+penalty_overlays()
+red_overlays()
+
+message('Goals')
+for(i in seq(sum(match_file$state=='Goal'))) goal_overlay(i)
+
 message('Minutes')
 cl <- makeCluster(active_cores)
 registerDoParallel(cl)
@@ -47,19 +62,5 @@ foreach(key = unique(time_base$KEY)) %dopar% {
 }
 stopCluster(cl)
 
-message('Key Moments')
-for(i in key_moments$IDX){ 
-    key_base(i,TRUE)
-}
-
-message('Lineups')
-for(i in unique(lineup_times$TRX)) lineup_base(i)
-
-message('Penalties / Cards')
-penalty_overlays()
-red_overlays()
-
-message('Goals')
-for(i in seq(sum(match_file$state=='Goal'))) goal_overlay(i)
 
 message('All layers built')

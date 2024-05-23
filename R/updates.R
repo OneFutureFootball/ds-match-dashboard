@@ -14,8 +14,6 @@ temp %>%
     ungroup() %>% 
     mutate(
         Y = case_when(
-            action=='shoot' & N==2 ~ Y,
-            period==1 & match_time=='00:16' ~ 28,
             TRUE ~ Y
         ),
         X = case_when(

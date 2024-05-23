@@ -2,28 +2,16 @@ active_cores <- 7
 normal <- 30
 slow <- 1
 
-pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 7*normal) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 6*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
+pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 14*normal) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 9*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 9*normal)) %>% 
     bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
     bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 4*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 8*normal)) %>% 
+    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 8*normal)) %>% 
     bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
     bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 4*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_A.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/starting_lineup_B.png', REP = 5*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/league_table_pre.png', REP = 6*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/manager_faceoff.png', REP = 4*normal)) %>% 
-    bind_rows(data.frame(base='output/layers/title_page.png', REP = 3*normal))
+    bind_rows(data.frame(base='output/layers/title_page.png', REP = 8*normal))
 
 goals <- match_file %>% subset(state=='Goal') %>% select(period,time) %>% mutate(goal=1) %>% rename(secs=time)
 pens <- key_moments %>% subset(state=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
@@ -72,6 +60,7 @@ kickoffs <- match_file %>% subset(state=='Kickoff') %>% select(period,time) %>% 
 corners <- match_file %>% subset(state=='Corner') %>% select(period,time) %>% mutate(corner=1) %>% rename(secs=time)
 subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% mutate(time = round(time), sub=1) %>% rename(secs=time) %>% slice(-1)
 injs <- key_moments %>% subset(oth_role=='injury') %>% select(period,time,next_time) %>% mutate(inj=1,time = round(time), next_time = round(next_time)) %>% rename(secs=time,next_inj=next_time)
+pen_shot <- key_moments %>% subset(live_label=='PENALTY') %>% select(period,time) %>% mutate(penshot=1) %>% rename(secs=time)
 reds <- key_moments %>% drop_na(card_given) %>% subset(str_detect(card_given,'red')) %>% mutate(red=1) %>% rename(secs=time) %>% select(period,secs,red)
 trxs <- trx_list %>% select(period,secs,possession) %>% mutate(trxx=1)
 crests <- trx_frames %>% select(period,timestamp,crest) %>% rename(secs=timestamp) %>% mutate(crest=paste0('crest_',crest,'.png'))
@@ -90,6 +79,7 @@ frame_index <- time_base %>%
     fill(c(minute,key,trx,text,lineup,card),.direction='down') %>% 
     left_join(goals,by=c('period','secs')) %>% 
     left_join(pens,by=c('period','secs')) %>% 
+    left_join(pen_shot,by=c('period','secs')) %>% 
     left_join(reds,by=c('period','secs')) %>% 
     left_join(selected_shots,by=c('period','secs')) %>% 
     left_join(kickoffs,by=c('period','secs')) %>% 
@@ -101,6 +91,7 @@ frame_index <- time_base %>%
            prev_goal = ifelse(goal==1,secs,NA),
            next_pen = ifelse(pen==1,secs,NA),
            prev_pen = ifelse(pen==1,secs,NA),
+           prev_penshot = ifelse(penshot==1,secs,NA),
            prev_red = ifelse(red==1,secs,NA),
            next_shot = ifelse(shot==1,secs,NA),
            prev_shot = ifelse(shot==1,secs,NA),
@@ -114,14 +105,15 @@ frame_index <- time_base %>%
            next_trx = ifelse(trxx==1,secs,NA)) %>% 
     group_by(period) %>% 
     fill(c(next_goal,next_pen, next_shot, next_kickoff, prev_red, next_corner, next_trx, next_sub), .direction='up') %>% 
-    fill(c(prev_goal,prev_pen, prev_shot, prev_kickoff, prev_sub, prev_inj, prev_inj_end, crest), .direction='down') %>% 
+    fill(c(prev_goal,prev_pen, prev_shot, prev_penshot, prev_kickoff, prev_sub, prev_inj, prev_inj_end, crest), .direction='down') %>% 
     mutate(
         match_state = case_when(
             secs>=prev_inj & secs<=prev_inj_end ~ 'injury',
             secs==prev_pen ~ 'overlay',
             secs==prev_red ~ 'overlay',
             secs<next_pen & next_pen - secs <= 12 & is.na(next_corner) ~ 'build_up',
-            secs<next_pen & next_pen - secs <= 12 & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
+            secs<next_pen & next_pen - secs <= 12 & secs - prev_goal >= 30 & secs < next_goal & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
+            secs>prev_pen & secs>=prev_penshot & secs<=prev_penshot + 16 & secs - prev_goal >=30 ~ 'build_up',
             secs>=prev_pen & secs-prev_pen <= 6 ~ 'reaction',
             secs>=prev_pen & secs<next_goal & next_goal-prev_pen < 75 ~ 'trx',
             secs==prev_goal ~ 'overlay',
@@ -178,19 +170,17 @@ frame_index <- pre_match %>%
     bind_rows(frame_index %>% subset(period==1)) %>% 
     bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 12*normal)) %>% 
     bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_ratings.png', REP = 8*normal)) %>%
-    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_player.png', REP = 6*normal)) %>%
-    bind_rows(frame_index %>% subset(period==1) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/halftime_stats.png', REP = 8*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2)) %>% 
-    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 15*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_stats.png', REP = 12*normal)) %>% 
     bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_ratings.png', REP = 10*normal)) %>% 
-    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_player.png', REP = 10*normal)) %>% 
-    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/league_table_post.png', REP = 25*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/fulltime_player.png', REP = 6*normal)) %>% 
+    bind_rows(frame_index %>% subset(period==2) %>% tail(1) %>% mutate(match_state = 'overlay', overlay='output/layers/league_table_post.png', REP = 12*normal)) %>% 
     group_by(period) %>% 
     fill(c(filename, minute, key, trx),.direction='down') %>%
     mutate(trx = ifelse(match_state%in%c('show_lineup','injury'),NA_character_,trx)) %>% 
     ungroup() %>% 
     mutate(IDX = row_number()) %>% 
-    mutate(KEY = 1 + IDX%%active_cores)
+    mutate(KEY = ceiling(IDX/(max(IDX)/active_cores)))
 
 frame_index %>% 
     toJSON(pretty = TRUE) %>%

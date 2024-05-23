@@ -10,7 +10,24 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
     if(!'overlay'%in%names(frame_index)) frame_index <- frame_index %>% mutate(overlay=NA_character_)
     assign('frame_index',frame_index,envir = .GlobalEnv)
     this_list <- subset(frame_index,KEY==idx)
-    for(i in this_list$IDX) build_frame(i)
+    success <- FALSE
+    # Define a counter to limit the number of retries
+    retry_limit <- 5
+    retry_count <- 0
+    while (!success && retry_count < retry_limit) {
+        retry_count <- retry_count + 1
+        tryCatch({
+            build_frames(this_list$IDX)
+            success <- TRUE  # If no error, set success to TRUE
+        }, error = function(e) {
+            message(paste("Attempt ", retry_count, " on Core ",idx," failed with error:", e$message))
+        })
+    }
+    
+    if (!success) {
+        stop("All attempts to run build_frames failed.")
+    }
+    # for(i in this_list$IDX) build_frame(i)
     for(i in this_list$IDX){
         frame <- this_list %>% subset(IDX==i)
         for(j in seq(frame$REP)){
