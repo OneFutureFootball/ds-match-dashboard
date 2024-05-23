@@ -29,14 +29,14 @@ lineup_base <- function(trx){
                 WHITE|BLACK ~ FALSE,
                 position=='GK' ~ FALSE,
                 team_class=='B' & team_id%in%c(6,9,10) ~ TRUE,
-                team_class=='A' & team_id%in%c(1,6) ~ TRUE,
+                team_class=='A' & team_id%in%c(1,6,7) ~ TRUE,
                 TRUE ~ FALSE
             ))
     
     card_overlay(unique(lineups$period),unique(lineups$time))
     
     
-    subs <- match_file %>% 
+    subs <- key_moments %>% 
         subset(state=='Substitution') %>% 
         subset(period<=unique(lineups$period)) %>% 
         subset(!(period==unique(lineups$period) & time>unique(lineups$time))) %>% 

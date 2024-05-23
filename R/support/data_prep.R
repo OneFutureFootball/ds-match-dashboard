@@ -136,6 +136,7 @@ match_file <- fromJSON('input/match_output.json') %>%
            LAB = ifelse(is.na(action),NA_character_,last_name),
            next_action = lead(action),
            next_state = lead(state),
+           next_card = lead(card_given),
            prev_action = lag(action),
            prev_state = lag(state),
            prev_technique = lag(technique),
@@ -284,7 +285,7 @@ key_moments <- match_file %>%
     subset(state%in%c('Substitution','Kickoff','Corner')|
                action%in%c('SHOT','PENALTY')|
                !is.na(card_given)) %>% 
-    select(period,time,prev_time,next_time,old_time,next_state,possession,state,action,outcome,position,full_name,last_name,oth_ID,oth_position, oth_full_name,oth_role,oth_team,team_id, card_given) %>% 
+    select(period,time,prev_time,next_time,old_time,next_state,possession,state,action,outcome,position,ID,full_name,last_name,oth_ID,oth_position, oth_full_name,oth_role,oth_team,team_id, card_given) %>% 
     mutate(
         live_label = case_when(
             action=='KICKOFF' ~ action,
@@ -419,7 +420,7 @@ time_prog <- match_file %>%
     subset(period>0) %>% 
     mutate(old_time = time,
            time = case_when(
-               action=='PENALTY' ~ prev_time+3,
+               action=='PENALTY' ~ time - 10,
                TRUE ~ time)) %>% 
     ungroup() %>% 
     mutate(
@@ -435,14 +436,16 @@ time_prog <- match_file %>%
         KEY = 1 + IDX%%active_cores)
 
 trx_frames <- time_prog %>% 
-    select(IDX,period,time,old_time,crest=possession,team_id,state,action,technique,outcome,full_name) %>% 
+    select(IDX,period,time,old_time,crest=possession,team_id,state,action,technique,outcome,full_name,card_given) %>% 
     group_by(period) %>% 
     arrange(period,time) %>% 
     mutate(next_time = lead(time),
+           next_action=lead(action),
            prev_time = lag(time),
            prev_action=lag(action),
            prev_state = lag(state),
            next_poss = lead(crest),
+           next_card = lead(card_given),
            next_state = lead(state)) %>% 
     ungroup() %>% 
     mutate(
@@ -455,6 +458,7 @@ trx_frames <- time_prog %>%
             technique=='head' ~ NA_real_,
             action=='PENALTY' ~ time,
             prev_action=='PENALTY' ~ time-1,
+            state%in%c('Free Kick') & str_detect(card_given,'red') & time-prev_time >=11 ~ time - 10,
             state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & time-prev_time > 7 ~ prev_time + 5,
             time - prev_time<=1 ~ NA_real_,
             time - prev_time<=3 ~ time-1,
@@ -468,6 +472,7 @@ trx_frames <- time_prog %>%
             action=='PENALTY' & outcome!='goal' ~ next_time-2,
             action=='PENALTY' & outcome=='goal' ~ next_time,
             next_state=='Goal' ~ NA_real_,
+            next_state=='Free Kick' & str_detect(next_card,'red') ~ time + 2,
             next_state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & next_time-time > 7 ~ time + 3,
             next_time - time==1 ~ NA_real_,
             next_time - time<=4 ~ time+1,
@@ -499,13 +504,13 @@ key_moments <- key_moments %>%
             select(IDX,period,old_time,type,timestamp) %>% 
             mutate(type = paste0(type,'_time')) %>% 
             spread(type,timestamp) %>% 
-            select(period,old_time,action_time,result_time),
+            select(period,old_time,action_time,result_time,possession_time),
         by=c('period'='period','old_time'='old_time')) %>% 
     group_by(period,time) %>% 
     mutate(
         time = case_when(
             is.na(action_time) ~ min(time),
-            action=='PENALTY' & !str_detect(live_label,'CARD') ~ action_time,
+            action=='PENALTY' & !str_detect(live_label,'CARD') ~ possession_time,
             TRUE ~ time
         ),
         next_time = case_when(
