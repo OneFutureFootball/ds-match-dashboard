@@ -19,7 +19,15 @@ trx_text <- function(time_idx){
   if(!is.na(time_stamp$action)) time_stamp <- time_stamp %>% 
     left_join(teams %>% select(team_id,medium_name),by='team_id') %>% 
     mutate(
-      action = case_when(
+        team_id = case_when(
+            next_state=='Free Kick' & str_detect(next_card,'red') ~ ifelse(possession=='A',this_match$away,this_match$home),
+            TRUE ~ team_id
+        ),
+        short_name = case_when(
+            next_state=='Free Kick' & str_detect(next_card,'red') ~ ifelse(possession=='A',this_match$away_name,this_match$home_name),
+            TRUE ~ short_name
+        ),
+        action = case_when(
         is.na(action) ~ NA_character_,
         status=='possession' & action=='PENALTY' ~ 'PENALTY',
         status=='possession' & state%in%c('Free Kick','Corner','Throw In','Goal Kick','Kickoff') ~ toupper(state),
@@ -58,7 +66,7 @@ trx_text <- function(time_idx){
       last_name = case_when(
         status=='possession' & action=='PENALTY CONCEDED' ~ oth_last_name,
         status=='result' & next_action=='PENALTY' ~ oth_last_name,
-        status=='result' & next_state=='Free Kick' & str_detect(next_card,'red') ~ oth_last_name,
+        status=='result' & next_state=='Free Kick' & str_detect(next_card,'red') ~ next_oth_last,
         status!='result' ~ last_name,
         is.na(action) ~ last_name,
         str_detect(action,'WON|CONCEDED') ~ toupper(medium_name),

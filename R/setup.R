@@ -18,7 +18,7 @@ for(i in list.files('fonts',full.names=TRUE)) font_add(str_split(str_replace(i,'
 showtext_auto()
 
 fixture <- fromJSON('data/fixture_S03.json')
-active_cores <- 7
+active_cores <- 8
 
 this_match <- fromJSON('input/match.json')
 

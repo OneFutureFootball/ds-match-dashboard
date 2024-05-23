@@ -418,6 +418,11 @@ pitch_transform <- function(x,coord='X') ifelse(coord=='X',
 time_prog <- match_file %>% 
     subset(state!='Substitution') %>%
     subset(period>0) %>% 
+    mutate(next_state = lead(state),
+           next_card = lead(card_given),
+           next_team = lead(team_id),
+           next_action = lead(action),
+           next_oth_last = lead(oth_last_name)) %>% 
     mutate(old_time = time,
            time = case_when(
                action=='PENALTY' ~ time - 10,
@@ -436,7 +441,7 @@ time_prog <- match_file %>%
         KEY = 1 + IDX%%active_cores)
 
 trx_frames <- time_prog %>% 
-    select(IDX,period,time,old_time,crest=possession,team_id,state,action,technique,outcome,full_name,card_given) %>% 
+    select(IDX,period,time,old_time,crest=possession,team_id,oth_team,state,action,technique,outcome,full_name,card_given) %>% 
     group_by(period) %>% 
     arrange(period,time) %>% 
     mutate(next_time = lead(time),
@@ -482,7 +487,11 @@ trx_frames <- time_prog %>%
     ) %>% 
     gather('type','timestamp',c(action_time,possession_time,result_time)) %>% 
     mutate(type = str_replace(type,'_time',''),
-           crest = ifelse(type=='result',NA_character_,crest)) %>% 
+           crest = ifelse(type=='result',NA_character_,crest),
+           crest = case_when(
+               type=='result' & next_state=='Free Kick' & str_detect(next_card,'red') ~ oth_team,
+               TRUE ~ crest
+           )) %>% 
     arrange(period,timestamp) %>% 
     group_by(period) %>% 
     fill(c(crest),.direction='down') %>% 
@@ -504,13 +513,17 @@ key_moments <- key_moments %>%
             select(IDX,period,old_time,type,timestamp) %>% 
             mutate(type = paste0(type,'_time')) %>% 
             spread(type,timestamp) %>% 
-            select(period,old_time,action_time,result_time,possession_time),
+            select(period,old_time,action_time,result_time,possession_time) %>% 
+            group_by(period) %>% 
+            mutate(prev_result = lag(result_time)) %>% 
+            ungroup(),
         by=c('period'='period','old_time'='old_time')) %>% 
     group_by(period,time) %>% 
     mutate(
         time = case_when(
             is.na(action_time) ~ min(time),
             action=='PENALTY' & !str_detect(live_label,'CARD') ~ possession_time,
+            str_detect(live_label,"RED|SECOND") ~ prev_result,
             TRUE ~ time
         ),
         next_time = case_when(
@@ -523,3 +536,4 @@ key_moments <- key_moments %>%
     select(-c(action_time,result_time)) %>% 
     arrange(period,time) %>% 
     mutate(IDX=row_number())
+
