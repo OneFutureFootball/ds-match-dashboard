@@ -460,7 +460,8 @@ trx_frames <- time_prog %>%
             action=='PENALTY' ~ old_time,
             TRUE ~ time),
         possession_time = case_when(
-            state=='Kickoff' ~ time,
+            state=='Kickoff' & time==0 ~ time,
+            state=='Kickoff' ~ time-1,
             technique=='head' ~ NA_real_,
             action=='PENALTY' ~ time,
             prev_action=='PENALTY' ~ time-1,
@@ -474,6 +475,7 @@ trx_frames <- time_prog %>%
         ),
         result_time = case_when(
             state=='Kickoff' & next_time - time > 3 ~ time+2,
+            state=='Kickoff' & next_time - time > 1 ~ time+1,
             state=='Kickoff' ~ NA_real_,
             action=='PENALTY' & outcome!='goal' ~ next_time-2,
             action=='PENALTY' & outcome=='goal' ~ next_time,
