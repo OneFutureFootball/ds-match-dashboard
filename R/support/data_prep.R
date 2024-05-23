@@ -67,7 +67,7 @@ names(text_colours) <- c(match_details$home_short_name,match_details$away_short_
 text_colours <- c(text_colours,kit_colours)
 
 match_file <- fromJSON('input/match_output.json') %>% 
-    arrange(str_detect(state,'Subs|Start'),period,time) %>% 
+    arrange(str_detect(state,'Subs|Start'),period,time,state=='Goal') %>% 
     mutate(outcome = ifelse(outcome=='wayward','off target',outcome)) %>% 
     left_join(teams %>% select(team_id,short_name),by='team_id') %>% 
     left_join(fromJSON('data/player_identity.json') %>% select(ID,number),by='ID') %>% 
@@ -78,6 +78,8 @@ match_file <- fromJSON('input/match_output.json') %>%
     select(-c(X,Y)) %>% 
     group_by(period) %>% 
     mutate(
+        prev_time=lag(time),
+        time = ifelse(time==prev_time & state=='Goal',time+1,time),
         ball_x=ifelse(possession=='B',120-ball_x,ball_x),
         ball_y=ifelse(possession=='B',80-ball_y,ball_y),
         prev_state = lag(state),
