@@ -20,9 +20,15 @@ high_xg <- match_file %>%
     subset(!(action%in%c('SHOT','PENALTY') & outcome!='goal' & prev_position=='GK')) %>% 
     drop_na(xg) %>% 
     mutate(xg = ifelse(time>=2700,xg+0.1,xg)) %>% 
-    arrange(outcome!='goal',desc(xg)) %>% group_by(period) %>% 
-    mutate(IDX = row_number()) %>% ungroup() %>% mutate(RANK = row_number()) %>% subset(IDX<=4|RANK<=8) %>% 
-    arrange(IDX,RANK) %>% head(8) %>% select(period,time) %>% arrange(period,time) %>% 
+    arrange(outcome!='goal',desc(xg)) %>% 
+    group_by(period) %>% 
+    mutate(IDX = row_number()) %>% 
+    group_by(team_id) %>% 
+    mutate(TIDX = row_number()) %>% 
+    ungroup() %>% 
+    mutate(RANK = row_number()) %>% 
+    subset(IDX<=4|RANK<=8|TIDX<=3) %>% 
+    arrange(IDX,TIDX,RANK) %>% head(8) %>% select(period,time) %>% arrange(period,time) %>% 
     mutate(shot=1) %>% rename(secs=time)
 selected_shots <- high_xg
 while(nrow(selected_shots) < min(12,nrow(match_file %>% drop_na(xg)))){
@@ -112,8 +118,8 @@ frame_index <- time_base %>%
             secs==prev_pen ~ 'overlay',
             secs==prev_red ~ 'overlay',
             secs<next_pen & next_pen - secs <= 12 & is.na(next_corner) ~ 'build_up',
-            secs<next_pen & next_pen - secs <= 12 & secs - prev_goal >= 30 & secs < next_goal & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
-            secs>prev_pen & secs>=prev_penshot & secs<=prev_penshot + 16 & secs - prev_goal >=30 ~ 'build_up',
+            secs<next_pen & next_pen - secs <= 12 & (is.na(prev_goal)|secs - prev_goal >= 30) & secs < next_goal & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
+            secs>prev_pen & secs>=prev_penshot & secs<=prev_penshot + 16 & (is.na(prev_goal)|secs - prev_goal >= 30) ~ 'build_up',
             secs>=prev_pen & secs-prev_pen <= 6 ~ 'reaction',
             secs>=prev_pen & secs<next_goal & next_goal-prev_pen < 75 ~ 'trx',
             secs==prev_goal ~ 'overlay',
