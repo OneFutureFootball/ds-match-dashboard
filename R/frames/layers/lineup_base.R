@@ -19,17 +19,19 @@ lineup_base <- function(trx){
             ),
             WHITE = case_when(
                 position=='GK' & team_id==2 ~ TRUE,
+                position=='GK' & team_id==5 ~ TRUE,
                 TRUE ~ FALSE
             ),
             BLACK = case_when(
                 position=='GK' & team_id==6 ~ TRUE,
+                position=='GK' & team_id==10~ TRUE,
                 TRUE ~ FALSE
             ),
             FILL = case_when(
                 WHITE|BLACK ~ FALSE,
                 position=='GK' ~ FALSE,
-                team_class=='A' & team_id%in%c(1,6,7,9) ~ TRUE,
-                team_class=='B' & team_id%in%c(1,6,7,9,10) ~ TRUE,
+                team_class=='A' & team_id%in%c(1,6,7,9,10) ~ TRUE,
+                team_class=='B' & team_id%in%c(6,7,9,10) ~ TRUE,
                 TRUE ~ FALSE
             ))
     
