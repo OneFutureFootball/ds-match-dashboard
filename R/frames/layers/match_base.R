@@ -1,4 +1,8 @@
 match_base <- function(){
+  add_alpha <- function(img) {
+    magick::image_fx(img, expression = "0.05*a", channel = "alpha")
+  }
+  
   plot_output <- ggplot() +
     #Main purple background
     coord_cartesian(xlim = c(0,1920), ylim = c(0,1080)) +
@@ -10,7 +14,7 @@ match_base <- function(){
     geom_image(mapping = aes(x=135,y=1020,image='images/icons/ball.png'),size=0.06) +
     # #Clock + scoreboard
     geom_shape(mapping = aes(x = 960 + 280*c(-1,1,1,-1),
-                             y = 975 + 53*c(-1,-1,1,1)),
+                             y = 965 + 63*c(-1,-1,1,1)),
                fill='#150928', colour='white',linewidth=0.3,radius=0.01) +
     geom_rect(mapping = aes(xmin = 960 - 320,
                             xmax = 960 + 320,
@@ -77,6 +81,14 @@ match_base <- function(){
                                               505.75,length.out=8),times=2),
                                       505.75,505.75)),
                  colour='white',linewidth=0.3, lineend='round') +
+    # geom_image(mapping = aes(x = c(960 - 200, 960 + 200,960 - 200, 960 + 200),
+    #                          y = c(650,650,295,295),
+    #                          image = rep(str_replace(
+    #                            c(teams$crest[teams$team_id==this_match$home],
+    #                              teams$crest[teams$team_id==this_match$away]),
+    #                            '-256','-white'),times=2)),
+    #            size = 0.19, 
+    #            image_fun = add_alpha) +
     # Key Moments
     geom_rect(mapping = aes(xmin=-50,xmax=320,
                             ymin=350,ymax=900),
@@ -89,14 +101,19 @@ match_base <- function(){
     geom_rect(mapping = aes(xmin=-50,xmax=320,
                             ymin=-20,ymax=330),
               fill='#150928',colour='white',linewidth=0.2) +
+    geom_rect(mapping = aes(xmin = 135 - 50 + 133*c(-1,1),
+                            xmax = 135 + 50 + 133*c(-1,1),
+                            ymin = 310 - 14,
+                            ymax = 310 + 14),
+              colour='white', fill='transparent', linewidth=0.2) +
     geom_image(all_stats %>% 
                  ungroup() %>% 
                  select(possession,short_name) %>% 
                  unique() %>% 
-                 mutate(X = 135 + 140*ifelse(possession=='A',-1,1),
+                 mutate(X = 135 + 133*ifelse(possession=='A',-1,1),
                         possession=ifelse(possession=='A','Home','Away')),
                mapping = aes(x=X,y=310,image=paste0('images/banners/',short_name,'-',possession,'.png')),
-               size=0.065) +
+               size=0.082) +
     geom_text(all_stats %>%
                 ungroup() %>%
                 select(statistic,Y,KEEP) %>%
@@ -109,15 +126,15 @@ match_base <- function(){
                             ymin=-20,ymax=900),
               fill='#150928',colour='white',linewidth=0.2) +
     geom_rect(data.frame(IDX=1:10) %>%
-                mutate(Y = 900 - 85*IDX,
+                mutate(Y = 890 - 105*IDX,
                        X = 1600),
               mapping = aes(xmin=X + 90,
                             xmax=X + 90 + 270,
                             ymin=Y - 12 - 10,
                             ymax=Y - 12 + 10),
               colour='white', fill='transparent', linewidth=0.2) +
-    geom_point(data.frame(IDX=1:10) %>%
-                 mutate(Y = 900 - 85*IDX,
+    geom_point(data.frame(IDX=1:8) %>%
+                 mutate(Y = 890 - 105*IDX,
                         X = 1645),
                mapping = aes(x=X,
                              y=Y),
@@ -151,6 +168,11 @@ match_base <- function(){
                             ymin=100 - 28,
                             ymax=845 + 27),
               fill=NA,colour='white',linewidth=0.2) +
+    geom_rect(mapping = aes(xmin = 960 + 500*c(1,-1) - 90,
+                            xmax = 960 + 500*c(1,-1) + 90,
+                            ymin = 845 - 25,
+                            ymax = 845 + 25),
+              colour='white', fill='transparent', linewidth=0.2) +
     geom_image(mapping = aes(x=1460, y=845,
                              image=paste0('images/banners/',
                                           teams %>% subset(team_id==match_details$away_id) %>% pull(short_name),
@@ -161,10 +183,10 @@ match_base <- function(){
                                           '-Home.png')),size=0.15) +
     geom_shape(mapping = aes(x=555 + 30*c(0, 0, 1),
                              y=c(835,855, 845)),
-               fill=team_colours[names(team_colours)==this_match$home],colour=NA) +
+               fill=team_colours[names(team_colours)==this_match$home],colour='white', linewidth=0.2) +
     geom_shape(mapping = aes(x=1365 - 30*c(0, 0, 1),
                              y=c(835,855, 845)),
-               fill=team_colours[names(team_colours)==this_match$away],colour=NA) +
+               fill=team_colours[names(team_colours)==this_match$away],colour='white', linewidth=0.2) +
     geom_image(mapping = aes(x=960 + 230*c(-1,1),y=c(100,100),image='images/logos/1FF-Logo-Mono-Rev.png'),size=0.09) +
     geom_image(mapping = aes(x=c(960),y=c(845),image='images/logos/S3 Logo.png'),size=0.07) +
     geom_image(mapping = aes(x=960 + c(-210,210,0,-460,460), y=c(845,845,100,100,100), image=paste0('images/banners/adboard/',match_details$home_short_name,'.png')), size=0.22) +
