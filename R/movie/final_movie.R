@@ -69,7 +69,7 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
 }
 stopCluster(cl)
 
-for(i in time_prog %>% subset(action%in%c('SHOT','PENALTY')) %>% nrow() %>% seq()) shot_animation(i)
+# for(i in time_prog %>% subset(action%in%c('SHOT','PENALTY')) %>% nrow() %>% seq()) shot_animation(i)
 
 all_chunks <- list.files('output/chunks',full.names=TRUE)
 

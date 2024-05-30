@@ -4,7 +4,8 @@ shot_animation <- function(shot_idx){
     #HEAD AT 10M/S
     input <- time_prog %>% 
         mutate(next_x = lead(ball_x),
-               next_y = lead(ball_y)) %>% 
+               next_y = lead(ball_y),
+               next_position = lead(position)) %>% 
         subset(action%in%c('SHOT','PENALTY')) %>% 
         slice(shot_idx)
     
