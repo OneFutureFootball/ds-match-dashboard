@@ -31,7 +31,7 @@ lineup_base <- function(trx){
                 WHITE|BLACK ~ FALSE,
                 position=='GK' ~ FALSE,
                 team_class=='A' & team_id%in%c(1,6,7,9,10) ~ TRUE,
-                team_class=='B' & team_id%in%c(6,7,9,10) ~ TRUE,
+                team_class=='B' & team_id%in%c(1,6,7,9,10,12) ~ TRUE,
                 TRUE ~ FALSE
             ))
     
@@ -65,17 +65,17 @@ lineup_base <- function(trx){
                                 y=Y,
                                 label=number,
                                 colour=paste0('kit_',team_id)),
-                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=6) +
+                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=5.7) +
         geom_text(lineups %>% subset(WHITE),
                   mapping = aes(x=X,
                                 y=Y,
                                 label=number),
-                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=6, colour='white') +
+                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=5.7, colour='white') +
         geom_text(lineups %>% subset(BLACK),
                   mapping = aes(x=X,
                                 y=Y,
                                 label=number),
-                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=6, colour='black') +
+                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=5.7, colour='black') +
         geom_rect(lineups %>% subset(FILL),
                   mapping = aes(xmin=X-15,xmax=X+15,
                                 ymin=Y-10,ymax=Y+10,
@@ -86,7 +86,7 @@ lineup_base <- function(trx){
                                 y=Y,
                                 label=number,
                                 colour=factor(team_id)),
-                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=6) +
+                  hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=5.7) +
         geom_rect(lineups,
                   mapping = aes(xmin = X - 5.7*nchar(last_name),
                                 xmax = X + 5.7*nchar(last_name),

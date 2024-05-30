@@ -13,9 +13,9 @@ minute_base <- function(pers,mins){
     
     ratings <- ratings %>% 
         arrange(desc(value),full_name) %>% 
-        head(10) %>% 
+        head(8) %>% 
         mutate(IDX = row_number(),
-               Y = 900 - 85*IDX,
+               Y = 890 - 105*IDX,
                X = 1600) %>% 
         mutate(value = ifelse(period==1 & time<=5,0,value),
                PCT = ifelse(period==1 & time<=5,0,PCT),
@@ -68,7 +68,7 @@ minute_base <- function(pers,mins){
                                  y = Y,
                                  fill=factor(team_id),
                                  group=statistic),
-                   radius = 0.004) +
+                   radius = 0.004, colour='white', linewidth=0.1) +
         geom_text(stats %>% subset(KEEP & ((RANK==1 & N==1 & value>0)|statistic=='POSSESSION %') & !str_detect(statistic,'CARDS')),
                   mapping = aes(x=X,y=Y,label=display, colour=factor(team_id)),
                   family='Montserrat-Medium',hjust=0.5,vjust=0.5, size=5) +
