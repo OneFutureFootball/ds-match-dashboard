@@ -19,12 +19,19 @@ trx_export <- function(time_idx,force=FALSE){
     time_stamp <- time_stamp %>% 
         mutate(time = trx_frames %>% subset(IDX==frame_ord & type==status) %>% pull(timestamp),
                next_action = replace_na(next_action,''),
+               ANG = atan((40 - ball_y)/(ifelse(possession=='A',0,120) - ball_x)),
                X = case_when(
-                   state%in%c('Free Kick','Kickoff','Goal Kick') & possession=='A' ~ X-17,
-                   state%in%c('Free Kick','Kickoff','Goal Kick') & possession=='B' ~ X+17,
+                   state%in%c('Kickoff','Goal Kick') & possession=='A' ~ X-17,
+                   state%in%c('Kickoff','Goal Kick') & possession=='B' ~ X+17,
+                   state=='Free Kick' & possession=='A' ~ X - 17*cos(ANG),
+                   state=='Free Kick' & possession=='B' ~ X + 17*cos(ANG),
                    state%in%c('Corner') & possession=='A' ~ X+17,
                    state%in%c('Corner') & possession=='B' ~ X-17,
-                   TRUE ~ X)
+                   TRUE ~ X),
+               Y = case_when(
+                   state=='Free Kick' & ball_y > 40 ~ Y + 17*sin(ANG),
+                   state=='Free Kick' & ball_y < 40 ~ Y - 17*sin(ANG),
+                   TRUE ~ Y)
         )
     
     #if(status%in%c('action','result') & time_stamp$action%in%c('SHOT','PENALTY')) time_stamp <- time_stamp %>% mutate(X4 = 233, Y4=ifelse(possession=='A',704,112))
@@ -141,8 +148,8 @@ trx_export <- function(time_idx,force=FALSE){
                                      image='images/icons/ball.png'),
                        size=0.018)
     }
-    # if(status=='action' & !time_stamp$action%in%c('SHOT','PENALTY')){
-    if(status=='action'){
+    if(status=='action' & !time_stamp$action%in%c('SHOT','PENALTY')){
+    # if(status=='action'){
         if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
                 geom_image(time_stamp,
                            mapping = aes(x=ifelse(is.na(next_action)|next_action=='PENALTY',RX,LSX), 
@@ -150,8 +157,8 @@ trx_export <- function(time_idx,force=FALSE){
                                          image='images/icons/ball.png'),
                            size=0.018)
     }
-    # if(status=='result' & !time_stamp$action%in%c('SHOT','PENALTY')){
-    if(status=='result'){
+    if(status=='result' & !time_stamp$action%in%c('SHOT','PENALTY')){
+    # if(status=='result'){
         plot_output <- plot_output +
             geom_segment(time_stamp %>% drop_na(LSX),
                          mapping = aes(x=LSX,y=LSY,xend=X4,yend=Y4, colour=factor(team_id)),

@@ -6,8 +6,7 @@ shot_animation <- function(shot_idx){
         mutate(next_x = lead(ball_x),
                next_y = lead(ball_y),
                next_position = lead(position)) %>% 
-        subset(action%in%c('SHOT','PENALTY')) %>% 
-        slice(shot_idx)
+        subset(IDX==shot_idx)
     
     goal_width <- data.frame(GY = seq(30,50,by=0.1)) %>% 
         mutate(GK = abs(GY-40)+0.1)
@@ -18,7 +17,7 @@ shot_animation <- function(shot_idx){
                                atan((ball_y - 40)/(120-ball_x)),
                                atan((ball_y - 40)/ball_x)))/pi*180,
             GX = case_when(
-                outcome=='goal' ~ ifelse(possession=='A',120,0),
+                outcome%in%c('post','goal') ~ ifelse(possession=='A',120,0),
                 outcome=='saved' ~ ifelse(possession=='A',120 - runif(n())*2,0 + runif(n())*2),
                 outcome%in%c('off target','blocked') ~ ifelse(possession=='A',122,-2),
                 TRUE ~ 60
@@ -59,7 +58,7 @@ shot_animation <- function(shot_idx){
                 technique == 'head' ~ DIST / 10,
                 TRUE ~ DIST / 25,
             ),
-            TIME = ifelse(TIME > 1,1,TIME),
+            TIME = ifelse(TIME > 1,0.8,TIME),
             DELAY = 1 - TIME
         ) %>% 
         select(possession,technique,X,Y,EX,EY,TIME,DELAY,ball_x,ball_y,next_x,next_y,GX,GY)
@@ -73,7 +72,9 @@ shot_animation <- function(shot_idx){
             Z = sqrt(A^2 + C^2)*x
             return(Z)
         })
-        DEF <- pct[order(val)][1]
+        DEF <- ifelse(input$next_state=='Corner',
+                      0.4 + runif(1)*0.5,
+                      pct[order(val)][1])
         
         mid_point <- end_point %>% 
             mutate(
@@ -83,20 +84,28 @@ shot_animation <- function(shot_idx){
                 MY = pitch_transform(DY,'Y'),
                 DIST = sqrt((ball_x - DX)^2 + (ball_y - DY)^2),
                 TIME = case_when(
-                    technique == 'head' ~ DIST / 10,
-                    TRUE ~ DIST / 25,
+                    technique == 'head' ~ DIST / 12,
+                    TRUE ~ DIST / 30,
                 ),
-                TIME = 0.2 + DEF*0.8
+                TIME = DEF
             )
         
         end_point <- end_point %>% 
-            mutate(EX = pitch_transform(next_x,'X'),
-                   EY = pitch_transform(next_y,'Y'),
+            mutate(EX = pitch_transform(ifelse(input$next_state=='Corner',
+                                               GX,
+                                               next_x),'X'),
+                   EY = pitch_transform(ifelse(input$next_state=='Corner',
+                                               GY + runif(1)*5,
+                                               next_y),'Y'),
                    TIME = 1)
+        
+        MD <- sqrt((input$X - mid_point$MX)^2 + (input$Y - mid_point$MY)^2)
+        ED <- sqrt((end_point$EX - mid_point$MX)^2 + (end_point$EY - mid_point$MY)^2)
+        mid_point$TIME <- MD/(MD + ED)*0.8 + 0.2
         
         plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
             bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.2)) %>% 
-            bind_rows(mid_point %>% select(X=MX,Y=MX,TIME)) %>% 
+            bind_rows(mid_point %>% select(X=MX,Y=MY,TIME)) %>% 
             bind_rows(end_point %>% mutate(TIME=1) %>% select(X=EX,Y=EY,TIME))
     }else if(input$outcome=='saved' & input$next_position!='GK'){
         DEF <- 1
@@ -112,17 +121,23 @@ shot_animation <- function(shot_idx){
                     technique == 'head' ~ DIST / 10,
                     TRUE ~ DIST / 25,
                 ),
-                TIME = 0.2 + DEF*0.8
+                TIME = 0.9
             )
         
         end_point <- end_point %>% 
-            mutate(EX = pitch_transform(next_x,'X'),
-                   EY = pitch_transform(next_y,'Y'),
+            mutate(EX = pitch_transform(ifelse(input$next_state=='Corner',
+                                               GX,next_x),'X'),
+                   EY = pitch_transform(ifelse(input$next_state=='Corner',
+                                               GY + runif(1)*5,next_y),'Y'),
                    TIME = 1)
+        
+        MD <- sqrt((input$X - mid_point$MX)^2 + (input$Y - mid_point$MY)^2)
+        ED <- sqrt((end_point$EX - mid_point$MX)^2 + (end_point$EY - mid_point$MY)^2)
+        mid_point$TIME <- MD/(MD + ED)*0.8 + 0.2
         
         plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
             bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.2)) %>% 
-            bind_rows(mid_point %>% select(X=MX,Y=MX,TIME)) %>% 
+            bind_rows(mid_point %>% select(X=MX,Y=MY,TIME)) %>% 
             bind_rows(end_point %>% mutate(TIME=1) %>% select(X=EX,Y=EY,TIME))
         
     }else{
@@ -131,16 +146,29 @@ shot_animation <- function(shot_idx){
             bind_rows(end_point %>% mutate(TIME=1) %>% select(X=EX,Y=EY,TIME))
     }
     
+    plot_input <- plot_input %>% 
+        mutate(
+            ANG = atan((max(Y[TIME==0])-max(Y[TIME==1]))/(max(X[TIME==0])-max(X[TIME==1]))),
+            X = ifelse(TIME==0 | (X==max(X[TIME==0]) & Y==max(Y[TIME==0])),
+                       X + ifelse(input$possession=='A',1,-1)*17*abs(cos(ANG)),
+                       X),
+            Y = ifelse(TIME==0 | (X==max(X[TIME==0]) & Y==max(Y[TIME==0])),
+                       Y + ifelse(input$ball_y > 40,-1,1)*17*abs(sin(ANG)),
+                       Y)
+        )
     
-    
-    
-    
+    base_image <- readPNG(paste0('output/layers/04/Trx_',input$period,'_',str_pad(input$time,4,pad='0'),'.png'))
     plot_output <- plot_input %>% 
+        unique() %>% 
         ggplot(mapping = aes(x=X,y=Y)) +
+        # background_image(readPNG('output/layers/01/Match.png')) +
+        # background_image(base_image) +
         geom_image(mapping=aes(image='images/icons/ball.png'),
                    size=0.018) +
         transition_time(TIME) +
         theme_void() +
+        enter_appear() +
+        exit_disappear() +
         coord_cartesian(xlim = c(0,1920), ylim=c(0,1080))
     
     anim <- animate(plot_output, 
@@ -172,13 +200,39 @@ shot_animation <- function(shot_idx){
             image_write(this_output$output)
     }
     
-    message(unique(new_frames$IDX))
-    
     frame_list <- new_frames$output
     av::av_encode_video(frame_list,
                         framerate = 30,
                         output = paste0('output/chunks/',str_pad(unique(new_frames$IDX),5,pad='0'),'.mp4'),
                         verbose = FALSE)
+    
+    result_frames <- frame_index %>% select(IDX,period,secs,REP,match_state,trx) %>% uncount(REP) %>% 
+        subset(trx == paste0('Trx_',unique(new_frames$period),'_',str_pad(unique(new_frames$secs)+1,4,pad='0'),'.png')) %>% 
+        subset(IDX > unique(new_frames$IDX)) %>% 
+        subset(input$outcome!='goal') %>% 
+        group_by(IDX) %>% mutate(REP = row_number()) %>% 
+        mutate(output = paste0('output/frames/',str_pad(IDX,5,pad='0'),'_',str_pad(REP,4,pad='0'),'.png')) %>% 
+        subset(match_state%in%c('build_up','reaction')) %>% ungroup()
+    
+    for(j in seq_along(result_frames$output)){
+        this_output <- result_frames %>% slice(j)
+        if(file.exists(this_output$output)) image_read(this_output$output) %>% 
+            image_composite(image_read(tail(new_frames$filename,1))) %>% 
+            image_write(this_output$output)
+    }
+    for(k in unique(result_frames$IDX)){
+        result_list <- result_frames %>% 
+            subset(IDX==k) %>% 
+            pull(output)
+        av::av_encode_video(result_list,
+                            framerate = 30,
+                            output = paste0('output/chunks/',str_pad(k,5,pad='0'),'.mp4'),
+                            verbose = FALSE)
+    }
+    
+    
+    
+    
     for(i in list.files('output/gifs',full.names=TRUE)) file.remove(i)
     
     #SAVED BUT NOT GK POSSESSION = BLOCKED WITH FIXED X
