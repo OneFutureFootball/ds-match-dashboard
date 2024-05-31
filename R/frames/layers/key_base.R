@@ -50,7 +50,7 @@ key_base <- function(idx,live=TRUE){
         mutate(IDX = row_number()) %>%
         mutate(XT = 960 + ifelse(possession=='A',-20,20),
                XP = 960 + ifelse(possession=='A',-70,70),
-               Y = 1005 - IDX*ifelse(n()>=4,16,23))
+               Y = 982 - (IDX-1)*ifelse(n()>=5,20,23))
     
     pers <- key_prog %>% tail(1) %>% pull(period)
     mins <- key_prog %>% tail(1) %>% mutate(MIN = floor(ifelse(live,time,next_time)/60)) %>% pull(MIN)
