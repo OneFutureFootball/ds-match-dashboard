@@ -150,6 +150,7 @@ match_file <- fromJSON('input/match_output.json') %>%
            prev_yz = lag(y),
            time = case_when(
                state=='Goal' & time==prev_time ~ time+1,
+               outcome=='goal' ~ time,
                state=='Free Kick' & next_time-time<=1 ~ time-2,
                state=='Free Kick' & next_time-time<=2 ~ time-1,
                TRUE ~ time))
@@ -394,7 +395,7 @@ key_moments <- key_moments %>%
             action=='PENALTY' & !str_detect(live_label,'CARD') ~ time - 2,
             TRUE ~ time),
         next_time = round(case_when(
-            state%in%c('Corner','Free Kick','Substition') ~ old_time,
+            state%in%c('Corner','Free Kick','Substition') & outcome!='goal' ~ old_time,
             next_time - time < 5 ~ next_time,
             TRUE ~ time + 3 + 4*runif(n())))
     ) %>% 
