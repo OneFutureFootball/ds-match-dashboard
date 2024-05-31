@@ -108,15 +108,13 @@ shot_animation <- function(shot_idx){
             bind_rows(mid_point %>% select(X=MX,Y=MY,TIME)) %>% 
             bind_rows(end_point %>% mutate(TIME=1) %>% select(X=EX,Y=EY,TIME))
     }else if(input$outcome=='saved' & input$next_position!='GK'){
-        DEF <- 1
+        DEF <- 0.9
         
         mid_point <- end_point %>% 
             mutate(
-                DX = ball_x*DEF + GX*(1-DEF),
-                DY = ball_y*DEF + GY*(1-DEF),
-                MX = pitch_transform(DX,'X'),
-                MY = pitch_transform(DY,'Y'),
-                DIST = sqrt((ball_x - DX)^2 + (ball_y - DY)^2),
+                MX = pitch_transform(GX,'X'),
+                MY = pitch_transform(GY,'Y'),
+                DIST = sqrt((ball_x - GX)^2 + (ball_y - GY)^2),
                 TIME = case_when(
                     technique == 'head' ~ DIST / 10,
                     TRUE ~ DIST / 25,
