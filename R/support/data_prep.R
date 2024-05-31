@@ -460,6 +460,7 @@ trx_frames <- time_prog %>%
         action_time = case_when(
             is.na(prev_time) ~ 1,
             action=='PENALTY' ~ old_time,
+            state=='Corner' ~ NA_real_,
             TRUE ~ time),
         possession_time = case_when(
             state=='Kickoff' & time==0 ~ time,
@@ -540,4 +541,3 @@ key_moments <- key_moments %>%
     select(-c(action_time,result_time)) %>% 
     arrange(period,time) %>% 
     mutate(IDX=row_number())
-
