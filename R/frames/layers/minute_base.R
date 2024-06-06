@@ -1,8 +1,9 @@
 minute_base <- function(pers,mins){
     stats <- all_stats %>% subset(period==pers & time==mins)
-    if(nrow(stats)==0) stats <- all_stats %>% 
+    if(nrow(stats)==0|(pers==1 & mins==0)) stats <- all_stats %>% 
             subset(period==1 & time==1) %>% 
             mutate(value=0,
+                   X2 = 135,
                    display=case_when(
                        statistic=='EXPECTED GOALS' ~ '0.00',
                        statistic=='POSSESSION %' ~ '0%',

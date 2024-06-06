@@ -18,7 +18,9 @@ shot_animation <- function(shot_idx){
                                atan((ball_y - 40)/ball_x)))/pi*180,
             GX = case_when(
                 outcome%in%c('post','goal') ~ ifelse(possession=='A',120,0),
-                outcome=='saved' ~ ifelse(possession=='A',120 - runif(n())*2,0 + runif(n())*2),
+                outcome=='saved' ~ ifelse(possession=='A',
+                                          120 - runif(n())*2,
+                                          0 + runif(n())*2),
                 outcome%in%c('off target','blocked') ~ ifelse(possession=='A',122,-2),
                 TRUE ~ 60
             ),
@@ -38,6 +40,7 @@ shot_animation <- function(shot_idx){
                 outcome%in%c('off target','blocked') & abs(ball_y - 40) <= 5 & abs(GY-40) > 6 ~ 0,
                 outcome%in%c('off target','blocked') ~ 1,
                 outcome%in%c('saved','goal') & abs(GY-40)>4 ~ 0,
+                outcome=='saved' & next_state=='Corner' & sign(GY-40)!=sign(next_y-40) ~ 0,
                 outcome=='saved' ~ 1,
                 outcome=='post' & abs(GY-40)>4.5 ~ 0,
                 outcome=='post' & abs(GY-36)<=0.5 ~ 40,
@@ -94,17 +97,21 @@ shot_animation <- function(shot_idx){
             mutate(EX = pitch_transform(ifelse(input$next_state=='Corner',
                                                GX,
                                                next_x),'X'),
-                   EY = pitch_transform(ifelse(input$next_state=='Corner',
-                                               GY + runif(1)*5,
-                                               next_y),'Y'),
+                   EGY = ifelse(input$next_state=='Corner',
+                                GY + runif(1)*5,
+                                next_y),
+                   EGY = ifelse(input$next_state=='Corner' & sign(EGY-40) != sign(next_y),
+                                40 + runif(1)*4*sign(next_y-40),
+                                EGY),
+                   EY = pitch_transform(EGY,'Y'),
                    TIME = 1)
         
         MD <- sqrt((input$X - mid_point$MX)^2 + (input$Y - mid_point$MY)^2)
         ED <- sqrt((end_point$EX - mid_point$MX)^2 + (end_point$EY - mid_point$MY)^2)
-        mid_point$TIME <- MD/(MD + ED)*0.8 + 0.2
+        mid_point$TIME <- MD/(MD + ED)*0.7 + 0.3
         
         plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
-            bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.2)) %>% 
+            bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.3)) %>% 
             bind_rows(mid_point %>% select(X=MX,Y=MY,TIME)) %>% 
             bind_rows(end_point %>% mutate(TIME=1) %>% select(X=EX,Y=EY,TIME))
     }else if(input$outcome=='saved' & input$next_position!='GK'){
@@ -124,17 +131,23 @@ shot_animation <- function(shot_idx){
         
         end_point <- end_point %>% 
             mutate(EX = pitch_transform(ifelse(input$next_state=='Corner',
-                                               GX,next_x),'X'),
-                   EY = pitch_transform(ifelse(input$next_state=='Corner',
-                                               GY + runif(1)*5,next_y),'Y'),
+                                               ifelse(possession=='A',122,-2),
+                                               next_x),'X'),
+                   EGY = ifelse(input$next_state=='Corner',
+                                GY + runif(1)*5,
+                                next_y),
+                   EGY = ifelse(input$next_state=='Corner' & sign(EGY-40) != sign(next_y),
+                                40 + runif(1)*4*sign(next_y-40),
+                                EGY),
+                   EY = pitch_transform(EGY,'Y'),
                    TIME = 1)
         
         MD <- sqrt((input$X - mid_point$MX)^2 + (input$Y - mid_point$MY)^2)
         ED <- sqrt((end_point$EX - mid_point$MX)^2 + (end_point$EY - mid_point$MY)^2)
-        mid_point$TIME <- MD/(MD + ED)*0.8 + 0.2
+        mid_point$TIME <- MD/(MD + ED)*0.7 + 0.3
         
         plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
-            bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.2)) %>% 
+            bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.3)) %>% 
             bind_rows(mid_point %>% select(X=MX,Y=MY,TIME)) %>% 
             bind_rows(end_point %>% mutate(TIME=1) %>% select(X=EX,Y=EY,TIME))
         

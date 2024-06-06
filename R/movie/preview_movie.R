@@ -19,7 +19,7 @@ high_xg <- match_file %>%
     mutate(prev_position = lag(position)) %>% 
     subset(!(action%in%c('SHOT','PENALTY') & outcome!='goal' & prev_position=='GK')) %>% 
     drop_na(xg) %>% 
-    mutate(xg = ifelse(time>=2700,xg+0.1,xg)) %>% 
+    mutate(xg = xg + ifelse(time>=2700,0.1,0) + ifelse(outcome%in%c('saved','post'),0.02,0) + ifelse(state=='Free Kick',0.01,0) + ifelse(outcome=='blocked',-0.02,0)) %>% 
     arrange(outcome!='goal',desc(xg)) %>% 
     group_by(period) %>% 
     mutate(IDX = row_number()) %>% 
@@ -27,8 +27,8 @@ high_xg <- match_file %>%
     mutate(TIDX = row_number()) %>% 
     ungroup() %>% 
     mutate(RANK = row_number()) %>% 
-    subset(IDX<=4|RANK<=8|TIDX<=3) %>% 
-    arrange(IDX,TIDX,RANK) %>% head(8) %>% select(period,time) %>% arrange(period,time) %>% 
+    subset(IDX<=4|RANK<=10|TIDX<=4) %>% 
+    arrange(IDX,TIDX,RANK) %>% head(10) %>% select(period,time) %>% arrange(period,time) %>% 
     mutate(shot=1) %>% rename(secs=time)
 selected_shots <- high_xg
 while(nrow(selected_shots) < min(12,nrow(match_file %>% drop_na(xg)))){
