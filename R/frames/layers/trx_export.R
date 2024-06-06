@@ -19,22 +19,20 @@ trx_export <- function(time_idx,force=FALSE){
     time_stamp <- time_stamp %>% 
         mutate(time = trx_frames %>% subset(IDX==frame_ord & type==status) %>% pull(timestamp),
                next_action = replace_na(next_action,''),
-               ANG = atan((40 - ball_y)/(ifelse(possession=='A',0,120) - ball_x)),
+               ANG = atan((ball_y - 40)/(ball_x - ifelse(possession=='A',120,0))),
                X = case_when(
                    state%in%c('Kickoff','Goal Kick') & possession=='A' ~ X-17,
                    state%in%c('Kickoff','Goal Kick') & possession=='B' ~ X+17,
-                   state=='Free Kick' & possession=='A' ~ X - 17*cos(ANG),
-                   state=='Free Kick' & possession=='B' ~ X + 17*cos(ANG),
-                   state%in%c('Corner') & possession=='A' ~ X+17,
-                   state%in%c('Corner') & possession=='B' ~ X-17,
+                   state=='Free Kick' & possession=='A' ~ X - 17*abs(cos(ANG)),
+                   state=='Free Kick' & possession=='B' ~ X + 17*abs(cos(ANG)),
+                   state%in%c('Corner') & status!='result' & possession=='A' ~ X+17,
+                   state%in%c('Corner') & status!='result' & possession=='B' ~ X-17,
                    TRUE ~ X),
                Y = case_when(
-                   state=='Free Kick' & ball_y > 40 ~ Y + 17*sin(ANG),
-                   state=='Free Kick' & ball_y < 40 ~ Y - 17*sin(ANG),
+                   state=='Free Kick' & ball_y > 40 ~ Y + 17*abs(sin(ANG)),
+                   state=='Free Kick' & ball_y < 40 ~ Y - 17*abs(sin(ANG)),
                    TRUE ~ Y)
         )
-    
-    #if(status%in%c('action','result') & time_stamp$action%in%c('SHOT','PENALTY')) time_stamp <- time_stamp %>% mutate(X4 = 233, Y4=ifelse(possession=='A',704,112))
     
     if(status%in%c('action','result')) time_stamp <- time_stamp %>% 
         mutate(
@@ -46,7 +44,14 @@ trx_export <- function(time_idx,force=FALSE){
             LSY = Y + 17*YS*abs(cos(ANG)),
             GAP = case_when(DIS<150 ~ 50,DIS>600 ~ 200,TRUE ~ DIS/3),
             LEX = X + GAP*XS*abs(sin(ANG)),
-            LEY = Y + GAP*YS*abs(cos(ANG)))
+            LEY = Y + GAP*YS*abs(cos(ANG)),
+            X4 = ifelse(next_action=='PENALTY',
+                        pitch_transform(ifelse(next_x < 60,0,120) + ifelse(next_x < 60,1,-1)*sqrt(runif(n()))*18,'X'),
+                        X4),
+            Y4 = ifelse(next_action=='PENALTY',
+                        pitch_transform(18 + runif(n())*44,'Y'),
+                        Y4)
+        )
     
     time_stamp <- time_stamp %>% 
         mutate(
@@ -54,7 +59,9 @@ trx_export <- function(time_idx,force=FALSE){
             RXS = sign(X2 - X),
             RYS = sign(Y2 - Y),
             RX = case_when(
-                state%in%c('Keeper Possession','Free Kick','Goal Kick','Kickoff') ~ X + 17*ifelse(possession=='A',1,-1),
+                state%in%c('Keeper Possession','Goal Kick','Kickoff') ~ X + 17*ifelse(possession=='A',1,-1),
+                state=='Free Kick' & possession=='A' ~ X + 17*abs(cos(ANG)),
+                state=='Free Kick' & possession=='B' ~ X - 17*abs(cos(ANG)),
                 state%in%c('Corner') ~ X + 17*ifelse(possession=='A',-1,1),
                 state%in%c('Throw In') ~ X,
                 X > X2  & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ X + 17*abs(sin(RANG)),
@@ -63,7 +70,9 @@ trx_export <- function(time_idx,force=FALSE){
                 X <= X2 ~ X + 17*abs(sin(RANG))
             ),
             RY = case_when(
-                state%in%c('Keeper Possession','Free Kick','Goal Kick','Kickoff','Corner') ~ Y,
+                state%in%c('Keeper Possession','Goal Kick','Kickoff','Corner') ~ Y,
+                state=='Free Kick' & ball_y > 40 ~ Y - 17*abs(sin(ANG)),
+                state=='Free Kick' & ball_y < 40 ~ Y + 17*abs(sin(ANG)),
                 state%in%c('Throw In') ~ Y - 17*sign(ball_y-40),
                 Y > Y2  & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ Y + 17*abs(cos(RANG)),
                 Y <= Y2 & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ Y - 17*abs(cos(RANG)),
@@ -72,17 +81,17 @@ trx_export <- function(time_idx,force=FALSE){
             )
         )
     
-    if(status=='result' & time_stamp$next_action=='PENALTY'){
-        time_stamp <- time_stamp %>% 
-            mutate(X = NA,
-                   Y = NA,
-                   X2 = NA,
-                   Y2 = NA,
-                   X3 = NA,
-                   Y3 = NA,
-                   LSX = NA,
-                   LSY = NA)
-    }
+    # if(status=='result' & time_stamp$next_action=='PENALTY'){
+    #     time_stamp <- time_stamp %>% 
+    #         mutate(X = NA,
+    #                Y = NA,
+    #                X2 = NA,
+    #                Y2 = NA,
+    #                X3 = NA,
+    #                Y3 = NA,
+    #                LSX = NA,
+    #                LSY = NA)
+    # }
     
     plot_output <- ggplot() +
         # background_image(readPNG('output/layers/01/Match.png')) +
@@ -149,7 +158,7 @@ trx_export <- function(time_idx,force=FALSE){
                        size=0.018)
     }
     if(status=='action' & !time_stamp$action%in%c('SHOT','PENALTY')){
-    # if(status=='action'){
+        # if(status=='action'){
         if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
                 geom_image(time_stamp,
                            mapping = aes(x=ifelse(is.na(next_action)|next_action=='PENALTY',RX,LSX), 
@@ -158,7 +167,7 @@ trx_export <- function(time_idx,force=FALSE){
                            size=0.018)
     }
     if(status=='result' & !time_stamp$action%in%c('SHOT','PENALTY')){
-    # if(status=='result'){
+        # if(status=='result'){
         plot_output <- plot_output +
             geom_segment(time_stamp %>% drop_na(LSX),
                          mapping = aes(x=LSX,y=LSY,xend=X4,yend=Y4, colour=factor(team_id)),
@@ -168,10 +177,12 @@ trx_export <- function(time_idx,force=FALSE){
                                      image='images/icons/ball.png'),
                        size=0.018)
     }
-    ggsave(paste0('output/layers/04/Trx_',time_stamp$period,'_',str_pad(time_stamp$time,4,pad='0'),'.png'),
-           plot_output,
-           height=1080,width=1920,
-           units='px',dpi=100)
+    time_stamp <- time_stamp %>% mutate(action = replace_na(action,''))
+    if(time_stamp$action!='GOAL') ggsave(paste0('output/layers/04/Trx_',time_stamp$period,'_',str_pad(time_stamp$time,4,pad='0'),'.png'),
+                                         plot_output,
+                                         height=1080,width=1920,
+                                         units='px',dpi=100)
     
+    if(status=='result' & time_stamp$next_action=='PENALTY') return(NULL)
     trx_text(time_idx)
 }

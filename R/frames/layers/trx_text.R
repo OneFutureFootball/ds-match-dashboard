@@ -35,8 +35,8 @@ trx_text <- function(time_idx){
         status=='result' ~ case_when(
           action%in%c('SHOT') & outcome=='goal' ~ 'GOAL',
           action%in%c('SHOT') & next_state=='Corner' ~ paste0(toupper(outcome),' - CORNER'),
-          action%in%c('SHOT') & outcome=='goal' ~ 'PENALTY GOAL',
-          action%in%c('SHOT') & next_state=='Corner' ~ paste0('PENALTY - ',toupper(outcome),' - CORNER'),
+          action%in%c('PENALTY') & outcome=='goal' ~ 'PENALTY GOAL',
+          action%in%c('PENALTY') & next_state=='Corner' ~ paste0('PENALTY - ',toupper(outcome),' - CORNER'),
           action=='PENALTY' ~ paste0('PENALTY - ',toupper(outcome)),
           action=='SHOT' & state=='Free Kick' ~ paste0('FREE KICK SHOT - ',toupper(replace_na(outcome,''))),
           action=='SHOT' ~ paste0('SHOT - ',toupper(outcome)),

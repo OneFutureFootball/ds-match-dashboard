@@ -270,13 +270,14 @@ key_moments <- match_file %>%
            prev_team = lag(team_id)) %>% 
     mutate(
         time = case_when(
-            !is.na(card_given) & !action%in%c('shoot','penalty') ~ time,
+            !is.na(card_given) & !action%in%c('SHOOT','PENALTY') ~ time,
             state%in%c('Corner','Free Kick') ~ old_time,
             TRUE ~ time),
         next_time = case_when(
             state=='Substitution' & oth_role=='injury' ~ round(old_time),
             state=='Substitution' & prev_role=='injury' & time==prev_time & team_id==prev_team ~ NA_real_,
             state=='Substitution' & prev_role2=='injury' & time==prev_time2 & team_id==prev_team ~ NA_real_,
+            action%in%c('SHOOT','PENALTY') ~ time+1,
             TRUE ~ next_time),
         time = case_when(
             state=='Substitution' & oth_role=='injury' ~ ceiling((prev_time + time)/2),
@@ -391,10 +392,12 @@ key_moments <- key_moments %>%
         time = round(time),
         time = case_when(
             str_detect(state,'Goal') ~ time,
+            action%in%c('SHOOT','PENALTY') & !str_detect(live_label,'CARD') ~ time,
             state=='PENALTY' ~ prev_time + 3,
-            action=='PENALTY' & !str_detect(live_label,'CARD') ~ time - 2,
+            #action=='PENALTY' & !str_detect(live_label,'CARD') ~ time - 2,
             TRUE ~ time),
         next_time = round(case_when(
+            action%in%c('SHOOT','PENALTY') & !str_detect(live_label,'CARD') ~ next_time,
             state%in%c('Corner','Free Kick','Substition') & outcome!='goal' ~ old_time,
             next_time - time < 5 ~ next_time,
             TRUE ~ time + 3 + 4*runif(n())))
@@ -429,7 +432,6 @@ time_prog <- match_file %>%
            next_oth_last = lead(oth_last_name)) %>% 
     mutate(old_time = time,
            time = case_when(
-               action=='PENALTY' ~ time - 10,
                TRUE ~ time)) %>% 
     ungroup() %>% 
     mutate(
@@ -460,14 +462,14 @@ trx_frames <- time_prog %>%
     mutate(
         action_time = case_when(
             is.na(prev_time) ~ 1,
-            action=='PENALTY' ~ old_time,
+            action=='PENALTY' ~ time,
             state=='Corner' ~ NA_real_,
             TRUE ~ time),
         possession_time = case_when(
             state=='Kickoff' & time==0 ~ time,
             state=='Kickoff' ~ time-1,
             technique=='head' ~ NA_real_,
-            action=='PENALTY' ~ time,
+            action=='PENALTY' ~ time - 15,
             prev_action=='PENALTY' ~ time-1,
             state%in%c('Free Kick') & str_detect(card_given,'red') & time-prev_time >=11 ~ time - 10,
             state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & time-prev_time > 7 ~ prev_time + 5,
@@ -478,13 +480,14 @@ trx_frames <- time_prog %>%
             TRUE ~ ceiling(0.4*prev_time + 0.6*time)
         ),
         result_time = case_when(
+            next_state=='Goal' ~ NA_real_,
+            action%in%c('SHOT','PENALTY') ~ action_time+1,
             state=='Kickoff' & next_time - time > 3 ~ time+2,
             state=='Kickoff' & next_time - time > 1 ~ time+1,
             state=='Kickoff' ~ NA_real_,
-            next_state=='Goal' ~ NA_real_,
-            action%in%c('SHOT','PENALTY') ~ time+1,
-            next_state=='Free Kick' & str_detect(next_card,'red') ~ time + 2,
-            next_state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & next_time-time > 7 ~ time + 3,
+            next_state=='Free Kick' & str_detect(next_card,'red') ~ time + 3,
+            next_action=='PENALTY' ~ time + 2,
+            next_state%in%c('Free Kick','Corner','Goal Kick','Keeper Possession','Throw In') & next_time-time > 7 ~ time + 4,
             next_time - time==1 ~ NA_real_,
             next_time - time<=4 ~ time+1,
             next_time - time<=6 ~ time+2,
@@ -531,12 +534,6 @@ key_moments <- key_moments %>%
             action=='PENALTY' & !str_detect(live_label,'CARD') ~ possession_time,
             str_detect(live_label,"RED|SECOND") ~ prev_result,
             TRUE ~ time
-        ),
-        next_time = case_when(
-            is.na(result_time) ~ min(next_time),
-            action=='SHOT' ~ result_time,
-            action=='PENALTY' ~ result_time,
-            TRUE ~ next_time
         )) %>% 
     ungroup() %>% 
     select(-c(action_time,result_time)) %>% 
