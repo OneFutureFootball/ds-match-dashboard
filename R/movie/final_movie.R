@@ -70,7 +70,9 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
 stopCluster(cl)
 
 shown_shots <- time_prog %>% 
-    inner_join(selected_shots,by=c('period','time'='secs')) %>% 
+    subset(action%in%c('SHOT','PENALTY')) %>% 
+    inner_join(frame_index %>% select(period,secs,match_state),by=c('period','time'='secs')) %>% 
+    subset(match_state%in%c('build_up','reaction')) %>% 
     select(IDX,period,time,action,outcome)
 
 for(i in shown_shots$IDX) shot_animation(i)
