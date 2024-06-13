@@ -62,6 +62,11 @@ while(nrow(selected_shots) < min(12,nrow(match_file %>% drop_na(xg)))){
         arrange(period,secs)
 }
 
+selected_shots <- time_prog %>% subset(action%in%c('SHOT','PENALTY')) %>% select(period,time) %>% 
+    left_join(selected_shots,by=c('period','time'='secs')) %>% 
+    mutate(shot = replace_na(shot,2)) %>% 
+    rename(secs=time)
+
 kickoffs <- match_file %>% subset(state=='Kickoff') %>% select(period,time) %>% mutate(kickoff=1) %>% rename(secs=time)
 corners <- match_file %>% subset(state=='Corner') %>% select(period,time) %>% mutate(corner=1) %>% rename(secs=time)
 subs <- lineup_times %>% ungroup() %>% select(period,time) %>% unique() %>% mutate(time = round(time), sub=1) %>% rename(secs=time) %>% slice(-1)
@@ -101,6 +106,7 @@ frame_index <- time_base %>%
            prev_red = ifelse(red==1,secs,NA),
            next_shot = ifelse(shot==1,secs,NA),
            prev_shot = ifelse(shot==1,secs,NA),
+           next_shots = ifelse(shot==2,secs,NA),
            prev_kickoff = ifelse(kickoff==1,secs,NA),
            next_kickoff = ifelse(kickoff==1,secs,NA),
            next_corner = ifelse(corner==1,secs,NA),
@@ -110,7 +116,7 @@ frame_index <- time_base %>%
            prev_inj_end = ifelse(inj==1,next_inj,NA),
            next_trx = ifelse(trxx==1,secs,NA)) %>% 
     group_by(period) %>% 
-    fill(c(next_goal,next_pen, next_shot, next_kickoff, prev_red, next_corner, next_trx, next_sub), .direction='up') %>% 
+    fill(c(next_goal,next_pen, next_shot, next_shots, next_kickoff, prev_red, next_corner, next_trx, next_sub), .direction='up') %>% 
     fill(c(prev_goal,prev_pen, prev_shot, prev_penshot, prev_kickoff, prev_sub, prev_inj, prev_inj_end, crest), .direction='down') %>% 
     mutate(
         match_state = case_when(
@@ -130,7 +136,8 @@ frame_index <- time_base %>%
             secs<next_goal & next_goal - secs <= 12 & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
             secs<next_shot & next_shot - secs <= 12 & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
             secs> prev_goal & next_kickoff - secs <= 60 & secs - prev_goal > 11 ~ NA_character_,
-            secs>=prev_shot & secs - prev_shot <= 6 ~ 'reaction',
+            secs>=prev_shot & secs - prev_shot <= 5 ~ 'reaction',
+            secs==next_shots | secs==(next_shots-1) ~ 'build_up',
             secs==2700 ~ 'overlay'
         ),
         delay = next_trx - secs,

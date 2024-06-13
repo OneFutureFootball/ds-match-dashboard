@@ -1,5 +1,7 @@
 shot_animation <- function(shot_idx){
-    for(i in list.files('output/gifs',full.names=TRUE)) file.remove(i)
+    file.create(paste0('output/',shot_idx,'.json'))
+    dir.create(paste0('output/gifs/',Sys.getpid()),showWarnings=FALSE)
+    for(i in list.files(paste0('output/gifs/',Sys.getpid()),full.names=TRUE)) file.remove(i)
     #KICK AT 25M/S
     #HEAD AT 10M/S
     input <- time_prog %>% 
@@ -188,22 +190,24 @@ shot_animation <- function(shot_idx){
                     height=1080,
                     width=1920,
                     units='px', 
-                    renderer = file_renderer(dir = "output/gifs", 
+                    renderer = file_renderer(dir = paste0("output/gifs/",Sys.getpid()), 
                                              prefix = paste0("GIF_",input$period,'_',str_pad(input$time,4,pad='0'),'_'), 
                                              overwrite = TRUE),
                     bg='transparent')
     
-    gif_list <- data.frame(filename=list.files('output/gifs',full.names=TRUE)) %>% 
+    gif_list <- data.frame(filename=list.files(paste0('output/gifs/',Sys.getpid()),full.names=TRUE)) %>% 
         mutate(period = as.numeric(sapply(filename,function(x) str_split(x,'_')[[1]][2])),
                time   = as.numeric(sapply(filename,function(x) str_split(x,'_')[[1]][3])),
                REP   = as.numeric(str_replace(sapply(filename,function(x) str_split(x,'_')[[1]][4]),'.png','')))
     
     new_frames <- frame_index %>% select(IDX,period,secs,REP,match_state) %>% uncount(REP) %>% 
-        group_by(IDX) %>% mutate(REP = row_number()) %>% 
+        group_by(IDX) %>% 
+        mutate(REP = row_number()) %>% 
         inner_join(gif_list,by=c('period','secs'='time','REP')) %>% 
         mutate(output = paste0('output/frames/',str_pad(IDX,5,pad='0'),'_',str_pad(REP,4,pad='0'),'.png')) %>% 
         subset(match_state%in%c('build_up','reaction'))
-    if(nrow(new_frames)==0) return(NULL)
+
+    new_frames %>% toJSON() %>% write(paste0('output/',shot_idx,'.json'))
     for(i in seq_along(new_frames$output)){
         this_output <- new_frames %>% slice(i)
         if(file.exists(this_output$output)) image_read(this_output$output) %>% 
@@ -244,7 +248,10 @@ shot_animation <- function(shot_idx){
     
     
     
-    for(i in list.files('output/gifs',full.names=TRUE)) file.remove(i)
+    for(i in list.files(paste0('output/gifs/',Sys.getpid()),full.names=TRUE)) file.remove(i)
+    file.remove(paste0('output/gifs/',Sys.getpid()))
     
     #SAVED BUT NOT GK POSSESSION = BLOCKED WITH FIXED X
+    
+    file.remove(paste0('output/',shot_idx,'.txt'))
 }
