@@ -160,12 +160,14 @@ shot_animation <- function(shot_idx){
     plot_input <- plot_input %>% 
         mutate(
             ANG = atan((max(Y[TIME==0])-max(Y[TIME==1]))/(max(X[TIME==0])-max(X[TIME==1]))),
-            X = ifelse(TIME==0 | (X==max(X[TIME==0]) & Y==max(Y[TIME==0])),
-                       X + ifelse(input$possession=='A',1,-1)*17*abs(cos(ANG)),
-                       X),
-            Y = ifelse(TIME==0 | (X==max(X[TIME==0]) & Y==max(Y[TIME==0])),
-                       Y + ifelse(input$ball_y > 40,-1,1)*17*abs(sin(ANG)),
-                       Y)
+            X = case_when(
+                input$action=='PENALTY' ~ X,
+                TIME==0 | (X==max(X[TIME==0]) & Y==max(Y[TIME==0])) ~ X + ifelse(input$possession=='A',1,-1)*17*abs(cos(ANG)),
+                TRUE ~ X),
+            Y = case_when(
+                input$action=='PENALTY' ~ Y,
+                TIME==0 | (Y==max(Y[TIME==0]) & Y==max(Y[TIME==0])) ~ Y + ifelse(input$ball_y > 40,-1,1)*17*abs(sin(ANG)),
+                TRUE ~ Y)
         )
     
     base_image <- readPNG(paste0('output/layers/04/Trx_',input$period,'_',str_pad(input$time,4,pad='0'),'.png'))
