@@ -51,6 +51,16 @@ stopCluster(cl)
 #     #file.remove(paste0('output/layers/99/Frame_',str_pad(i,5,pad='0'),'.png'))
 # } 
 
+shown_shots <- time_prog %>% 
+    subset(action%in%c('SHOT','PENALTY')) %>% 
+    inner_join(frame_index %>% select(period,secs,match_state,FIDX=IDX),by=c('period','time'='secs')) %>% 
+    subset(match_state%in%c('build_up','reaction')) %>% 
+    select(IDX,period,time,action,outcome,match_state,FIDX) %>% 
+    mutate(RN = row_number()-1,
+           KEY = 1 + RN%%active_cores)
+shown_shots %>% toJSON() %>% write('output/shown_shots.json')
+
+
 message('All frames built')
 
 message('Building chunks')
@@ -69,13 +79,23 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
 }
 stopCluster(cl)
 
-shown_shots <- time_prog %>% 
-    subset(action%in%c('SHOT','PENALTY')) %>% 
-    inner_join(frame_index %>% select(period,secs,match_state),by=c('period','time'='secs')) %>% 
-    subset(match_state%in%c('build_up','reaction')) %>% 
-    select(IDX,period,time,action,outcome)
-
-for(i in shown_shots$IDX) shot_animation(i)
+message('Shot animations')
+cl <- makeCluster(active_cores)
+clusterEvalQ(cl,{
+    library(tidyverse)
+    library(png)
+    library(ggimage)
+    library(gganimate)
+    library(jsonlite)
+    library(magick)
+})
+clusterExport(cl, c('shot_animation','shown_shots','frame_index','time_prog','pitch_transform'))
+registerDoParallel(cl)
+foreach(shot_idx = shown_shots$IDX,
+        .packages = c('tidyverse','png','ggimage','gganimate','jsonlite','magick')) %dopar% {
+    shot_animation(shot_idx)
+}
+stopCluster(cl)
 
 all_chunks <- list.files('output/chunks',full.names=TRUE)
 
