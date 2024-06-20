@@ -530,6 +530,7 @@ key_moments <- key_moments %>%
     group_by(period,time) %>% 
     mutate(
         time = case_when(
+            state=='Substitution' & !str_detect(oth_role,'injury') ~ round(old_time) - 3,
             is.na(action_time) ~ min(time),
             action=='PENALTY' & !str_detect(live_label,'CARD') ~ possession_time,
             str_detect(live_label,"RED|SECOND") ~ prev_result,
@@ -537,5 +538,10 @@ key_moments <- key_moments %>%
         )) %>% 
     ungroup() %>% 
     select(-c(action_time,result_time)) %>% 
+    mutate(next_time = case_when(
+        action%in%c('SHOT','PENALTY') ~ time + 1,
+        state=='Substitution' ~ round(old_time),
+        TRUE ~ next_time
+    )) %>% 
     arrange(period,time) %>% 
     mutate(IDX=row_number())

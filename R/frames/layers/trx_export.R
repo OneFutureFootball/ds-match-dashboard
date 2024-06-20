@@ -67,7 +67,8 @@ trx_export <- function(time_idx,force=FALSE){
                 X > X2  & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ X + 17*abs(sin(RANG)),
                 X <= X2 & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ X - 17*abs(sin(RANG)),
                 X >  X2 ~ X - 17*abs(sin(RANG)),
-                X <= X2 ~ X + 17*abs(sin(RANG))
+                X <= X2 ~ X + 17*abs(sin(RANG)),
+                prev_action%in%c('SHOT','PENALTY') ~ X + 17*ifelse(possession=='A',1,-1)*abs(cos(ANG))
             ),
             RY = case_when(
                 state%in%c('Keeper Possession','Goal Kick','Kickoff','Corner') ~ Y,
@@ -77,21 +78,10 @@ trx_export <- function(time_idx,force=FALSE){
                 Y > Y2  & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ Y + 17*abs(cos(RANG)),
                 Y <= Y2 & prev_action%in%c('MOVE','CARRY','DRIBBLE') & ID==prev_player ~ Y - 17*abs(cos(RANG)),
                 Y >  Y2 ~ Y - 17*abs(cos(RANG)),
-                Y <= Y2 ~ Y + 17*abs(cos(RANG))
+                Y <= Y2 ~ Y + 17*abs(cos(RANG)),
+                prev_action%in%c('SHOT','PENALTY') ~ Y + 17*ifelse(ball_y < 40,1,-1)*abs(sin(ANG))
             )
         )
-    
-    # if(status=='result' & time_stamp$next_action=='PENALTY'){
-    #     time_stamp <- time_stamp %>% 
-    #         mutate(X = NA,
-    #                Y = NA,
-    #                X2 = NA,
-    #                Y2 = NA,
-    #                X3 = NA,
-    #                Y3 = NA,
-    #                LSX = NA,
-    #                LSY = NA)
-    # }
     
     plot_output <- ggplot() +
         # background_image(readPNG('output/layers/01/Match.png')) +
@@ -161,8 +151,8 @@ trx_export <- function(time_idx,force=FALSE){
         # if(status=='action'){
         if(!is.na(time_stamp$LEX)) plot_output <- plot_output +
                 geom_image(time_stamp,
-                           mapping = aes(x=ifelse(is.na(next_action)|next_action=='PENALTY',RX,LSX), 
-                                         y=ifelse(is.na(next_action)|next_action=='PENALTY',RY,LSY),
+                           mapping = aes(x=ifelse(is.na(next_action),RX,LSX), 
+                                         y=ifelse(is.na(next_action),RY,LSY),
                                          image='images/icons/ball.png'),
                            size=0.018)
     }
@@ -170,7 +160,9 @@ trx_export <- function(time_idx,force=FALSE){
         # if(status=='result'){
         plot_output <- plot_output +
             geom_segment(time_stamp %>% drop_na(LSX),
-                         mapping = aes(x=LSX,y=LSY,xend=X4,yend=Y4, colour=factor(team_id)),
+                         mapping = aes(x=X,y=Y,
+                                       xend=X4,yend=Y4,
+                                       colour=factor(team_id)),
                          linewidth=0.4) +
             geom_image(time_stamp,
                        mapping = aes(x=X4, y=Y4,
