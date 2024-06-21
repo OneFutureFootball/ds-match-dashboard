@@ -94,8 +94,7 @@ key_base <- function(idx,live=TRUE){
         geom_image(key_prog %>% drop_na(logo),
                    mapping = aes(x=X+290,y=Y,image=logo, alpha=IDX),
                    size=0.025) +
-        scale_colour_manual(values = c(text_colours, 'GOAL'='#5CED73', 'YELLOW CARD'='#FFF380', 'RED CARD'='#FF6955','SECOND YELLOW CARD'='#FF6955', 'DARK'='#150928'), na.value='white',guide='none') + 
-        scale_fill_manual(values = team_colours,guide='none')
+        scale_colour_manual(values = c(text_colours, 'GOAL'='#5CED73', 'YELLOW CARD'='#FFF380', 'RED CARD'='#FF6955','SECOND YELLOW CARD'='#FF6955', 'DARK'='#150928'), na.value='white',guide='none')
     
     if(!(topup>0 & !this_moment$oth_role%in%c('red card','injury') & live)){
         
@@ -106,7 +105,7 @@ key_base <- function(idx,live=TRUE){
                units='px',
                dpi=300)
     }
-    
+    if(replace_na(this_moment$oth_role,'')=='injury') card_overlay(this_moment$period,ifelse(live,this_moment$time,this_moment$next_time))
     if(is.na(this_moment$post_label)) return(NULL)
     if(this_moment$post_label == this_moment$live_label & topup==0) return(NULL)
     if(live) key_base(idx,FALSE)
