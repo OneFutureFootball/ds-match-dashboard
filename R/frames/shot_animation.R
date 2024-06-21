@@ -159,7 +159,9 @@ shot_animation <- function(shot_idx){
                     technique == 'head' ~ DIST / 10,
                     TRUE ~ DIST / 25,
                 ),
-                TIME = 0.95
+                TIME = 0.95,
+                DX = GX,
+                DY = GY
             )
         
         end_point <- end_point %>% 
@@ -177,24 +179,29 @@ shot_animation <- function(shot_idx){
         
         MD <- sqrt((input$ball_x - mid_point$DX)^2 + (input$ball_y - mid_point$DY)^2)
         ED <- sqrt((end_point$next_x - mid_point$DX)^2 + (end_point$next_y - mid_point$DY)^2)
-        MT <- 99
-        while(MT > 0.95*MD/(MD+ED)){
+        BT <- MT <- 99; idx <- 0
+        while(MT > 0.9*MD/(MD+ED) & idx < 5000){
+            idx <- idx+1
             IS <- case_when(
-                input$technique == 'head' ~ rnorm(1,9,1),
+                input$technique == 'head' ~ rnorm(1,10,2),
                 TRUE ~ rnorm(1,21,2)
             )
             MT <- MD / IS
+            if(MT < BT) BT <- MT
         }
-        mid_point$TIME <- MT + 0.3
-        ET <- 99
-        while(ET > 0.95*ED/(MD+ED)){
+        mid_point$TIME <- BT + 0.3
+        
+        BT <- ET <- 99; idx <- 0
+        while(ET > 0.9*ED/(MD+ED) & idx < 5000){
+            idx <- idx+1
             ES <- case_when(
-                input$technique == 'head' ~ rnorm(1,9,1),
+                input$technique == 'head' ~ rnorm(1,10,2),
                 TRUE ~ rnorm(1,21,2)
             )
             ET <- ED / ES
+            if(ET < BT) BT <- ET
         }
-        end_point$TIME <- ET + mid_point$TIME
+        end_point$TIME <- BT + mid_point$TIME
         
         plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
             bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.3)) %>% 
