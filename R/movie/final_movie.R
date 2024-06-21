@@ -7,6 +7,7 @@ registerDoParallel(cl)
 foreach(idx = unique(frame_index$KEY)) %dopar% {
     source('R/setup.R')
     frame_index <- fromJSON('output/frame_index.json')
+    if(!'card'%in%names(frame_index)) frame_index <- frame_index %>% mutate(card=NA_character_)
     if(!'overlay'%in%names(frame_index)) frame_index <- frame_index %>% mutate(overlay=NA_character_)
     assign('frame_index',frame_index,envir = .GlobalEnv)
     this_list <- subset(frame_index,KEY==idx)
