@@ -136,7 +136,7 @@ frame_index <- time_base %>%
             secs>=prev_shot & secs - prev_shot <= 5 ~ 'reaction',
             secs==next_shots | secs==(next_shots-1) ~ 'build_up',
             secs==2700 ~ 'overlay',
-            secs>=prev_subs & secs<=next_sub ~ 'substitution'
+            secs>=next_subs & secs<=next_sub ~ 'substitution'
         ),
         delay = next_trx - secs,
         overlay = paste0('output/layers/07/Overlay_',period,'_',str_pad(secs,4,pad='0'),'.png'),

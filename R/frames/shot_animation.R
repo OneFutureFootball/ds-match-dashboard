@@ -113,7 +113,7 @@ shot_animation <- function(shot_idx){
         ED <- sqrt((end_point$next_x - mid_point$DX)^2 + (end_point$next_y - mid_point$DY)^2)
         
         MT <- 99
-        while(MT > 0.8*MD/(MD+ED)){
+        while(MT > 0.95*MD/(MD+ED)){
             IS <- case_when(
                 input$technique == 'head' ~ rnorm(1,9,1),
                 TRUE ~ rnorm(1,21,2)
@@ -122,7 +122,7 @@ shot_animation <- function(shot_idx){
         }
         mid_point$TIME <- MT + 0.3
         ET <- 99
-        while(ET > 0.8*ED/(MD+ED)){
+        while(ET > 0.95*ED/(MD+ED)){
             ES <- case_when(
                 input$technique == 'head' ~ rnorm(1,9,1),
                 TRUE ~ rnorm(1,21,2)
@@ -173,7 +173,7 @@ shot_animation <- function(shot_idx){
         MD <- sqrt((input$ball_x - mid_point$DX)^2 + (input$ball_y - mid_point$DY)^2)
         ED <- sqrt((end_point$next_x - mid_point$DX)^2 + (end_point$next_y - mid_point$DY)^2)
         MT <- 99
-        while(MT > 0.8*MD/(MD+ED)){
+        while(MT > 0.95*MD/(MD+ED)){
             IS <- case_when(
                 input$technique == 'head' ~ rnorm(1,9,1),
                 TRUE ~ rnorm(1,21,2)
@@ -182,7 +182,7 @@ shot_animation <- function(shot_idx){
         }
         mid_point$TIME <- MT + 0.3
         ET <- 99
-        while(ET > 0.8*ED/(MD+ED)){
+        while(ET > 0.95*ED/(MD+ED)){
             ES <- case_when(
                 input$technique == 'head' ~ rnorm(1,9,1),
                 TRUE ~ rnorm(1,21,2)
