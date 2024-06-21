@@ -52,8 +52,10 @@ lineup_base <- function(trx){
             )
         )
     
-    fill_colours <- team_colours; fill_colours[names(fill_colours)==1] <- 'white'
-    number_colours <- text_colours; number_colours[names(number_colours)==1] <- '#ee202e'
+    fill_colours <- team_colours
+    if(!this_match$home%in%c(1)) fill_colours[names(fill_colours)==1] <- 'white'
+    number_colours <- text_colours
+    if(!this_match$home%in%c(1)) number_colours[names(number_colours)==1] <- '#ee202e'
     
     plot_output <- ggplot() + 
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) + 
