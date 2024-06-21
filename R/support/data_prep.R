@@ -66,7 +66,9 @@ text_colours <- c(text_colours,text_colours)
 names(text_colours) <- c(match_details$home_short_name,match_details$away_short_name,match_details$home_id, match_details$away_id)
 text_colours <- c(text_colours,kit_colours)
 
-match_file <- fromJSON('input/match_output.json') %>% 
+match_file <- fromJSON('input/match_output.json')
+if(!'card_given'%in%names(match_file)) match_file <- match_file %>% mutate(card_given = NA_character_)
+match_file <- match_file %>%
     arrange(str_detect(state,'Subs|Start'),period,time,state=='Goal') %>% 
     mutate(outcome = ifelse(outcome=='wayward','off target',outcome)) %>% 
     left_join(teams %>% select(team_id,short_name),by='team_id') %>% 

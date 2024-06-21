@@ -106,6 +106,7 @@ av::av_encode_video(all_chunks,
                                     '_R',str_pad(match_details$round_no,2,pad='0'),
                                     '_',match_details$home_short_name,'v',match_details$away_short_name,'.mp4'),
                     verbose = FALSE)
+message(Sys.time())
 
 home_goals <- match_file %>% 
     subset(state=='Goal' & possession=='A') %>% 

@@ -45,8 +45,8 @@ while(nrow(selected_shots) < min(12,nrow(match_file %>% drop_na(xg)))){
             prev_shot = replace_na(prev_shot,0),
             next_shot = ifelse(is.na(next_shot),PL,next_shot),
             old_delay = next_shot - prev_shot,
-               new_delay_prev = time - prev_shot,
-               new_delay_next = next_shot - time) %>% 
+            new_delay_prev = time - prev_shot,
+            new_delay_next = next_shot - time) %>% 
         mutate(
             old_delay = ifelse(old_delay < 0, old_delay + max(match_file$time[match_file$period==1]),old_delay),
             new_delay_prev = ifelse(new_delay_prev < 0, new_delay_prev + max(match_file$time[match_file$period==1]),new_delay_prev),
