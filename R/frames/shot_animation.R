@@ -138,7 +138,9 @@ shot_animation <- function(shot_idx){
             mutate(TIME = case_when(
                 TIME==0 ~ 0,
                 end_point$TIME >= 1.29 ~ TIME - 0.29,
-                end_point$TIME > 1 ~ TIME - (end_point$TIME - 1)
+                end_point$TIME > 1 ~ TIME - (end_point$TIME - 1),
+                end_point$TIME < 1 ~ TIME + (end_point$TIME - 1),
+                TRUE ~ TIME
             ))
     }else if(input$outcome=='saved' & input$next_position!='GK'){
         DEF <- 0.9
@@ -196,7 +198,9 @@ shot_animation <- function(shot_idx){
             mutate(TIME = case_when(
                 TIME==0 ~ 0,
                 end_point$TIME >= 1.29 ~ TIME - 0.29,
-                end_point$TIME > 1 ~ TIME - (end_point$TIME - 1)
+                end_point$TIME > 1 ~ TIME - (end_point$TIME - 1),
+                end_point$TIME < 1 ~ TIME + (end_point$TIME - 1),
+                TRUE ~ TIME
             ))
         
     }else{
@@ -207,7 +211,7 @@ shot_animation <- function(shot_idx){
     
     plot_input <- plot_input %>% 
         mutate(
-            ANG = atan((max(Y[TIME==0])-max(Y[TIME==1]))/(max(X[TIME==0])-max(X[TIME==1]))),
+            ANG = atan((max(Y[TIME==0])-max(Y[TIME==max(TIME)]))/(max(X[TIME==0])-max(X[TIME==max(TIME)]))),
             X = case_when(
                 input$action=='PENALTY' ~ X,
                 input$state=='Free Kick' ~ X,
@@ -255,6 +259,8 @@ shot_animation <- function(shot_idx){
                frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
         subset(match_state%in%c('build_up','reaction'))
     
+    new_frames %>% pull(IDX) %>% unique() %>% print()
+    
     for(i in seq_along(new_frames$output)){
         this_output <- new_frames %>% slice(i)
         if(file.exists(this_output$output)) image_read(this_output$frame) %>% 
@@ -276,6 +282,8 @@ shot_animation <- function(shot_idx){
         mutate(output = paste0('output/frames/',str_pad(IDX,5,pad='0'),'_',str_pad(REP,4,pad='0'),'.png'),
                frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
         subset(match_state%in%c('build_up','reaction')) %>% ungroup()
+    
+    result_frames %>% pull(IDX) %>% unique() %>% print()
     
     for(j in seq_along(result_frames$output)){
         this_output <- result_frames %>% slice(j)
