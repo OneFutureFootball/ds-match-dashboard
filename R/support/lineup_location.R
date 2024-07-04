@@ -98,6 +98,7 @@ lineup_location <- function(input){
                     position=='CAM' & AM==1~50,
                     position=='CAM' & AM==2 & CM%in%c(1,3) ~ (ORD-1.5)*20+50,
                     position=='CAM' & AM==2 ~ (ORD-1.5)*20+50,
+                    position=='CAM' & AM>2 ~ (ORD-2)*20+50,
                     position=='CDM' & AM==1 & DM==1 & CM==1 ~ 47,
                     position=='CDM' & DM==1 ~ 50,
                     position=='CDM' & DM==2 & CM%in%c(1,3) ~ (ORD-1.5)*24+50,
