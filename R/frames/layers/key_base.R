@@ -47,14 +47,17 @@ key_base <- function(idx,live=TRUE){
     }
     goals <- goals %>% 
         group_by(team_id) %>% 
-        mutate(IDX = row_number()) %>%
+        mutate(IDX = row_number(),
+               N = n()) %>%
+        ungroup() %>% 
         mutate(XT = 960 + ifelse(possession=='A',-20,20),
                XP = 960 + ifelse(possession=='A',-70,70),
-               Y = 982 - (IDX-1)*ifelse(n()>=5,20,23))
+               Y = 982 - ifelse(max(N),-3,0) - (IDX-1)*ifelse(max(N)>=5,18,23))
     
     pers <- key_prog %>% tail(1) %>% pull(period)
     mins <- key_prog %>% tail(1) %>% mutate(MIN = floor(ifelse(live,time,next_time)/60)) %>% pull(MIN)
     plot_output <- ggplot() +
+        #background_image(readPNG('output/layers/01/Match.png')) +
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
         theme_void() +
         scale_alpha_continuous(range = c(0.7,1),guide='none') +
