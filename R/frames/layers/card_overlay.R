@@ -83,11 +83,13 @@ card_overlay <- function(pers,secs){
         bind_rows(injs) %>% 
         bind_rows(subs)
     
-    if(dots %>% bind_rows(reds) %>% nrow() == 0) return(NULL)
+    #if(dots %>% bind_rows(reds) %>% nrow() == 0) return(NULL)
     
     plot_output <- ggplot() + 
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) + 
-        theme_void() +
+        theme_void()
+    
+    if(dots %>% bind_rows(reds) %>% nrow() > 0) plot_output <- plot_output +
         geom_point(dots,
                    mapping = aes(x=X+25*ifelse(is.na(card_given),-1,1),
                                  y=Y-25),
