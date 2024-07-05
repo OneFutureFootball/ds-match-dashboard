@@ -1,6 +1,6 @@
 input <- fromJSON('input/match_output.json')
-this_period <- 2
-this_time <- c(68,20); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
+this_period <- 1
+this_time <- c(0,0); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
 
 input %>% subset(time>=this_time) %>% 
     subset(period==this_period) %>% 
@@ -14,16 +14,12 @@ temp <- input %>%
     ungroup() %>% 
     mutate(
         Y = case_when(
-            period==1 & match_time=='00:10' ~ 69,
-            period==1 & match_time=='12:17' ~ 21,
-            period==1 & match_time=='42:10' ~ 50,
-            period==2 & match_time=='42:10' ~ 31,
+            period==1 & match_time=='00:06' ~ 21,
             TRUE ~ Y
         ),
         X = case_when(
-            period==1 & match_time=='00:06' ~ 39,
-            period==1 & match_time=='12:12' ~ 23,
-            period==1 & match_time=='12:17' ~ 120-27,
+            period==1 & match_time=='00:06' ~ 71,
+            period==2 & match_time=='45:06' ~ 23,
             TRUE ~ X
         )
     )
@@ -35,8 +31,27 @@ source('R/support/data_prep.R')
 #for(i in list.files('output/layers/99',full.names=TRUE)) file.remove(i)
 #for(i in list.files('output/frames',full.names=TRUE)) file.remove(i)
 
+affected_times <- input %>% select(idx,period,time,X,Y) %>% left_join(fromJSON('input/match_output.json') %>% select(idx,period,time,X,Y),by=c('idx','period','time'),suffix=c('','_new')) %>% 
+    mutate(X = replace_na(X,0),
+           Y = replace_na(Y,0)) %>% 
+    subset(X!=X_new|Y!=Y_new) %>% 
+    left_join(trx_frames,by=c('period','time'='timestamp')) %>% 
+    select(period,IDX,ORD) %>% 
+    cross_join(data.frame(ADD = seq(-1,3))) %>% 
+    mutate(IDX = IDX + ADD) %>% 
+    left_join(trx_frames,by='IDX',suffix=c('_old','')) %>% 
+    group_by(period,ORD_old) %>% 
+    summarise(
+        first_time = min(timestamp),
+        last_time = max(timestamp)
+    )
+
+affected_times <- data.frame(period=c(1,2),first_time=c(2,2),last_time=c(18,15))
+
 affected_frames <- frame_index %>% 
-    subset(period==1 & secs%in%(12*60 + 13:19))
+    left_join(affected_times,by='period') %>% 
+    drop_na(secs) %>% 
+    subset(secs>=first_time & secs<=last_time)
 for(i in affected_frames$IDX){
     this_frame <- affected_frames %>% subset(IDX==i)
     this_trx <- trx_frames %>% 
