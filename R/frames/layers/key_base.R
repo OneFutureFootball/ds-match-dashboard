@@ -28,6 +28,7 @@ key_base <- function(idx,live=TRUE){
     topup <- key_moments %>% subset(period==this_moment$period & time==this_moment$time) %>% summarise(TOPUP = sum(oth_role%in%c('red card','injury'))) %>% pull(TOPUP)
     
     if(!is.na(this_moment$card_given)) card_overlay(this_moment$period,this_moment$time)
+    if(this_moment$state=='Substitution') card_overlay(this_moment$period,this_moment$time)
     
     key_prog <- key_prog %>% 
         subset(state!='Goal') %>% 

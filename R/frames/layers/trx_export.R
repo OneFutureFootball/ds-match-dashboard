@@ -175,6 +175,5 @@ trx_export <- function(time_idx,force=FALSE){
                                          height=1080,width=1920,
                                          units='px',dpi=100)
     
-    if(status=='result' & time_stamp$next_action=='PENALTY') return(NULL)
     trx_text(time_idx)
 }

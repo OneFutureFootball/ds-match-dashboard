@@ -294,11 +294,14 @@ key_moments <- match_file %>%
                !is.na(card_given)) %>% 
     select(period,time,prev_time,next_time,old_time,next_state,possession,state,action,outcome,position,ID,full_name,last_name,oth_ID,oth_position, oth_full_name,oth_role,oth_team,team_id, card_given) %>% 
     mutate(
+        oth_short_name = sapply(oth_full_name,shorten_name),
+        short_name = sapply(full_name,shorten_name),
         live_label = case_when(
             action=='KICKOFF' ~ action,
             action=='SHOT' ~ 'SHOT',
             state=='Substitution' & oth_role=='injury' ~ 'INJURY',
-            state=='Substitution' ~ paste0(' > ',toupper(oth_full_name)),
+            state=='Substitution' ~ paste0(' > ',toupper(case_when(nchar(oth_full_name)>=20 ~ oth_short_name,
+                                                                   TRUE ~ oth_full_name))),
             state=='Corner' ~ 'CORNER',
             action=='PENALTY' ~ 'PENALTY',
             card_given=='red' ~ 'RED CARD',
@@ -317,7 +320,8 @@ key_moments <- match_file %>%
                 outcome=='saved'~ 'PENALTY SAVED',
                 TRUE ~ 'PENALTY MISSED',
             ),
-            state=='Substitution' ~ paste0(' > ',toupper(oth_full_name)),
+            state=='Substitution' ~ paste0(' > ',toupper(case_when(nchar(oth_full_name)>=20 ~ oth_short_name,
+                                                                   TRUE ~ oth_full_name))),
             TRUE ~ live_label
         ),
         team_id = case_when(
@@ -329,6 +333,7 @@ key_moments <- match_file %>%
             action=='SHOT' ~ full_name,
             action=='PENALTY' ~ full_name,
             !is.na(card_given) ~ oth_full_name,
+            state=='Substitution' & nchar(full_name)>=20 ~ short_name,
             TRUE ~ full_name
         ),
         position = case_when(
@@ -400,7 +405,7 @@ key_moments <- key_moments %>%
             TRUE ~ time),
         next_time = round(case_when(
             action%in%c('SHOOT','PENALTY') & !str_detect(live_label,'CARD') ~ next_time,
-            state%in%c('Corner','Free Kick','Substition') & outcome!='goal' ~ old_time,
+            state%in%c('Corner','Free Kick','Substitution') & outcome!='goal' ~ old_time,
             next_time - time < 5 ~ next_time,
             TRUE ~ time + 3 + 4*runif(n())))
     ) %>% 
@@ -501,6 +506,7 @@ trx_frames <- time_prog %>%
            crest = ifelse(type=='result',NA_character_,crest),
            crest = case_when(
                type=='result' & next_state=='Free Kick' & str_detect(next_card,'red') ~ oth_team,
+               type=='result' & next_action=='PENALTY' ~ oth_team,
                TRUE ~ crest
            )) %>% 
     arrange(period,timestamp) %>% 
@@ -541,7 +547,7 @@ key_moments <- key_moments %>%
     ungroup() %>% 
     select(-c(action_time,result_time)) %>% 
     mutate(next_time = case_when(
-        action%in%c('SHOT','PENALTY') ~ time + 1,
+        action%in%c('SHOT','PENALTY') ~ old_time + 1,
         state=='Substitution' ~ round(old_time),
         TRUE ~ next_time
     )) %>% 

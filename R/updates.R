@@ -14,12 +14,13 @@ temp <- input %>%
     ungroup() %>% 
     mutate(
         Y = case_when(
-            period==1 & match_time=='00:06' ~ 21,
             TRUE ~ Y
         ),
         X = case_when(
-            period==1 & match_time=='00:06' ~ 71,
-            period==2 & match_time=='45:06' ~ 23,
+            period==1 & match_time=='13:56' ~ 75,
+            period==1 & match_time=='14:00' ~ 85,
+            period==1 & match_time=='14:02' ~ 105,
+            period==1 & match_time=='15:56' ~ 115,
             TRUE ~ X
         )
     )
@@ -27,9 +28,9 @@ temp %>% toJSON(pretty=TRUE) %>%
     write(file='input/match_output.json')
 source('R/support/data_prep.R')
 
-#for(i in list.files('output/layers/04',full.names=TRUE)) file.remove(i)
-#for(i in list.files('output/layers/99',full.names=TRUE)) file.remove(i)
-#for(i in list.files('output/frames',full.names=TRUE)) file.remove(i)
+# for(i in list.files('output/layers/04',full.names=TRUE)) file.remove(i)
+# for(i in list.files('output/layers/99',full.names=TRUE)) file.remove(i)
+# for(i in list.files('output/frames',full.names=TRUE)) file.remove(i)
 
 affected_times <- input %>% select(idx,period,time,X,Y) %>% left_join(fromJSON('input/match_output.json') %>% select(idx,period,time,X,Y),by=c('idx','period','time'),suffix=c('','_new')) %>% 
     mutate(X = replace_na(X,0),

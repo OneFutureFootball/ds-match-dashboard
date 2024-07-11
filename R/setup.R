@@ -23,5 +23,5 @@ active_cores <- 8
 
 this_match <- fromJSON('input/match.json')
 
-for(x in list.files('R/support',recursive=TRUE,full.names=TRUE)) source(x)
+for(x in rev(list.files('R/support',recursive=TRUE,full.names=TRUE))) source(x)
 for(x in list.files('R/frames',recursive=TRUE,full.names=TRUE)) source(x)

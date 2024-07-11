@@ -172,6 +172,7 @@ frame_index <- frame_index %>%
         match_state=='overlay' ~ 3*normal,
         match_state=='substition' ~ normal / slow,
         match_state%in%c('kickoff','build_up','reaction') ~ normal / slow,
+        secs==prev_subs ~ 3*normal,
         TRUE ~ 1
     ))
 
@@ -190,8 +191,10 @@ frame_index <- pre_match %>%
     fill(c(filename, minute, key, trx),.direction='down') %>%
     mutate(trx = ifelse(match_state%in%c('show_lineup','substitution'),NA_character_,trx)) %>% 
     ungroup() %>% 
-    mutate(IDX = row_number()) %>% 
-    mutate(KEY = ceiling(IDX/(max(IDX)/active_cores)))
+    mutate(IDX = row_number(),
+           TOT = sum(REP),
+           AVG = TOT/active_cores,
+           KEY = ceiling(cumsum(REP)/AVG))
 
 frame_index %>% 
     toJSON(pretty = TRUE) %>%
@@ -202,30 +205,3 @@ preview_index <- frame_index %>%
     subset(!match_state%in%c('show_lineup','overlay')) %>% 
     mutate(prev_secs = lag(secs),
            GROUP = cumsum(is.na(prev_secs)|secs != prev_secs+1))
-
-for(i in unique(preview_index$GROUP)){
-    temp_preview <- subset(preview_index,GROUP==i)
-    
-    temp_output <- temp_preview %>% 
-        select(period,secs) %>% 
-        inner_join(time_prog,by=c('period'='period','secs'='time')) %>% 
-        mutate(RN = row_number()) %>% 
-        ggplot() +
-        theme_void() +
-        coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
-        background_image(readPNG('output/layers/01/Match.png')) +
-        geom_segment(mapping = aes(x=X,y=Y,xend=X2,yend=Y2,colour=factor(team_id)),linewidth=0.4) +
-        geom_point(mapping = aes(x=X,y=Y,fill=factor(team_id),colour=short_name),size=3,pch=21) +
-        geom_text(mapping = aes(x=X,y=Y,label=number,colour=short_name),
-                  family='Montserrat-Medium',hjust=0.5,vjust=0.5,size=3.5) +
-        geom_text(mapping = aes(x=X,y=Y+20,label=RN),
-                  family='Montserrat-Medium',hjust=0.5,vjust=0.5,size=2.5,colour='black') +
-        scale_fill_manual(values = team_colours,guide='none') + 
-        scale_colour_manual(values = c(team_colours,text_colours[1:2]),guide='none')
-    dir.create('output/preview',showWarnings=FALSE)
-    ggsave(paste0('output/preview/',min(temp_preview$period),'_',str_pad(min(temp_preview$secs),4,pad='0'),'.png'),
-           temp_output,
-           height=1080,width=1920,
-           units='px',dpi=300)
-    
-}

@@ -1,8 +1,6 @@
 shot_animation <- function(shot_idx){
     dir.create(paste0('output/gifs/',Sys.getpid()),showWarnings=FALSE)
     for(i in list.files(paste0('output/gifs/',Sys.getpid()),full.names=TRUE)) file.remove(i)
-    #KICK AT 25M/S
-    #HEAD AT 10M/S
     input <- time_prog %>% 
         mutate(next_x = lead(ball_x),
                next_y = lead(ball_y),
@@ -10,43 +8,40 @@ shot_animation <- function(shot_idx){
         subset(IDX==shot_idx)
     
     goal_width <- data.frame(GY = seq(30,50,by=0.1)) %>% 
-        mutate(GK = abs(GY-40)+0.1)
-    end_point <- input %>% 
+        rowwise() %>% 
+        mutate(GK = max(0.01,abs(GY-40))) %>% 
+        ungroup()
+    
+    shot_target <- input %>% 
         mutate(
             DIST = sqrt((ifelse(possession=='A',120,0)-ball_x)^2 + (40-ball_y)^2),
             ANGLE = abs(ifelse(possession=='A',
                                atan((ball_y - 40)/(120-ball_x)),
                                atan((ball_y - 40)/ball_x)))/pi*180,
-            GX = case_when(
-                outcome%in%c('post','goal') ~ ifelse(possession=='A',120,0),
-                outcome=='saved' ~ ifelse(possession=='A',
-                                          120 - runif(n())*2,
-                                          0 + runif(n())*2),
-                outcome%in%c('off target','blocked') ~ ifelse(possession=='A',122,-2),
-                TRUE ~ 60
-            ),
-            GX = case_when(
-                possession=='A' & GX < ball_x ~ (ball_x + 120)/2,
-                possession=='B' & GX > ball_x ~ (ball_x)/2,
-                TRUE ~ GX
-            ))
+            GX = ifelse(possession=='A',120,0))
     
-    if(exists('cross_join'))  end_point <- end_point %>% cross_join(goal_width)
-    if(!exists('cross_join')) end_point <- end_point %>% left_join(goal_width,by=character())
+    if(exists('cross_join'))  shot_target <- shot_target %>% cross_join(goal_width)
+    if(!exists('cross_join')) shot_target <- shot_target %>% left_join(goal_width,by=character())
     
-    end_point <- end_point %>% 
+    shot_target <- shot_target %>% 
         mutate(
             YW = GK*case_when(
-                outcome%in%c('off target','blocked') & abs(ball_y - 40) > 5  & abs(GY-40) > abs(ball_y-40) ~ 0,
-                outcome%in%c('off target','blocked') & abs(ball_y - 40) <= 5 & abs(GY-40) > 6 ~ 0,
+                outcome%in%c('off target','blocked') & abs(ball_y - 40) > 4  & abs(GY-40) > abs(ball_y-40)+0.5 ~ 0,
+                outcome%in%c('off target','blocked') & abs(ball_y - 40) <= 4 & abs(GY-40) > 6 ~ 0,
                 outcome%in%c('off target','blocked') ~ 1,
-                outcome%in%c('saved','goal') & abs(GY-40)>4 ~ 0,
-                outcome=='saved' & next_state=='Corner' & sign(GY-40)!=sign(next_y-40) ~ 0,
+                outcome%in%c('saved','goal') & abs(GY-40)>3.9 ~ 0,
+                outcome%in%c('saved') & next_state=='Corner' ~ case_when(
+                    sign(GY-40)!=sign(next_y-40) ~ 0,
+                    TRUE ~ 1
+                ),
                 outcome=='saved' ~ 1,
-                outcome=='post' & abs(GY-40)>4.5 ~ 0,
-                outcome=='post' & abs(GY-36)<=0.5 ~ 40,
-                outcome=='post' & abs(GY-44)<=0.5 ~ 40,
-                outcome=='post' ~ 1,
+                outcome=='post' ~ case_when(
+                    abs(GY-40)>4.5 ~ 0,
+                    abs(GY-36)<=0.5 ~ 40,
+                    abs(GY-44)<=0.5 ~ 40,
+                    next_state=='Corner' & sign(GY-40)!=sign(next_y-40) ~ 0,
+                    TRUE ~ 1
+                ),
                 ANGLE < 60 ~ 1,
                 abs(ball_y - 40) < 4 ~ 1,
                 ball_y > 40 ~ 1 - (GY - 36)/8,
@@ -59,184 +54,218 @@ shot_animation <- function(shot_idx){
             EY = pitch_transform(GY,'Y'),
             DIST = sqrt((ball_x - GX)^2 + (ball_y - GY)^2),
             TIME = case_when(
-                technique == 'head' ~ DIST / rnorm(1,8,1),
+                technique == 'head' ~ DIST / rnorm(1,12,1),
                 TRUE ~ DIST / rnorm(1,21,2),
             ),
-            TIME = ifelse(TIME > 0.8,0.8,TIME),
-            DELAY = 1 - TIME
+            TIME = case_when(
+                TIME > 0.8 ~ 0.8,
+                TIME < 0.1 ~ 0.1,
+                TRUE ~ TIME
+            ),
+            DELAY = case_when(
+                technique%in%c('volley','head') ~ 0.01,
+                TRUE ~ 0.95 - TIME
+            )
         ) %>% 
-        select(possession,technique,X,Y,EX,EY,TIME,DELAY,ball_x,ball_y,next_x,next_y,GX,GY)
+        select(possession,technique,X,Y,EX,EY,DIST,TIME,DELAY,ball_x,ball_y,next_x,next_y,GX,GY)
     
-    if(input$outcome=='blocked'){
-        pct <- (4:16)*5 / 100
-        val <- sapply(pct,function(x){
-            end_point$next_y = end_point$next_y + ifelse(input$next_state%in%c('Corner','Goal Kick'),rnorm(1,0,2),0)
-            A = with(end_point,sqrt((next_x - ball_x)^2 + (next_y - ball_y)^2))
-            C = with(end_point,sqrt((ifelse(possession=='A',120,0)-ball_x)^2 + (ball_y-40)^2))
-            Z = sqrt(A^2 + C^2)*x
-            return(Z)
-        })
-        DEF <- ifelse(input$next_state=='Corner',
-                      0.4 + runif(1)*0.5,
-                      pct[order(val)][1])
-        
-        mid_point <- end_point %>% 
+    
+    if(input$outcome%in%c('saved')){
+        save_point <- shot_target %>% 
             mutate(
-                DX = ball_x*(1-DEF) + GX*(DEF),
-                DY = ball_y*(1-DEF) + GY*(DEF),
-                MX = pitch_transform(DX,'X'),
-                MY = pitch_transform(DY,'Y'),
-                DIST = sqrt((ball_x - DX)^2 + (ball_y - DY)^2),
-                TIME = case_when(
-                    technique == 'head' ~ DIST / rnorm(1,9,1),
-                    TRUE ~ DIST / rnorm(1,23,2),
+                SX = case_when(
+                    possession=='A' ~ case_when(
+                        input$state=='Free Kick' ~ 119.6,
+                        ball_x >= 114 ~ 119.6,
+                        ball_x >= 102 ~ 119.6 - runif(1)*3,
+                        TRUE ~ 119.6 - runif(1)*8
+                    ),
+                    possession=='B' ~ case_when(
+                        input$state=='Free Kick' ~ 0.4,
+                        ball_x <= 6  ~ 0.4,
+                        ball_x <= 18 ~ 0.4 + runif(1)*3,
+                        TRUE ~ 0.4 + runif(1)*8
+                    )
                 ),
-                TIME = DEF
-            )
+                SP = (SX - ball_x)/(GX - ball_x),
+                SY = round(SP*(GY - ball_y) + ball_y,1),
+                OY = round((ifelse(possession=='A',122,-2) - ball_x)/(GX - ball_x)*(GY - ball_y) + ball_y,1)
+            ) %>% 
+            rename(TY = GY)
         
-        end_point <- end_point %>% 
-            mutate(EX = pitch_transform(ifelse(input$next_state=='Corner',
-                                               GX,
-                                               next_x),'X'),
-                   EGY = ifelse(input$next_state=='Corner',
-                                GY + runif(1)*5,
-                                next_y),
-                   EGY = ifelse(input$next_state=='Corner' & sign(EGY-40) != sign(next_y),
-                                40 + runif(1)*4*sign(next_y-40),
-                                EGY),
-                   EY = pitch_transform(EGY,'Y'),
-                   next_x = ifelse(input$next_state=='Corner',GX,next_x),
-                   next_y = ifelse(input$next_state=='Corner',GY,next_y),
-                   TIME = 1)
+        def_point <- save_point %>% 
+            mutate(ball_x = SX,
+                   ball_y = SY,
+                   X = pitch_transform(SX,'X'),
+                   Y = pitch_transform(SY,'Y')) %>% select(ball_x,ball_y,X,Y) %>% mutate(technique = 'deflection',STEP = 2)
         
-        MD <- sqrt((input$ball_x - mid_point$DX)^2 + (input$ball_y - mid_point$DY)^2)
-        ED <- sqrt((end_point$next_x - mid_point$DX)^2 + (end_point$next_y - mid_point$DY)^2)
+        if(exists('cross_join')) end_options <- save_point %>% cross_join(goal_width)
+        if(!exists('cross_join')) end_options <- save_point %>% left_join(goal_width,by=character())
         
-        BT <- MT <- 99; idx <- 0
-        while(MT > 0.9*MD/(MD+ED) & idx < 5000){
-            idx <- idx+1
-            IS <- case_when(
-                input$technique == 'head' ~ rnorm(1,10,2),
-                TRUE ~ rnorm(1,21,2)
-            )
-            MT <- MD / IS
-            if(MT < BT) BT <- MT
-        }
-        mid_point$TIME <- BT + 0.3
-        
-        BT <- ET <- 99; idx <- 0
-        while(ET > 0.9*ED/(MD+ED) & idx < 5000){
-            idx <- idx+1
-            ES <- case_when(
-                input$technique == 'head' ~ rnorm(1,10,2),
-                TRUE ~ rnorm(1,21,2)
-            )
-            ET <- ED / ES
-            if(ET < BT) BT <- ET
-        }
-        end_point$TIME <- BT + mid_point$TIME
-        
-        plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
-            bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.3)) %>% 
-            bind_rows(mid_point %>% select(X=MX,Y=MY,TIME)) %>% 
-            bind_rows(end_point %>% select(X=EX,Y=EY,TIME)) %>% 
-            mutate(TIME = case_when(
-                TIME==0 ~ 0,
-                end_point$TIME >= 1.29 ~ TIME - 0.29,
-                end_point$TIME > 1 ~ TIME - (end_point$TIME - 1),
-                end_point$TIME < 1 ~ TIME + (end_point$TIME - 1),
-                TRUE ~ TIME
-            ))
-    }else if(input$outcome=='saved' & input$next_position!='GK'){
-        DEF <- 0.9
-        
-        mid_point <- end_point %>% 
+        end_point <- end_options %>% 
             mutate(
-                MX = pitch_transform(GX,'X'),
-                MY = pitch_transform(GY,'Y'),
-                DIST = sqrt((ball_x - GX)^2 + (ball_y - GY)^2),
-                TIME = case_when(
-                    technique == 'head' ~ DIST / 10,
-                    TRUE ~ DIST / 25,
+                KEEP = case_when(
+                    input$next_state=='Corner' ~ case_when(
+                        sign(GY-40)!=sign(next_y-40) ~ FALSE,
+                        sign(ball_y-40)!=sign(SY-40) & abs(GY-40) > abs(OY-40) ~ FALSE,
+                        TRUE ~ TRUE
+                    ),
+                    input$outcome=='saved' & input$next_position=='GK' ~ GY==SY,
+                    input$outcome=='post' & input$next_state=='Goal Kick' ~ case_when(
+                        sign(ball_y-40)!=sign(SY-40) & abs(GY-40) > abs(OY-40) ~ FALSE,
+                        abs(TY-40) < 3.5 & abs(GY-OY) > 1 ~ FALSE,
+                        TRUE ~ TRUE
+                    ),
+                    TRUE ~ TRUE
                 ),
-                TIME = 0.95,
-                DX = GX,
-                DY = GY
+                DC = (max(GK) - GK)/(max(GK)-min(GK)),
+                EC = GK/max(GK),
+                OL = abs(SY-40)/4,
+                OL = ifelse(OL>1,1,OL),
+                WGT = OL*DC^2 + (1-OL)*sqrt(EC)
+            ) %>% 
+            subset(KEEP) %>% 
+            sample_n(1,weight = WGT) %>% 
+            mutate(NX = ifelse(possession=='A',122,-2)) %>% 
+            rename(NY = GY) %>% 
+            mutate(
+                NX = case_when(
+                    input$next_state=='Keeper Possession' ~ SX,
+                    str_detect(input$next_state,'Possession') ~ input$next_x,
+                    TRUE ~ NX
+                ),
+                NY = case_when(
+                    input$next_state=='Keeper Possession' ~ SY,
+                    str_detect(input$next_state,'Possession') ~ input$next_y,
+                    TRUE ~ NY
+                )
             )
+    }else if(input$outcome%in%c('blocked','post')){
+        block_pct <- data.frame(BP = (2:18)/20)
+        if(input$outcome=='post') block_pct <- data.frame(BP=1)
+        if(exists('cross_join')) block_point <- shot_target %>% cross_join(block_pct)
+        if(!exists('cross_join')) block_point <- shot_target %>% left_join(block_pct,by=character())
+        assign('temp_block',block_point,envir=.GlobalEnv)
+        block_point <- block_point %>% 
+            mutate(
+                BX = round(BP*(GX - ball_x) + ball_x,1),
+                BY = round(BP*(GY - ball_y) + ball_y,1),
+                SD = sqrt((GX - ball_x)^2 + (GY - ball_y)^2),
+                BD = SD*BP,
+                NY = case_when(
+                    input$next_state=='Corner' ~ rnorm(n(),GY,3),
+                    TRUE ~ next_y
+                ),
+                NY = case_when(
+                    input$next_state!='Corner' ~ NY,
+                    max(NY) < 40 | min(NY) > 40 ~ rnorm(n(),40,4),
+                    TRUE ~ NY
+                ),
+                KEEP = case_when(
+                    input$next_state=='Corner' & sign(next_y-40)!=sign(NY-40) ~ FALSE,
+                    TRUE ~ TRUE
+                ),
+                NX = case_when(
+                    input$next_state=='Corner' ~ ifelse(possession=='A',122,-2),
+                    TRUE ~ next_x
+                ),
+                ED = sqrt((BX - NX)^2 + (BY - NY)^2),
+                TD = ED + BD,
+                WG = 1/TD*case_when(abs(NY-40)<=4 ~ 0.2, TRUE ~ 1)
+            ) %>% 
+            subset(KEEP) %>% 
+            subset((SD - BD > 5)|max(SD - BD) < 5) %>% 
+            sample_n(1)
         
-        end_point <- end_point %>% 
-            mutate(EX = pitch_transform(ifelse(input$next_state=='Corner',
-                                               ifelse(possession=='A',122,-2),
-                                               next_x),'X'),
-                   EGY = ifelse(input$next_state=='Corner',
-                                GY + runif(1)*5,
-                                next_y),
-                   EGY = ifelse(input$next_state=='Corner' & sign(EGY-40) != sign(next_y),
-                                40 + runif(1)*4*sign(next_y-40),
-                                EGY),
-                   EY = pitch_transform(EGY,'Y'),
-                   TIME = 1)
+        def_point <- block_point %>% 
+            mutate(ball_x = BX,
+                   ball_y = BY,
+                   X = pitch_transform(BX,'X'),
+                   Y = pitch_transform(BY,'Y')) %>% select(ball_x,ball_y,X,Y) %>% mutate(technique = 'deflection',STEP = 2)
         
-        MD <- sqrt((input$ball_x - mid_point$DX)^2 + (input$ball_y - mid_point$DY)^2)
-        ED <- sqrt((end_point$next_x - mid_point$DX)^2 + (end_point$next_y - mid_point$DY)^2)
-        BT <- MT <- 99; idx <- 0
-        while(MT > 0.9*MD/(MD+ED) & idx < 5000){
-            idx <- idx+1
-            IS <- case_when(
-                input$technique == 'head' ~ rnorm(1,10,2),
-                TRUE ~ rnorm(1,21,2)
-            )
-            MT <- MD / IS
-            if(MT < BT) BT <- MT
-        }
-        mid_point$TIME <- BT + 0.3
-        
-        BT <- ET <- 99; idx <- 0
-        while(ET > 0.9*ED/(MD+ED) & idx < 5000){
-            idx <- idx+1
-            ES <- case_when(
-                input$technique == 'head' ~ rnorm(1,10,2),
-                TRUE ~ rnorm(1,21,2)
-            )
-            ET <- ED / ES
-            if(ET < BT) BT <- ET
-        }
-        end_point$TIME <- BT + mid_point$TIME
-        
-        plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
-            bind_rows(input %>% select(X,Y) %>% mutate(TIME=0.3)) %>% 
-            bind_rows(mid_point %>% select(X=MX,Y=MY,TIME)) %>% 
-            bind_rows(end_point %>% select(X=EX,Y=EY,TIME)) %>% 
-            mutate(TIME = case_when(
-                TIME==0 ~ 0,
-                end_point$TIME >= 1.29 ~ TIME - 0.29,
-                end_point$TIME > 1 ~ TIME - (end_point$TIME - 1),
-                end_point$TIME < 1 ~ TIME + (end_point$TIME - 1),
-                TRUE ~ TIME
-            ))
-        
-    }else{
-        plot_input <- input %>% select(X,Y) %>% mutate(TIME=0) %>% 
-            bind_rows(end_point %>% mutate(TIME=DELAY) %>% select(X,Y,TIME)) %>% 
-            bind_rows(end_point %>% mutate(TIME=1) %>% select(X=EX,Y=EY,TIME))
+        end_point <- block_point
+    }else if(input$outcome%in%c('off target','goal')){
+        def_point <- shot_target %>% 
+            mutate(ball_x = GX,
+                   ball_y = GY,
+                   X = pitch_transform(GX,'X'),
+                   Y = pitch_transform(GY,'Y')) %>% select(ball_x,ball_y,X,Y) %>% mutate(technique = 'deflection',STEP=2)
+        end_point <- shot_target %>% 
+            mutate(NX = GX,
+                   NY = GY)
     }
     
-    plot_input <- plot_input %>% 
+    
+    
+    anim_start <- input %>% select(technique,ball_x,ball_y,X,Y) %>% mutate(STEP=0)
+    shot_start <- input %>% select(technique,ball_x,ball_y,X,Y) %>% mutate(STEP=1)
+    def_point <- def_point
+    shot_end <- end_point %>% 
+        mutate(ball_x = NX,
+               ball_y = NY,
+               X = pitch_transform(NX,'X'),
+               Y = pitch_transform(NY,'Y')) %>% select(technique,ball_x,ball_y,X,Y) %>% mutate(STEP=3)
+    anim_end <- shot_end %>% mutate(STEP = 4)
+    
+    all_points <- anim_start %>% 
+        bind_rows(shot_start) %>% 
+        bind_rows(def_point) %>% 
+        bind_rows(shot_end) %>% 
+        bind_rows(anim_end) %>% 
+        mutate(DIST = sqrt((ball_x - lead(ball_x))^2 + (ball_y - lead(ball_y))^2))
+    
+    total_distance <- sum(all_points$DIST,na.rm=TRUE)
+    shot_speed <- rnorm(1,case_when(
+        input$technique=='head' ~ 12,
+        input$technique=='volley' ~ 23,
+        TRUE ~ 20
+    ),2)
+    def_speed <- rnorm(1,case_when(
+        input$technique=='head' ~ 8,
+        input$technique=='volley' ~ 16,
+        TRUE ~ 15
+    ),2)
+    shot_time <- (all_points %>% subset(STEP==1) %>% pull(DIST))/shot_speed
+    def_time <- tail(c(0,(all_points %>% subset(STEP==2) %>% pull(DIST))/def_speed),1)
+    total_time <- shot_time + def_time
+    
+    if(total_time > 0.9){
+        time_warp <- 0.9/total_time
+        spare_time <- 0.1
+    }else{
+        time_warp <- 1
+        spare_time <- 1 - total_time
+    }
+    
+    plot_input <- all_points %>% 
+        mutate(
+            TIME = case_when(
+                STEP==0 ~ 0,
+                STEP==1 ~ ifelse(input$technique%in%c('head','volley'),0,spare_time/2),
+                STEP==2 ~ shot_time*time_warp,
+                STEP==3 ~ def_time*time_warp,
+                STEP==4 ~ ifelse(input$technique%in%c('head','volley'),spare_time,spare_time/2)
+            ),
+            TIME = cumsum(TIME),
+            START = STEP<=1) %>% 
+        select(-c(technique,STEP,DIST)) %>% 
+        unique()
+    
+    
+    plot_output <- plot_input %>% 
         mutate(
             ANG = atan((max(Y[TIME==0])-max(Y[TIME==max(TIME)]))/(max(X[TIME==0])-max(X[TIME==max(TIME)]))),
             X = case_when(
                 input$action=='PENALTY' ~ X,
                 input$state=='Free Kick' ~ X,
-                TIME==0 | (X==max(X[TIME==0]) & Y==max(Y[TIME==0])) ~ X + ifelse(input$possession=='A',1,-1)*17*abs(cos(ANG)),
+                START ~ X + ifelse(input$possession=='A',1,-1)*17*abs(cos(ANG)),
                 TRUE ~ X),
             Y = case_when(
                 input$action=='PENALTY' ~ Y,
                 input$state=='Free Kick' ~ Y,
-                TIME==0 | (Y==max(Y[TIME==0]) & Y==max(Y[TIME==0])) ~ Y + ifelse(input$ball_y > 40,-1,1)*17*abs(sin(ANG)),
+                START ~ Y + ifelse(input$ball_y > 40,-1,1)*17*abs(sin(ANG)),
                 TRUE ~ Y)
-        )
-    
-    plot_output <- plot_input %>% 
+        ) %>% 
         unique() %>% 
         ggplot(mapping = aes(x=X,y=Y)) +
         geom_image(mapping=aes(image='images/icons/ball.png'),
@@ -271,8 +300,6 @@ shot_animation <- function(shot_idx){
                frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
         subset(match_state%in%c('build_up','reaction'))
     
-    new_frames %>% pull(IDX) %>% unique() %>% print()
-    
     for(i in seq_along(new_frames$output)){
         this_output <- new_frames %>% slice(i)
         if(file.exists(this_output$output)) image_read(this_output$frame) %>% 
@@ -295,8 +322,6 @@ shot_animation <- function(shot_idx){
                frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
         subset(match_state%in%c('build_up','reaction')) %>% ungroup()
     
-    result_frames %>% pull(IDX) %>% unique() %>% print()
-    
     for(j in seq_along(result_frames$output)){
         this_output <- result_frames %>% slice(j)
         if(file.exists(this_output$output)) image_read(this_output$frame) %>% 
@@ -318,6 +343,5 @@ shot_animation <- function(shot_idx){
     
     for(i in list.files(paste0('output/gifs/',Sys.getpid()),full.names=TRUE)) file.remove(i)
     file.remove(paste0('output/gifs/',Sys.getpid()))
-    
-    #SAVED BUT NOT GK POSSESSION = BLOCKED WITH FIXED X
+    return(plot_input)
 }
