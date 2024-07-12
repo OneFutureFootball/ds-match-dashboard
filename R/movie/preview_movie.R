@@ -14,7 +14,7 @@ pre_match <- data.frame(base = 'output/layers/title_page.png', REP = 14*normal) 
     bind_rows(data.frame(base='output/layers/title_page.png', REP = 8*normal))
 
 goals <- match_file %>% subset(state=='Goal') %>% select(period,time) %>% mutate(goal=1) %>% rename(secs=time)
-pens <- key_moments %>% subset(state=='PENALTY') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
+pens <- key_moments %>% subset(action=='CONCEDED') %>% select(period,time) %>% mutate(pen=1) %>% rename(secs=time)
 high_xg <- match_file %>% 
     mutate(prev_position = lag(position)) %>% 
     subset(!(action%in%c('SHOT','PENALTY') & outcome!='goal' & prev_position=='GK')) %>% 
@@ -120,8 +120,8 @@ frame_index <- time_base %>%
         match_state = case_when(
             secs==prev_pen ~ 'overlay',
             secs==prev_red ~ 'overlay',
-            secs<next_pen & next_pen - secs <= 12 & is.na(next_corner) ~ 'build_up',
-            secs<next_pen & next_pen - secs <= 12 & (is.na(prev_goal)|secs - prev_goal >= 30) & secs < next_goal & (next_corner - secs > 12|next_corner - secs <= 3) ~ 'build_up',
+            secs<next_pen & next_pen - secs <= 8 & is.na(next_corner) ~ 'build_up',
+            secs<next_pen & next_pen - secs <= 8 & (is.na(prev_goal)|secs - prev_goal >= 30) & secs < next_goal & (next_corner - secs > 8|next_corner - secs <= 3) ~ 'build_up',
             secs>prev_pen & secs>=prev_penshot & secs<=prev_penshot + 16 & (is.na(prev_goal)|secs - prev_goal >= 30) ~ 'build_up',
             secs>=prev_pen & secs-prev_pen <= 6 ~ 'reaction',
             secs>=prev_pen & secs<next_goal & next_goal-prev_pen < 75 ~ 'trx',
