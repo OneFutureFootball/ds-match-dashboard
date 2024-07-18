@@ -1,6 +1,6 @@
 input <- fromJSON('input/match_output.json')
-this_period <- 1
-this_time <- c(0,0); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
+this_period <- 2
+this_time <- c(77,10); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
 
 input %>% subset(time>=this_time) %>% 
     subset(period==this_period) %>% 
@@ -13,16 +13,18 @@ temp <- input %>%
     mutate(N = n()) %>% 
     ungroup() %>% 
     mutate(
-        Y = case_when(
-            TRUE ~ Y
+        YC = case_when(
+            period==1 & match_time=='33:46' ~ 23,
+            period==1 & match_time=='40:40' ~ 31,
+            period==2 & match_time=='64:15' ~ 20
         ),
-        X = case_when(
-            period==1 & match_time=='13:56' ~ 75,
-            period==1 & match_time=='14:00' ~ 85,
-            period==1 & match_time=='14:02' ~ 105,
-            period==1 & match_time=='15:56' ~ 115,
-            TRUE ~ X
-        )
+        Y = ifelse(is.na(YC),Y,YC),
+        XC = case_when(
+            period==1 & match_time=='33:46' ~ 112,
+            period==1 & match_time=='40:40' ~ 84,
+            period==2 & match_time=='77:25' ~ 77
+        ),
+        X = ifelse(is.na(XC),X,XC)
     )
 temp %>% toJSON(pretty=TRUE) %>% 
     write(file='input/match_output.json')
@@ -31,23 +33,30 @@ source('R/support/data_prep.R')
 # for(i in list.files('output/layers/04',full.names=TRUE)) file.remove(i)
 # for(i in list.files('output/layers/99',full.names=TRUE)) file.remove(i)
 # for(i in list.files('output/frames',full.names=TRUE)) file.remove(i)
+# for(i in list.files('output/chunks',full.names=TRUE)) file.remove(i)
 
-affected_times <- input %>% select(idx,period,time,X,Y) %>% left_join(fromJSON('input/match_output.json') %>% select(idx,period,time,X,Y),by=c('idx','period','time'),suffix=c('','_new')) %>% 
-    mutate(X = replace_na(X,0),
-           Y = replace_na(Y,0)) %>% 
-    subset(X!=X_new|Y!=Y_new) %>% 
+affected_times <- temp %>% 
+    subset(!is.na(YC) | !is.na(XC)) %>% 
+    select(idx,match_time,period,time,X,Y) %>%
     left_join(trx_frames,by=c('period','time'='timestamp')) %>% 
-    select(period,IDX,ORD) %>% 
-    cross_join(data.frame(ADD = seq(-1,3))) %>% 
+    select(period,match_time,IDX,ORD)
+if(exists('cross_join')){
+    affected_times <- affected_times %>% cross_join(data.frame(ADD = seq(-1,3)))
+}else{
+    affected_times <- affected_times %>% left_join(data.frame(ADD = seq(-1,3)),by=character())
+}
+affected_times <- affected_times %>% 
     mutate(IDX = IDX + ADD) %>% 
     left_join(trx_frames,by='IDX',suffix=c('_old','')) %>% 
     group_by(period,ORD_old) %>% 
     summarise(
         first_time = min(timestamp),
-        last_time = max(timestamp)
+        last_time = max(timestamp),
+        first_clock = min(match_time),
+        last_clock = max(match_time),
+        .groups='drop'
     )
-
-affected_times <- data.frame(period=c(1,2),first_time=c(2,2),last_time=c(18,15))
+affected_times %>% print()
 
 affected_frames <- frame_index %>% 
     left_join(affected_times,by='period') %>% 

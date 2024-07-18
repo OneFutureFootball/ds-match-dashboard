@@ -237,6 +237,7 @@ shot_animation <- function(shot_idx){
         spare_time <- 1 - total_time
     }
     
+    
     plot_input <- all_points %>% 
         mutate(
             TIME = case_when(
@@ -251,10 +252,14 @@ shot_animation <- function(shot_idx){
         select(-c(technique,STEP,DIST)) %>% 
         unique()
     
+    this_chunk <- chunk_index %>% subset(START_PER==input$period & START_SEC==input$time)
+    this_frame <- paste0('output/layers/99/Frame_',this_chunk %>% pull(FIRST) %>% str_pad(5,pad='0'),'.png')
+    
+    target_line <- plot_input %>% subset(!START) %>% head(1)
     
     plot_output <- plot_input %>% 
         mutate(
-            ANG = atan((max(Y[TIME==0])-max(Y[TIME==max(TIME)]))/(max(X[TIME==0])-max(X[TIME==max(TIME)]))),
+            ANG = atan((target_line$Y-input$Y)/(target_line$X-input$X)),
             X = case_when(
                 input$action=='PENALTY' ~ X,
                 input$state=='Free Kick' ~ X,
@@ -292,48 +297,57 @@ shot_animation <- function(shot_idx){
                time   = as.numeric(sapply(filename,function(x) str_split(x,'_')[[1]][3])),
                REP   = as.numeric(str_replace(sapply(filename,function(x) str_split(x,'_')[[1]][4]),'.png','')))
     
-    new_frames <- frame_index %>% select(IDX,period,secs,REP,match_state) %>% uncount(REP) %>% 
-        group_by(IDX) %>% 
-        mutate(REP = row_number()) %>% 
-        inner_join(gif_list,by=c('period','secs'='time','REP')) %>% 
-        mutate(output = paste0('output/frames/',str_pad(IDX,5,pad='0'),'_',str_pad(REP,4,pad='0'),'.png'),
-               frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
-        subset(match_state%in%c('build_up','reaction'))
-    
-    for(i in seq_along(new_frames$output)){
-        this_output <- new_frames %>% slice(i)
-        if(file.exists(this_output$output)) image_read(this_output$frame) %>% 
-            image_composite(image_read(this_output$filename)) %>% 
-            image_write(this_output$output)
-    }
-    
-    frame_list <- new_frames$output
-    av::av_encode_video(frame_list,
+    # shot_frame <- frame_index %>% select(IDX)
+    # new_frames <- frame_index %>% select(IDX,period,secs,REP,match_state) %>% uncount(REP) %>% 
+    #     group_by(IDX) %>% 
+    #     mutate(REP = row_number()) %>% 
+    #     inner_join(gif_list,by=c('period','secs'='time','REP')) %>% 
+    #     mutate(output = paste0('output/frames/',str_pad(IDX,5,pad='0'),'_',str_pad(REP,4,pad='0'),'.png'),
+    #            frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
+    #     subset(match_state%in%c('build_up','reaction'))
+    # 
+    # for(i in seq_along(new_frames$output)){
+    #     this_output <- new_frames %>% slice(i)
+    #     if(file.exists(this_output$output)) image_read(this_output$frame) %>% 
+    #         image_composite(image_read(this_output$filename)) %>% 
+    #         image_write(this_output$output)
+    # }
+    for(i in gif_list$filename) image_read(this_frame) %>% image_composite(image_read(i)) %>% image_write(i)
+
+    av::av_encode_video(gif_list$filename,
                         framerate = 30,
-                        output = paste0('output/chunks/',str_pad(unique(new_frames$IDX),5,pad='0'),'.mp4'),
+                        output = paste0('output/chunks/',str_pad(unique(this_chunk$CHUNK),5,pad='0'),'.mp4'),
                         verbose = FALSE)
     
     result_frames <- frame_index %>% select(IDX,period,secs,REP,match_state,trx) %>% uncount(REP) %>% 
-        subset(trx == paste0('Trx_',unique(new_frames$period),'_',str_pad(unique(new_frames$secs)+1,4,pad='0'),'.png')) %>% 
-        subset(IDX > unique(new_frames$IDX)) %>% 
+        subset(trx == paste0('Trx_',unique(input$period),'_',str_pad(unique(input$time)+1,4,pad='0'),'.png')) %>% 
+        subset(IDX > this_chunk$LAST) %>% 
         subset(input$outcome!='goal') %>% 
-        group_by(IDX) %>% mutate(REP = row_number()) %>% 
-        mutate(output = paste0('output/frames/',str_pad(IDX,5,pad='0'),'_',str_pad(REP,4,pad='0'),'.png'),
-               frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
-        subset(match_state%in%c('build_up','reaction')) %>% ungroup()
+        group_by(IDX) %>% 
+        mutate(REP = row_number()) %>% 
+        mutate(frame = paste0('output/layers/99/Frame_',str_pad(IDX,5,pad='0'),'.png')) %>% 
+        subset(match_state%in%c('build_up','reaction')) %>% 
+        ungroup() %>% 
+        select(IDX,frame) %>% 
+        unique()
     
-    for(j in seq_along(result_frames$output)){
+    if(nrow(result_frames)==0) return(NULL)
+    
+    for(j in seq_along(result_frames$frame)){
         this_output <- result_frames %>% slice(j)
-        if(file.exists(this_output$output)) image_read(this_output$frame) %>% 
-            image_composite(image_read(tail(new_frames$filename,1))) %>% 
-            image_write(this_output$output)
+        if(file.exists(this_output$frame)) image_read(this_output$frame) %>% 
+            image_composite(image_read(tail(gif_list$filename,1))) %>% 
+            image_write(this_output$frame)
     }
-    for(k in unique(result_frames$IDX)){
-        result_list <- result_frames %>% 
-            subset(IDX==k) %>% 
-            pull(output)
+    result_chunks <- chunk_index %>% 
+        subset(START_PER==input$period & FIRST>=min(result_frames$IDX) & FIRST<=max(result_frames$IDX))
+    for(k in unique(result_chunks$CHUNK)){
+        this_chunk <- result_chunks %>% subset(CHUNK==k)
+        result_list <- paste0('output/layers/99/Frame_',frame_index %>% 
+            subset(IDX>=this_chunk$FIRST & IDX<=this_chunk$LAST) %>% 
+            pull(IDX) %>% str_pad(5,pad='0'),'.png')
         av::av_encode_video(result_list,
-                            framerate = 30,
+                            framerate = 30/this_chunk$REP,
                             output = paste0('output/chunks/',str_pad(k,5,pad='0'),'.mp4'),
                             verbose = FALSE)
     }
@@ -343,5 +357,4 @@ shot_animation <- function(shot_idx){
     
     for(i in list.files(paste0('output/gifs/',Sys.getpid()),full.names=TRUE)) file.remove(i)
     file.remove(paste0('output/gifs/',Sys.getpid()))
-    return(plot_input)
 }

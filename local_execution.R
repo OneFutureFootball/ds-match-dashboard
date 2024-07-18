@@ -44,7 +44,7 @@ this_match <- full_fixture %>%
     subset(match_id%in%completed_matches) %>% 
     arrange(utc) %>% 
     tail(1)
-this_match <- full_fixture %>% subset(match_id==3102)
+this_match <- full_fixture %>% subset(match_id==3114)
 system(paste0('aws s3 sync "',match_bucket,'/',this_match$match_id,'" "',dump_folder,'" --profile ',aws_account))
 system(paste0('aws s3 sync "',stats_bucket,'/',this_match$match_id,'" "',dump_folder,'" --profile ',aws_account))
 system(paste0('aws s3 sync "',graphics_bucket,'/',this_match$match_id,'/broadcast" "',graphics_folder,'/broadcast" --profile ',aws_account))

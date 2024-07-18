@@ -104,6 +104,7 @@ frame_index <- time_base %>%
            prev_red = ifelse(red==1,secs,NA),
            next_shot = ifelse(shot==1,secs,NA),
            prev_shot = ifelse(shot==1,secs,NA),
+           prev_shots = ifelse(shot==2,secs,NA),
            next_shots = ifelse(shot==2,secs,NA),
            prev_kickoff = ifelse(kickoff==1,secs,NA),
            next_kickoff = ifelse(kickoff==1,secs,NA),
@@ -115,13 +116,13 @@ frame_index <- time_base %>%
            next_trx = ifelse(trxx==1,secs,NA)) %>% 
     group_by(period) %>% 
     fill(c(next_goal,next_pen, next_shot, next_shots, next_kickoff, prev_red, next_corner, next_trx, next_sub, next_subs), .direction='up') %>% 
-    fill(c(prev_goal,prev_pen, prev_shot, prev_penshot, prev_kickoff, prev_sub, prev_subs, crest), .direction='down') %>% 
+    fill(c(prev_goal,prev_pen, prev_shot, prev_shots, prev_penshot, prev_kickoff, prev_sub, prev_subs, crest), .direction='down') %>% 
     mutate(
         match_state = case_when(
             secs==prev_pen ~ 'overlay',
             secs==prev_red ~ 'overlay',
             secs<next_pen & next_pen - secs <= 8 & is.na(next_corner) ~ 'build_up',
-            secs<next_pen & next_pen - secs <= 8 & (is.na(prev_goal)|secs - prev_goal >= 30) & secs < next_goal & (next_corner - secs > 8|next_corner - secs <= 3) ~ 'build_up',
+            secs<next_pen & next_pen - secs <= 8 & (is.na(prev_goal)|secs - prev_goal >= 30) & (is.na(next_goal)|secs < next_goal) & (next_corner - secs > 8|next_corner - secs <= 3) ~ 'build_up',
             secs>prev_pen & secs>=prev_penshot & secs<=prev_penshot + 16 & (is.na(prev_goal)|secs - prev_goal >= 30) ~ 'build_up',
             secs>=prev_pen & secs-prev_pen <= 6 ~ 'reaction',
             secs>=prev_pen & secs<next_goal & next_goal-prev_pen < 75 ~ 'trx',
