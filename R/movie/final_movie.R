@@ -89,8 +89,8 @@ foreach(idx = unique(frame_index$KEY)) %dopar% {
     for(i in this_key$CHUNK){
         this_chunk <- this_key %>% subset(CHUNK==i)
         this_list <- paste0('output/layers/99/Frame_',str_pad(seq(this_chunk$FIRST,this_chunk$LAST,by=1),5,pad='0'),'.png')
-        av::av_encode_video(this_list,
-                            framerate = 30/this_chunk$REP,
+        av::av_encode_video(data.frame(this_list) %>% uncount(this_chunk$REP) %>% pull(this_list),
+                            framerate = 30,
                             output = paste0('output/chunks/',str_pad(i,5,pad='0'),'.mp4'))
     }
 }
@@ -132,6 +132,10 @@ if(file.exists(output_file)) file.remove(output_file)
 system(paste0("ffmpeg -f concat -safe 0 -i output/chunks.txt -c copy ",output_file),
        ignore.stdout = TRUE,
        ignore.stderr = TRUE)
+
+av::av_encode_video(all_chunks,
+                    output = output_file,
+                    framerate = 30)
 message(Sys.time())
 
 home_goals <- match_file %>% 
