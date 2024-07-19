@@ -312,8 +312,11 @@ shot_animation <- function(shot_idx){
     #         image_composite(image_read(this_output$filename)) %>% 
     #         image_write(this_output$output)
     # }
+    file.copy(tail(gif_list$filename,1),
+              str_replace(tail(gif_list$filename,1),'.png','-ball.png'),
+              overwrite=TRUE)
     for(i in gif_list$filename) image_read(this_frame) %>% image_composite(image_read(i)) %>% image_write(i)
-
+    
     av::av_encode_video(gif_list$filename,
                         framerate = 30,
                         output = paste0('output/chunks/',str_pad(unique(this_chunk$CHUNK),5,pad='0'),'.mp4'),
@@ -336,7 +339,7 @@ shot_animation <- function(shot_idx){
     for(j in seq_along(result_frames$frame)){
         this_output <- result_frames %>% slice(j)
         if(file.exists(this_output$frame)) image_read(this_output$frame) %>% 
-            image_composite(image_read(tail(gif_list$filename,1))) %>% 
+            image_composite(image_read(str_replace(tail(gif_list$filename,1),'.png','-ball.png'))) %>% 
             image_write(this_output$frame)
     }
     result_chunks <- chunk_index %>% 
@@ -344,8 +347,8 @@ shot_animation <- function(shot_idx){
     for(k in unique(result_chunks$CHUNK)){
         this_chunk <- result_chunks %>% subset(CHUNK==k)
         result_list <- paste0('output/layers/99/Frame_',frame_index %>% 
-            subset(IDX>=this_chunk$FIRST & IDX<=this_chunk$LAST) %>% 
-            pull(IDX) %>% str_pad(5,pad='0'),'.png')
+                                  subset(IDX>=this_chunk$FIRST & IDX<=this_chunk$LAST) %>% 
+                                  pull(IDX) %>% str_pad(5,pad='0'),'.png')
         av::av_encode_video(result_list,
                             framerate = 30/this_chunk$REP,
                             output = paste0('output/chunks/',str_pad(k,5,pad='0'),'.mp4'),
