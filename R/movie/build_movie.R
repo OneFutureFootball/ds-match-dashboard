@@ -1,6 +1,7 @@
 
 message('Pre Game')
 title_page()
+previous_match()
 starting_lineups()
 starting_lineups('A')
 starting_lineups('B')

@@ -1,6 +1,6 @@
 fulltime_stats <- function(){
     
-    ST <- data.frame(img = list.files('graphics',pattern='stats_ft.png',recursive=TRUE,full.names=TRUE)) %>% 
+    ST <- data.frame(img = list.files('graphics/post_game',pattern='stats_ft.png',recursive=TRUE,full.names=TRUE)) %>% 
         mutate(X = 960,
                Y = 540)
     ggplot() +

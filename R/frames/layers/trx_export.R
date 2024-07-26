@@ -45,11 +45,33 @@ trx_export <- function(time_idx,force=FALSE){
             GAP = case_when(DIS<150 ~ 50,DIS>600 ~ 200,TRUE ~ DIS/3),
             LEX = X + GAP*XS*abs(sin(ANG)),
             LEY = Y + GAP*YS*abs(cos(ANG)),
+            PENX = case_when(
+                next_action!='PENALTY' ~ X4,
+                outcome=='fouled' ~ rnorm(n(),ball_x,2),
+                TRUE ~ sqrt(runif(n()))*18
+                ),
+            PENX = case_when(
+                PENX > 120 ~ 120 - runif(n())*6,
+                PENX < 0 ~ 0 + runif(n())*6,
+                PENX < 60 & PENX > 18 ~ 18 - runif(n())*6,
+                PENX > 60 & PENX < 102 ~ 102 + runif(n())*6,
+                TRUE ~ PENX
+            ),
+            PENY = case_when(
+                next_action!='PENALTY' ~ Y4,
+                outcome=='fouled' ~ rnorm(n(),ball_y,2),
+                TRUE ~ 18 + sqrt(runif(n()))*44
+            ),
+            PENY = case_when(
+                PENY > 62 ~ 62 - runif(n())*6,
+                PENY < 18 ~ 18 + runif(n())*6,
+                TRUE ~ PENY
+            ),
             X4 = ifelse(next_action=='PENALTY',
-                        pitch_transform(ifelse(next_x < 60,0,120) + ifelse(next_x < 60,1,-1)*sqrt(runif(n()))*18,'X'),
+                        pitch_transform(PENX,'X'),
                         X4),
             Y4 = ifelse(next_action=='PENALTY',
-                        pitch_transform(18 + runif(n())*44,'Y'),
+                        pitch_transform(PENY,'Y'),
                         Y4)
         )
     

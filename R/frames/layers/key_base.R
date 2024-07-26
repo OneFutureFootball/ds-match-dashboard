@@ -57,8 +57,10 @@ key_base <- function(idx,live=TRUE){
     
     pers <- key_prog %>% tail(1) %>% pull(period)
     mins <- key_prog %>% tail(1) %>% mutate(MIN = floor(ifelse(live,time,next_time)/60)) %>% pull(MIN)
+    
+    agg_goals <- data.frame(team_id=c(8,4),X=960 - 140*c(-1,1),Y=c(1090,1090),display=c(4,3))
     plot_output <- ggplot() +
-        #background_image(readPNG('output/layers/01/Match.png')) +
+        # background_image(readPNG('output/layers/01/Match.png')) +
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) +
         theme_void() +
         scale_alpha_continuous(range = c(0.7,1),guide='none') +
@@ -67,6 +69,9 @@ key_base <- function(idx,live=TRUE){
                       mutate(display=replace_na(value,0)),
                   mapping = aes(x=X,y=Y,label=display),
                   hjust = 0.5, vjust=0.5, family='Montserrat-ExtraBold', size=16, colour='white') +
+        # geom_text(agg_goals,
+        #           mapping = aes(x=X,y=Y,label=paste0('(',display,')')),
+        #           hjust = 0.5, vjust=0.5, family='Montserrat-Bold', size=7, colour='white') +
         geom_text(mapping = aes(x=960, y=1030, label='–'),
                   hjust = 0.5, vjust=0.5, family='Montserrat-Black', size=8, colour='white') +
         geom_rect(

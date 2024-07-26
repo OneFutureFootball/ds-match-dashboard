@@ -1,6 +1,6 @@
 input <- fromJSON('input/match_output.json')
 this_period <- 2
-this_time <- c(77,10); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
+this_time <- c(79,30); this_time <- 60*this_time[1] + this_time[2] - (45*60*(this_period-1))
 
 input %>% subset(time>=this_time) %>% 
     subset(period==this_period) %>% 
@@ -14,19 +14,29 @@ temp <- input %>%
     ungroup() %>% 
     mutate(
         YC = case_when(
-            period==1 & match_time=='33:46' ~ 23,
-            period==1 & match_time=='40:40' ~ 31,
-            period==2 & match_time=='64:15' ~ 20
+            period==1 & match_time=='15:15' & action=='shoot' ~ 32.6,
+            period==2 & match_time=='49:37' ~ 35,
+            period==2 & match_time=='65:06' ~ 5,
+            period==2 & match_time=='65:09' ~ 21,
+            period==2 & match_time=='79:38' ~ 42,
+            period==2 & match_time=='79:40' ~ 19,
+            period==2 & match_time=='79:49' ~ 25,
+            period==2 & match_time=='79:52' & action=='shoot' ~ 47
+            
         ),
         Y = ifelse(is.na(YC),Y,YC),
         XC = case_when(
-            period==1 & match_time=='33:46' ~ 112,
-            period==1 & match_time=='40:40' ~ 84,
-            period==2 & match_time=='77:25' ~ 77
+            period==1 & match_time=='09:50' ~ 47,
+            period==1 & match_time=='15:15' & action=='shoot' ~ 104.2,
+            period==2 & match_time=='49:34' ~ 35,
+            period==2 & match_time=='49:37' ~ 43,
+            period==2 & match_time=='49:44' ~ 67,
+            period==2 & match_time=='79:46' ~ 79,
+            period==2 & match_time=='79:49' ~ 92
         ),
         X = ifelse(is.na(XC),X,XC)
     )
-temp %>% toJSON(pretty=TRUE) %>% 
+temp %>% select(-c(XC,YC)) %>% toJSON(pretty=TRUE) %>% 
     write(file='input/match_output.json')
 source('R/support/data_prep.R')
 
