@@ -245,7 +245,10 @@ shot_animation <- function(shot_idx){
                 STEP==1 ~ ifelse(input$technique%in%c('head','volley'),0,spare_time/2),
                 STEP==2 ~ shot_time*time_warp,
                 STEP==3 ~ def_time*time_warp,
-                STEP==4 ~ ifelse(input$technique%in%c('head','volley'),spare_time,spare_time/2)
+                STEP==4 ~ case_when(
+                    input$outcome=='goal' ~ 0,
+                    input$technique%in%c('head','volley') ~ spare_time,
+                    TRUE ~ spare_time/2)
             ),
             TIME = cumsum(TIME),
             START = STEP<=1) %>% 

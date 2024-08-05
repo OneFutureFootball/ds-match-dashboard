@@ -23,6 +23,9 @@ key_base <- function(idx,live=TRUE){
                Y = 879 - 46*(max(GIDX) + 1 - GIDX)) %>% 
         mutate(logo = ifelse(state=='Substitution',paste0('images/icons/subon',ifelse(oth_role=='injury','injury',''),'.png'),NA_character_))
     
+    reds <- key_moments %>% 
+        subset(str_detect(live_label,'RED|SECOND'))
+    
     this_moment <- subset(key_prog,IDX==idx)
     if(nrow(this_moment)==0) return(NULL)
     topup <- key_moments %>% subset(period==this_moment$period & time==this_moment$time) %>% summarise(TOPUP = sum(oth_role%in%c('red card','injury'))) %>% pull(TOPUP)
@@ -100,6 +103,11 @@ key_base <- function(idx,live=TRUE){
                   hjust = 0, vjust=0.5, family='Montserrat-Bold', size=4, colour='white') +
         geom_text(goals %>% subset(possession=='B'),mapping = aes(x=XP,y=Y,label=toupper(last_name)),
                   hjust = 0, vjust=0.5, family='Montserrat-Medium', size=4, colour='white') +
+        geom_image(reds,
+                   mapping = aes(x=960 + 90*ifelse(oth_team=='A',-1,1),
+                                 y=1010,
+                                 image='images/icons/cardred.png'),
+                   size=0.016) +
         geom_image(key_prog %>% drop_na(logo),
                    mapping = aes(x=X+290,y=Y,image=logo, alpha=IDX),
                    size=0.025) +

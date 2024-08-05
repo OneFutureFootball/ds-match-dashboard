@@ -83,8 +83,6 @@ card_overlay <- function(pers,secs){
         bind_rows(injs) %>% 
         bind_rows(subs)
     
-    #if(dots %>% bind_rows(reds) %>% nrow() == 0) return(NULL)
-    
     plot_output <- ggplot() + 
         coord_cartesian(xlim=c(0,1920),ylim=c(0,1080)) + 
         theme_void()
@@ -108,12 +106,7 @@ card_overlay <- function(pers,secs){
                    mapping = aes(x=X-25,
                                  y=Y-25,
                                  image='images/icons/subon.png'),
-                   size=0.022) +
-        geom_image(reds,
-                   mapping = aes(x=960 + 90*ifelse(oth_team=='A',-1,1),
-                                 y=1010,
-                                 image='images/icons/cardred.png'),
-                   size=0.016)
+                   size=0.022)
     
     ggsave(paste0('output/layers/08/Card_',pers,'_',str_pad(round(secs),4,pad='0'),'.png'),
            plot_output,

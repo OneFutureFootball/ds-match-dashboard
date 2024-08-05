@@ -44,7 +44,7 @@ this_match <- full_fixture %>%
     subset(match_id%in%completed_matches) %>% 
     arrange(utc) %>% 
     tail(1)
-this_match <- full_fixture %>% subset(match_id==3122)
+this_match <- full_fixture %>% subset(match_id==3132)
 teams <- with(this_match,c(home,away))
 prev_match <- full_fixture %>% subset(home%in%teams & away%in%teams) %>% subset(match_id < this_match$match_id) %>% tail(1)
 system(paste0('aws s3 sync "',match_bucket,'/',this_match$match_id,'" "',dump_folder,'" --profile ',aws_account))
